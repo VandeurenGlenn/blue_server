@@ -18,16 +18,39 @@ let lastUpdated: EpochTimeStamp
 
 const shouldUpdate = ( ) => lastUpdated + oneHour <= new Date().getTime()
 
-const fetchGithub = () => {
+const fetchGithub = (url) => {
   const headers = new Headers();
+  headers.append("Accept", "application/vnd.github+json")
   headers.append("Authorization", `Bearer ${keys.github}`);
   headers.append("X-GitHub-Api-Version", `2022-11-28`)
+  return fetch(url, { headers })
 }
 
 const fetchCoinmarketcap = (url) => {
   const headers = new Headers();
   headers.append("X-CMC_PRO_API_KEY", keys.coinmarketcap);
   return fetch(url, { headers })
+}
+
+const getCodeFrequency = () => {
+  
+  return fetchGithub(`https://github.com/repos/{owner}/{repo}/stats/code_frequency`)
+}
+
+const getRepos = async (name) => {
+  const response = await fetchGithub(`https://api.github.com/users/${name}/repos`)
+  if (response.status === 404) return []
+  return response.json()
+}
+
+const getOrgRepos = async (name) => {
+  console.log(name);
+  
+  const response = await fetchGithub(`https://api.github.com/orgs/${name}/repos`)
+  console.log(response.status);
+  
+  if (response.status === 404) return []
+  return response.json()
 }
 
 const getCurrencyInfo = async (ids: string[] | string) => {
@@ -65,7 +88,8 @@ const getTop100 = async (): Promise<top100Return[]> => {
       sourceCode,
       github: {
         activity: 0,
-        repos: []
+        repos: [],
+        contributers: []
       }
     }
   }
@@ -79,13 +103,27 @@ const getTop100 = async (): Promise<top100Return[]> => {
 
       // check if a link is a profile
       // note: a profile could also be an organization
-      const isProfile = item.sourceCode.split('/')
+      const isProfile = urlParts.length === 2
 
-      // If we trully want to have all dev activity for a project we atleast need to start with looping trough all the repos
+      
       if (isProfile) {
+        let repos
+        repos = await getOrgRepos(urlParts[1])
+        console.log(repos);
+        if (repos.length === 0) repos = await getRepos(urlParts[1])
+        console.log(repos);
         
       } else {
-        urlParts.pop()
+        // If we trully want to have all dev activity for a project we atleast need to start with looping trough all the repos
+        let repos
+        repos = await getOrgRepos(urlParts[1])
+        if (repos?.length === 0) repos = await getRepos(urlParts[1])
+        item.github.repos = repos
+      }
+
+      for (const repo of item.github.repos) {
+        console.log(repo);
+        
       }
     }
     return item

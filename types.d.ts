@@ -4,6 +4,7 @@ export declare type blueCache = {
 export declare type githubReturn = {
     activity: number;
     repos: string[];
+    contributers: string[];
 };
 export declare type top100Return = {
     id: string;

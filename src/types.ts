@@ -2,7 +2,8 @@ export declare type blueCache = { currencies: {}[] }
 
 export declare type githubReturn = {
   activity: number,
-  repos: string[]
+  repos: string[],
+  contributers: string[]
 }
 
 export declare type top100Return = {
