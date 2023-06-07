@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import Koa from 'koa'
 import cors from 'koa-cors'
 import Router from 'koa-router'
-import { blueCache } from './types.js'
+import { blueCache, top100Return } from './types.js'
 import { CronJob } from 'cron'
 
 const keys = dotenv.config().parsed
@@ -36,7 +36,7 @@ const getCurrencyInfo = async (ids: string[] | string) => {
   return (await response.json()).data
 }
 
-const getTop100 = async () => {
+const getTop100 = async (): Promise<top100Return[]> => {
   let currencies
   let response = await fetchCoinmarketcap('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=100')
   currencies = (await response.json()).data
@@ -50,7 +50,7 @@ const getTop100 = async () => {
   }
 
   const metadata = await getCurrencyInfo(ids)
-  const list = []
+  const list: top100Return[] = []
   for (let i = 1; i <= currencies.length; i++) {
     const id = currencies[i - 1].id
     const sourceCode = metadata[id].urls.source_code?.[0]
@@ -62,9 +62,14 @@ const getTop100 = async () => {
       symbol: metadata[id].symbol,
       price: currencies[i - 1].price,
       description: metadata[id].description,
-      sourceCode
+      sourceCode,
+      github: {
+        activity: 0,
+        repos: []
+      }
     }
   }
+
   return Promise.all(list.map(async (item) => {
     // todo: should we filter out those who don't have sourceCode?
     if (item.sourceCode) {
