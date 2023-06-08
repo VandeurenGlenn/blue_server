@@ -1,4 +1,7 @@
 # blue_server
+<center>
+<img src="./not-needed-for-now-but-saved/logo.png">
+</center>
 
 ## development
 
