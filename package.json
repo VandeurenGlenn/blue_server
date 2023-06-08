@@ -1,7 +1,7 @@
 {
   "name": "blue_server",
   "version": "0.1.0",
-  "description": "",
+  "description": "test",
   "main": "index.js",
   "type": "module",
   "scripts": {
