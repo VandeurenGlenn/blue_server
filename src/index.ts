@@ -3,12 +3,11 @@ import Koa from 'koa';
 import cors from 'koa-cors';
 import Router from 'koa-router';
 import pathlib from 'path';
-import {writeFile} from 'fs/promises';
+import {writeFile, readFile} from 'fs/promises';
 import type {BlueCache, CMCCurrency, DotEnvKeys} from './types.js';
 import {CronJob} from 'cron';
 import {fileURLToPath} from 'url';
 import fetch from 'node-fetch';
-import {readFile} from 'fs/promises';
 const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
 const envs = dotenv.config({
@@ -169,7 +168,7 @@ const cache: BlueCache = {
 
 /**
  * Convenient function to load data (local or remote).
- * It saves data on locally when fetched remotely.
+ * It saves data locally when fetched remotely.
  */
 async function loadCurrencies({local = false} = {}) {
 	if (local) {
@@ -195,7 +194,7 @@ loadCurrencies({local: true});
 router.get('/top-100', async (ctx) => (ctx.body = cache.currencies));
 
 // runs every minute
-new CronJob('* * * * *', async () => loadCurrencies());
+new CronJob('* * * * *', loadCurrencies);
 
 const server = new Koa();
 
