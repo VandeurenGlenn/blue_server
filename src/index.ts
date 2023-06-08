@@ -3,10 +3,12 @@ import Koa from 'koa';
 import cors from 'koa-cors';
 import Router from 'koa-router';
 import pathlib from 'path';
+import {writeFile} from 'fs/promises';
 import type {BlueCache, CMCCurrency, DotEnvKeys} from './types.js';
 import {CronJob} from 'cron';
 import {fileURLToPath} from 'url';
 import fetch from 'node-fetch';
+import {readFile} from 'fs/promises';
 const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
 const envs = dotenv.config({
@@ -19,10 +21,6 @@ if (envs === undefined) {
 const router = new Router();
 const oneHour = 3600_000;
 const jobs = [];
-
-const cache: BlueCache = {
-	currencies: [],
-};
 
 let lastUpdated: EpochTimeStamp;
 
@@ -162,12 +160,42 @@ const getTop100 = async (): Promise<CMCCurrency[]> => {
 	);
 };
 
+/* main */
+
+const dataFilename = 'data.json';
+const cache: BlueCache = {
+	currencies: [],
+};
+
+/**
+ * Convenient function to load data (local or remote).
+ * It saves data on locally when fetched remotely.
+ */
+async function loadCurrencies({local = false} = {}) {
+	if (local) {
+		// Get data from local
+		try {
+			cache.currencies = JSON.parse(
+				(await readFile(pathlib.join(__dirname, '..', dataFilename))) + ''
+			);
+		} catch (_) {
+			cache.currencies = [];
+		}
+	} else {
+		// Get data from remote
+		cache.currencies = await getTop100();
+		writeFile(
+			pathlib.join(__dirname, '..', dataFilename),
+			JSON.stringify(cache.currencies)
+		);
+	}
+}
+loadCurrencies({local: true});
+
 router.get('/top-100', async (ctx) => (ctx.body = cache.currencies));
 
-cache.currencies = await getTop100();
-
 // runs every minute
-new CronJob('* * * * *', async () => (cache.currencies = await getTop100()));
+new CronJob('* * * * *', async () => loadCurrencies());
 
 const server = new Koa();
 
