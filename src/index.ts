@@ -3,7 +3,7 @@ import Koa from 'koa';
 import cors from 'koa-cors';
 import Router from 'koa-router';
 import pathlib from 'path';
-import type {blueCache, CMCCurrency} from './types.js';
+import type {BlueCache, CMCCurrency} from './types.js';
 import {CronJob} from 'cron';
 import {fileURLToPath} from 'url';
 import fetch from 'node-fetch';
@@ -20,7 +20,7 @@ const router = new Router();
 const oneHour = 3600_000;
 const jobs = [];
 
-const cache: blueCache = {
+const cache: BlueCache = {
 	currencies: [],
 };
 
