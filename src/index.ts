@@ -3,15 +3,15 @@ import Koa from 'koa';
 import cors from 'koa-cors';
 import Router from 'koa-router';
 import pathlib from 'path';
-import type {BlueCache, CMCCurrency} from './types.js';
+import type {BlueCache, CMCCurrency, DotEnvKeys} from './types.js';
 import {CronJob} from 'cron';
 import {fileURLToPath} from 'url';
 import fetch from 'node-fetch';
 const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
 const keys = dotenv.config({
-	path: pathlib.join(__dirname, '..', '.env.template'),
-}).parsed;
+	path: pathlib.join(__dirname, '..', '.env.vault'),
+}).parsed as DotEnvKeys | undefined;
 if (keys === undefined) {
 	console.log('env vars not found');
 	process.exit(1);

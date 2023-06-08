@@ -1,12 +1,12 @@
-export declare type BlueCache = {currencies: {}[]};
+export type BlueCache = {currencies: {}[]};
 
-export declare type githubReturn = {
+export type githubReturn = {
 	activity: number;
 	repos: string[];
 	contributers: string[];
 };
 
-export declare type CMCCurrency = {
+export type CMCCurrency = {
 	id: string;
 	name: string;
 	slug: string;
@@ -17,3 +17,8 @@ export declare type CMCCurrency = {
 	sourceCode: string;
 	github: githubReturn;
 };
+
+export interface DotEnvKeys {
+	coinmarketcap: string;
+	github: string;
+}
