@@ -5,9 +5,10 @@
 		"module": "es2022",
 		"target": "es2022",
 		"moduleResolution": "nodenext",
-		"outDir": ".",
+		"rootDir": "src",
+		"outDir": "lib",
 		"declaration": true,
-		"emitDeclarationOnly": true,
+		"allowSyntheticDefaultImports": true,
 		"types": ["node"]
 	},
 	"include": ["src/**/*"],

@@ -6,7 +6,7 @@ export declare type githubReturn = {
   contributers: string[]
 }
 
-export declare type top100Return = {
+export declare type CMCCurrency = {
   id: string,
   name: string,
   slug: string,

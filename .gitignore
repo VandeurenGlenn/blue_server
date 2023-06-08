@@ -1,7 +1,7 @@
 node_modules
-index.js
-index.d.ts
-types.d.ts
+
+lib
 
 .DS_Store
 .env
+.wireit

@@ -2,10 +2,16 @@ import dotenv from 'dotenv';
 import Koa from 'koa';
 import cors from 'koa-cors';
 import Router from 'koa-router';
-import type {blueCache, top100Return} from './types.js';
+import pathlib from 'path';
+import type {blueCache, CMCCurrency} from './types.js';
 import {CronJob} from 'cron';
+import {fileURLToPath} from 'url';
+import fetch from 'node-fetch';
+const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
-const keys = dotenv.config().parsed;
+const keys = dotenv.config({
+	path: pathlib.join(__dirname, '..', '.env.template'),
+}).parsed;
 if (keys === undefined) {
 	console.log('env vars not found');
 	process.exit(1);
@@ -25,18 +31,19 @@ function shouldUpdate() {
 	return lastUpdated + oneHour <= new Date().getTime();
 }
 
-const fetchGithub = (url: RequestInfo | URL) => {
+const fetchGithub = async (url: string) => {
 	const headers = new Headers();
 	headers.append('Accept', 'application/vnd.github+json');
 	headers.append('Authorization', `Bearer ${keys.github}`);
 	headers.append('X-GitHub-Api-Version', `2022-11-28`);
-	return fetch(url, {headers});
+	// TODO: check if GH has typescript types so we can easily understand returned data.
+	return await fetch(url, {headers});
 };
 
-const fetchCoinmarketcap = (url: RequestInfo | URL) => {
+const fetchCoinmarketcap = async (url: string) => {
 	const headers = new Headers();
 	headers.append('X-CMC_PRO_API_KEY', keys.coinmarketcap);
-	return fetch(url, {headers});
+	return await fetch(url, {headers});
 };
 
 const getCodeFrequency = () => {
@@ -45,12 +52,12 @@ const getCodeFrequency = () => {
 	);
 };
 
-const getRepos = async (name: string) => {
+const getRepos = async (name: string): Promise<string[]> => {
 	const response = await fetchGithub(
 		`https://api.github.com/users/${name}/repos`
 	);
 	if (response.status === 404) return [];
-	return response.json();
+	return (await response.json()) as string[];
 };
 
 const getOrgRepos = async (name: string) => {
@@ -62,7 +69,7 @@ const getOrgRepos = async (name: string) => {
 	// console.log(response.status);
 
 	if (response.status === 404) return [];
-	return response.json();
+	return (await response.json()) as [];
 };
 
 const getCurrencyInfo = async (ids: string[] | string) => {
@@ -72,26 +79,31 @@ const getCurrencyInfo = async (ids: string[] | string) => {
 			','
 		)}`
 	);
+	// TODO: check if CMC has typescript types so we can easily understand returned data.
+	// @ts-ignore
 	return (await response.json()).data;
 };
 
-const getTop100 = async (): Promise<top100Return[]> => {
-	let currencies;
-	let response = await fetchCoinmarketcap(
+const getTop100 = async (): Promise<CMCCurrency[]> => {
+	let currencies: CMCCurrency[];
+	const response = await fetchCoinmarketcap(
 		'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=100'
 	);
-	currencies = (await response.json()).data;
+
+	currencies = ((await response.json()) as unknown as {data: CMCCurrency[]})
+		.data as CMCCurrency[];
 
 	const slugs = [];
 	const ids = [];
 
+	// console.log(currencies);
 	for (const currency of currencies) {
 		slugs.push(currency.slug);
 		ids.push(currency.id);
 	}
 
 	const metadata = await getCurrencyInfo(ids);
-	const list: top100Return[] = [];
+	const list: CMCCurrency[] = [];
 	for (let i = 1; i <= currencies.length; i++) {
 		const id = currencies[i - 1].id;
 		const sourceCode = metadata[id].urls.source_code?.[0];
@@ -132,9 +144,11 @@ const getTop100 = async (): Promise<top100Return[]> => {
 					console.log(repos);
 				} else {
 					// If we trully want to have all dev activity for a project we atleast need to start with looping trough all the repos
-					let repos;
+					let repos: string[];
 					repos = await getOrgRepos(urlParts[1]);
-					if (repos?.length === 0) repos = await getRepos(urlParts[1]);
+					if (repos?.length === 0) {
+						repos = await getRepos(urlParts[1]);
+					}
 					item.github.repos = repos;
 				}
 
