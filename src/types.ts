@@ -1,4 +1,4 @@
-export type BlueCache = {currencies: {}[]};
+export type BlueCache = {currencies: CMCCurrency[]};
 
 export type githubReturn = {
 	activity: number;

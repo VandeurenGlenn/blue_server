@@ -153,6 +153,7 @@ const getTop100 = async (): Promise<CMCCurrency[]> => {
 				}
 
 				for (const repo of item.github.repos) {
+					// TODO: what the heck
 					console.log(repo);
 				}
 			}
