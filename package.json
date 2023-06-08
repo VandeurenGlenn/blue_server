@@ -24,6 +24,10 @@
   "homepage": "https://github.com/VandeurenGlenn/blue_server#readme",
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.1",
+    "@types/cron": "^2.0.1",
+    "@types/koa": "^2.13.6",
+    "@types/koa-cors": "^0.0.2",
+    "@types/koa-router": "^7.4.4",
     "@types/node": "^20.2.5",
     "dotenv": "^16.1.4",
     "rollup": "^3.23.0",

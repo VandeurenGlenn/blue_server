@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		//  "allowJs": true, // shouldn't be needed, not recommended also
+		"strict": true,
 		"module": "es2022",
 		"target": "es2022",
 		"moduleResolution": "nodenext",
