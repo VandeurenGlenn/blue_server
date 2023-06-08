@@ -1,16 +1,15 @@
 {
   "name": "blue_server",
   "version": "0.1.0",
-  "description": "test",
+  "description": "",
   "main": "index.js",
+  "module": "index.js",
   "type": "module",
   "scripts": {
-    "build": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
   },
   "files": [
-    "./index.js",
-    "./README.md"
+    "/index.js"
   ],
   "repository": {
     "type": "git",
