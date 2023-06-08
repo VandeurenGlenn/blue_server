@@ -21,4 +21,5 @@ export type CMCCurrency = {
 export interface DotEnvKeys {
 	coinmarketcap: string;
 	github: string;
+	port: number;
 }

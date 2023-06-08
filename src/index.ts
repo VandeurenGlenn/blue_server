@@ -9,10 +9,10 @@ import {fileURLToPath} from 'url';
 import fetch from 'node-fetch';
 const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
-const keys = dotenv.config({
+const envs = dotenv.config({
 	path: pathlib.join(__dirname, '..', '.env.vault'),
 }).parsed as DotEnvKeys | undefined;
-if (keys === undefined) {
+if (envs === undefined) {
 	console.log('env vars not found');
 	process.exit(1);
 }
@@ -34,7 +34,7 @@ function shouldUpdate() {
 const fetchGithub = async (url: string) => {
 	const headers = new Headers();
 	headers.append('Accept', 'application/vnd.github+json');
-	headers.append('Authorization', `Bearer ${keys.github}`);
+	headers.append('Authorization', `Bearer ${envs.github}`);
 	headers.append('X-GitHub-Api-Version', `2022-11-28`);
 	// TODO: check if GH has typescript types so we can easily understand returned data.
 	return await fetch(url, {headers});
@@ -42,7 +42,7 @@ const fetchGithub = async (url: string) => {
 
 const fetchCoinmarketcap = async (url: string) => {
 	const headers = new Headers();
-	headers.append('X-CMC_PRO_API_KEY', keys.coinmarketcap);
+	headers.append('X-CMC_PRO_API_KEY', envs.coinmarketcap);
 	return await fetch(url, {headers});
 };
 
@@ -173,4 +173,4 @@ const server = new Koa();
 server.use(cors({origin: '*'}));
 server.use(router.routes());
 
-server.listen(9876);
+server.listen(envs.port);
