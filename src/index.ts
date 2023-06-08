@@ -171,6 +171,6 @@ new CronJob('* * * * *', async () => (cache.currencies = await getTop100()));
 const server = new Koa();
 
 server.use(cors({origin: '*'}));
-server.use(router.routes());
+server.use(router.routes()).use(router.allowedMethods());
 
 server.listen(envs.port);
