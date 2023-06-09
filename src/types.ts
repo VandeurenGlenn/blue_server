@@ -1,4 +1,4 @@
-export type BlueCache = {currencies: []};
+export type blueCache = {currencies: top100Return[]};
 
 export type top100Return = {
 	id: string;

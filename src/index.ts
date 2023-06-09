@@ -2,11 +2,11 @@ import dotenv from 'dotenv'
 import Koa from 'koa'
 import cors from 'koa-cors'
 import Router from 'koa-router'
-import { blueCache, githubRepoResponse, githubReposResponse, top100Return } from './types.js'
+import { blueCache, githubRepoResponse, githubReposResponse, githubReturn, top100Return } from './types.js'
 import { CronJob } from 'cron'
 import fetch from 'node-fetch'
 
-const env = dotenv.config().parsed
+const env = (dotenv.config()).parsed
 const router = new Router()
 // 7 days in ms
 const sevenDaysAgo = 604_800_000
@@ -33,7 +33,7 @@ const getCodeFrequency = async (owner, name) => {
   const response = await fetchGithub(`https://api.github.com/repos/${owner}/${name}/stats/code_frequency`)
   if (response.status === 404) return []
   
-  const result: [number, number, number][] = await response.json()
+  const result: [number, number, number][] = await response.json() as []
   if (result.length > 0) {
     const [aggregate, additions, deletions] = result[0]
     return { aggregate, additions, deletions }
@@ -44,13 +44,13 @@ const getCodeFrequency = async (owner, name) => {
 const getRepos = async (name): Promise<githubReposResponse> => {
   const response = await fetchGithub(`https://api.github.com/users/${name}/repos`)
   if (response.status === 404) return []
-  return response.json()
+  return response.json() as Promise<githubReposResponse>
 }
 
 const getOrgRepos = async (name): Promise<githubReposResponse> => {
   const response = await fetchGithub(`https://api.github.com/orgs/${name}/repos`)
   if (response.status === 404) return []
-  return response.json()
+  return response.json() as Promise<githubReposResponse>
 }
 
 const getCurrencyInfo = async (ids: string[] | string) => {
@@ -115,7 +115,8 @@ const getTop100 = async (): Promise<top100Return[]> => {
       let repos: githubReposResponse
       repos = await getOrgRepos(urlParts[1])
       if (repos.length === 0) repos = await getRepos(urlParts[1])
-      if (repos.length > 0) item.github.repos = repos
+      // @ts-ignore
+      if (repos.length > 0) item.github.repos = repos 
 
       let promises = []
      
@@ -143,12 +144,16 @@ const getTop100 = async (): Promise<top100Return[]> => {
     return item
   }))
 }
-getTop100();
 
-router.get('/top-100', async (ctx) => (ctx.body = cache.currencies));
+const updateCache = async () => {
+  cache.currencies = await getTop100();
+}
+await updateCache()
 
 // runs every minute
-new CronJob('* * * * *', getTop100);
+new CronJob('* * * * *', updateCache);
+
+router.get('/top-100', async (ctx) => (ctx.body = JSON.stringify(cache.currencies, null, '\t')))
 
 const server = new Koa();
 
