@@ -72,7 +72,7 @@ const getTop100 = async () => {
 			description: metadata[id].description,
 			sourceCode,
 			github: {
-				activity: {additions: 0, deletions: 0, total: 0},
+				activity: {},
 				repos: [],
 				contributers: [],
 			},
@@ -91,9 +91,7 @@ const getTop100 = async () => {
 				// @ts-ignore
 				if (repos.length > 0) item.github.repos = repos;
 
-				// let promises = [];
-
-				const activity: GithubActivity = {additions: 0, deletions: 0, total: 0};
+				let promises = [];
 
 				for (const repo of repos) {
 					// repo had activity within 7 days, so we try to get it's stats
@@ -102,29 +100,22 @@ const getTop100 = async () => {
 						new Date().getTime()
 					) {
 						const [owner, name] = repo.full_name.split('/');
-						const repoActivity = await GitHub.getRepositoryCodeFrequency(
-							owner,
-							name
-						);
-						item.github.activity.additions += repoActivity.additions;
-						item.github.activity.deletions += repoActivity.deletions;
-						item.github.activity.additions +=
-							repoActivity.additions + repoActivity.deletions;
+						promises.push(GitHub.getRepositoryCodeFrequency(owner, name));
 					} else {
 						// there was no activity, remove the repo to keep data to front minimal
 						item.github.repos.splice(repos.indexOf(repo));
 					}
 				}
-				// promises = await Promise.all(promises);
-				// item.github.activity = promises.reduce(
-				// 	(previous: any, current: any) => {
-				// 		previous.additions += current.additions;
-				// 		previous.deletions += current.deletions;
-				// 		previous.total += current.additions + current.deletions;
-				// 		return previous;
-				// 	},
-				// 	{additions: 0, deletions: 0, total: 0}
-				// );
+				promises = await Promise.all(promises);
+				item.github.activity = promises.reduce(
+					(previous: any, current: any) => {
+						previous.additions += current.additions;
+						previous.deletions += current.deletions;
+						previous.total += current.additions + current.deletions;
+						return previous;
+					},
+					{additions: 0, deletions: 0, total: 0}
+				);
 			}
 			return item;
 		})
