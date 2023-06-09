@@ -9,7 +9,7 @@
 npm run serve --watch
 ```
 
-server starts and restarts when source files change or/and when `.env.vault` is modified.
+server starts and restarts when source files change or/and when `.env` is modified.
 
 ## build
 

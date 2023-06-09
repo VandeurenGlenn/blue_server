@@ -1,0 +1,7 @@
+{
+	"name": "@blueserver/types",
+	"version": "1.0.0",
+	"description": "repo for the blue server types",
+	"type": "module",
+	"types": "types.d.ts"
+}

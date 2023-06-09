@@ -1,0 +1,50 @@
+{
+	"name": "@blueserver/server",
+	"description": "blue server: API server",
+	"type": "module",
+	"scripts": {
+		"build": "wireit",
+		"serve": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"command": "tsc --pretty",
+			"clean": "if-file-deleted",
+			"files": [
+				"tsconfig.json",
+				"src"
+			],
+			"output": [
+				"lib"
+			]
+		},
+		"serve": {
+			"#comment": "restart the server when the build files changed",
+			"command": "node ./lib/index.js",
+			"service": true,
+			"files": [
+				".env"
+			],
+			"dependencies": [
+				"build"
+			]
+		}
+	},
+	"devDependencies": {
+		"@blueserver/types": "^1.0.0",
+		"@types/cron": "^2.0.1",
+		"@types/koa": "^2.13.6",
+		"@types/koa-cors": "^0.0.2",
+		"@types/koa-router": "^7.4.4",
+		"@types/node": "^20.2.5",
+		"@types/node-fetch": "^2.6.4",
+		"dotenv": "^16.1.4",
+		"node-fetch": "^3.3.1"
+	},
+	"dependencies": {
+		"cron": "^2.3.1",
+		"koa": "^2.14.2",
+		"koa-cors": "^0.0.16",
+		"koa-router": "^12.0.0"
+	}
+}
