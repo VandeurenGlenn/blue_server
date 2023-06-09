@@ -2,7 +2,8 @@
 	"name": "@blueserver/front",
 	"type": "module",
 	"scripts": {
-		"save:top-100-data": "wireit"
+		"dev": "wireit",
+		"build": "vite build"
 	},
 	"wireit": {
 		"save:top-100-data": {
@@ -16,9 +17,35 @@
 			"dependencies": [
 				"../server:build"
 			]
+		},
+		"dev": {
+			"command": "rm -rf node_modules/.vite && vite --host",
+			"service": true,
+			"dependencies": [
+				"save:top-100-data"
+			]
+		},
+		"build": {
+			"command": "vite build",
+			"dependencies": [
+				"save:top-100-data"
+			],
+			"files": [
+				"vite.config.js"
+			],
+			"output": [
+				"dist"
+			]
 		}
 	},
 	"devDependencies": {
-		"@blueserver/server": "*"
+		"@blueserver/server": "*",
+		"@material/web": "^1.0.0-pre.9",
+		"define-custom-element-decorator": "^0.0.7",
+		"lit": "^2.7.5",
+		"tailwindcss": "^3.3.2",
+		"toastit": "^0.0.4",
+		"vite": "^4.3.9",
+		"vite-lit-with-tailwind": "^2.1.1"
 	}
 }
