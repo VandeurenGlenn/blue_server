@@ -108,7 +108,7 @@ const getTop100 = async () => {
 				}
 				promises = await Promise.all(promises);
 				item.github.activity = promises.reduce(
-					(previous: any, current: any) => {
+					(previous, current) => {
 						previous.additions += current.additions;
 						previous.deletions += current.deletions;
 						previous.total += current.additions + current.deletions;
