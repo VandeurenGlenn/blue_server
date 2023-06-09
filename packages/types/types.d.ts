@@ -184,7 +184,10 @@ export declare type GithubIndicator = {
 	contributers: string[];
 };
 
-export type BlueIndicator = CMCAsset & {sourceCode: string, github: GithubIndicator};
+export type BlueIndicator = Partial<CMCAsset> & {
+	sourceCode: string;
+	github: GithubIndicator;
+};
 
 export interface DotEnvKeys {
 	coinmarketcap: string;
