@@ -6,6 +6,7 @@ import type {
 	BlueCache,
 	GithubProjectResponse,
 	CMCCurrency,
+	GithubActivity,
 } from '@blueserver/types';
 import pathlib from 'path';
 import {CronJob} from 'cron';
