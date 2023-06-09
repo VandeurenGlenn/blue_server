@@ -6,7 +6,6 @@ import type {
 	BlueCache,
 	GithubProjectResponse,
 	CMCCurrency,
-	GithubActivity,
 } from '@blueserver/types';
 import pathlib from 'path';
 import {CronJob} from 'cron';
@@ -72,7 +71,7 @@ const getTop100 = async () => {
 			description: metadata[id].description,
 			sourceCode,
 			github: {
-				activity: {},
+				activity: {deletions: 0, additions: 0, total: 0},
 				repos: [],
 				contributers: [],
 			},
