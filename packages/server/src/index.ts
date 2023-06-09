@@ -139,11 +139,15 @@ async function loadCurrencies({local = false} = {}) {
 		// Get data from local
 		try {
 			cache.currencies = JSON.parse(
-				(await readFile(pathlib.join(__dirname, '..', dataFilename))) + ''
+				(await readFile(pathlib.join(__dirname, '..', dataFilename))).toString()
 			);
 		} catch (_) {
 			// default
-			cache.currencies = [];
+			cache.currencies = await getTop100();
+			await writeFile(
+				pathlib.join(__dirname, '..', dataFilename),
+				JSON.stringify(cache.currencies)
+			);
 		}
 	} else {
 		// Get data from remote
@@ -154,10 +158,11 @@ async function loadCurrencies({local = false} = {}) {
 		);
 	}
 }
-loadCurrencies({local: true});
+await loadCurrencies({local: true});
 
 // fetch remotely every minute
-new CronJob('* * * * *', loadCurrencies);
+const job = await new CronJob('* * * * *', loadCurrencies);
+job.start()
 
 const router = new Router();
 

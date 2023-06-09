@@ -5,3 +5,4 @@ lib
 .DS_Store
 .env
 .wireit
+packages/server/data.json
