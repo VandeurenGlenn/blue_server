@@ -32,7 +32,12 @@ class AppShell extends LitElement {
 			<md-list>
 				${this.assets.map((asset, i) => {
 					return html`
-						<md-list-item headline=${asset.name!} @click=${() => {}}>
+						<md-list-item
+							headline=${asset.name!}
+							@click=${() => {
+								window.open(asset.sourceCode, '_blank');
+							}}
+						>
 							<div slot="start">
 								<img src="${getCmcLogoSrcUrl(asset.id!)}" width="24" />
 							</div>
@@ -50,6 +55,7 @@ class AppShell extends LitElement {
 
 	async _fetchInfo() {
 		this.assets = await getBlueList();
+		console.log(this.assets);
 		const assets: BlueIndicator[] = [];
 		return;
 		// for (const asset of Object.keys(info)) {
