@@ -186,7 +186,7 @@ export declare type GithubProject = {
 };
 
 // TODO
-export type buildGithubIndicator = {
+export type GithubIndicator = {
 
 }
 

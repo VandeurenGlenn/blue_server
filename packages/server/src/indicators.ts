@@ -1,6 +1,11 @@
-import { GithubProjectResponse } from "@blueserver/types";
+import {GithubIndicator, GithubProject} from '@blueserver/types';
 
-// TODO
-export function buildGithubIndicator (githubProject: GithubProjectResponse) {
+export function buildGithubIndicators(githubProject: GithubProject) {
+	// TODO
+}
 
+export function buildSuperMegaIndicatorFromAllIndicators(
+	githubIndicator: GithubIndicator
+) {
+	// TODO
 }
