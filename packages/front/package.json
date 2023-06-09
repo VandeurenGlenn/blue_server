@@ -3,7 +3,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "wireit",
-		"build": "vite build"
+		"build": "wireit"
 	},
 	"wireit": {
 		"save:top-100-data": {
