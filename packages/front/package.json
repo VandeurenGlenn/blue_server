@@ -1,0 +1,24 @@
+{
+	"name": "@blueserver/front",
+	"type": "module",
+	"scripts": {
+		"save:top-100-data": "wireit"
+	},
+	"wireit": {
+		"save:top-100-data": {
+			"command": "node ./scripts/save-top-100-information.js",
+			"files": [
+				"scripts/save-top-100-information.js"
+			],
+			"output": [
+				"src/top100.json"
+			],
+			"dependencies": [
+				"../server:build"
+			]
+		}
+	},
+	"devDependencies": {
+		"@blueserver/server": "*"
+	}
+}

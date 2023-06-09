@@ -7,7 +7,7 @@ const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
 const _env = dotenv.config({
 	path: pathlib.join(__dirname, '..', '.env'),
-}).parsed as DotEnvKeys | undefined;
+}).parsed as unknown as DotEnvKeys | undefined;
 
 // Required to exit the program nicely
 // and remove undefined errors further in the code.

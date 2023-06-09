@@ -2,8 +2,8 @@
 	"compilerOptions": {
 		"module": "ES2022",
 		"target": "ES2022",
-		"moduleResolution": "node",
-		"strict": true,
+		"moduleResolution": "nodenext",
+		// "strict": true,
 		"rootDir": "src",
 		"outDir": "lib",
 		"declaration": true,

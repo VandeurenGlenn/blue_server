@@ -2,6 +2,14 @@
 	"name": "@blueserver/server",
 	"description": "blue server: API server",
 	"type": "module",
+	"exports": {
+		"./top": {
+			"import": "./lib/top.js"
+		},
+		"./coinmarketcap": {
+			"import": "./lib/coinmarketcap.js"
+		}
+	},
 	"scripts": {
 		"build": "wireit",
 		"serve": "wireit"

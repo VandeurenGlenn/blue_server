@@ -33,13 +33,13 @@ export class GitHub {
 		return response.json() as Promise<GithubProjectResponse[]>;
 	};
 
-	static getOrganisationRepositories = async (
+	static async getOrganisationRepositories(
 		name: string
-	): Promise<GithubProjectResponse[]> => {
+	): Promise<GithubProjectResponse[]> {
 		const response = await fetch(`https://api.github.com/orgs/${name}/repos`, {
 			headers: githubHeaders,
 		});
 		if (response.status === 404) return [];
 		return response.json() as Promise<GithubProjectResponse[]>;
-	};
+	}
 }

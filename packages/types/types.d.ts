@@ -1,16 +1,61 @@
 export type BlueCache = {
-	currencies: CMCCurrency[];
+	bluelist: any[];
 };
-export type CMCCurrency = {
+
+/**
+ * Type of objects returned by CMC listings endpoint.
+ */
+export type CMCListing = {
 	id: string;
 	name: string;
+	symbol: string;
+	slug: string;
+	num_market_pairs: number;
+	date_added: string;
+	tags: string[];
+	max_supply: number;
+	circulating_supply: number;
+	total_supply: number;
+	// type to define
+	platform: any[];
+	infinite_supply: boolean;
+	cmc_rank: number;
+	self_reported_circulating_supply: number | null;
+	self_reported_market_cap: number | null;
+	tvl_ratio: number | null;
+	last_updated: string;
+	// type to define
+	quote: any[];
+};
+
+/**
+ * Type of objects returned by CMC Currency information endpoint.
+ */
+export type CMCAsset = {
+	id: string;
+	name: string;
+	symbol: string;
+	category: string;
+	description: string;
 	slug: string;
 	logo: string;
-	symbol: string;
-	price: number;
-	description: string;
-	sourceCode: string;
-	github: GithubProject;
+	subreddit: string;
+	notice: string;
+	tags: string[] | null;
+	urls: {[type: string]: string[]};
+	date_added: string;
+	twitter_username: string | null;
+	is_hidden: 0 | 1;
+	date_launched: string;
+	// type to define
+	contract_address: any[];
+	self_reported_circulating_supply: number | null;
+	self_reported_tags: string[];
+	self_reported_market_cap: number | null;
+	infinite_supply: boolean;
+	// price: number;
+	// sourceCode: string;
+	// github: GithubProject;
 };
 
 export declare type GithubProjectResponse = {
@@ -133,11 +178,14 @@ export type GithubActivity = {
 	total: number;
 };
 
-export declare type GithubProject = {
+export declare type GithubIndicator = {
 	activity: GithubActivity;
 	repos: string[];
 	contributers: string[];
 };
+
+export type BlueIndicator = CMCAsset & {sourceCode: string, github: GithubIndicator};
+
 export interface DotEnvKeys {
 	coinmarketcap: string;
 	github: string;
