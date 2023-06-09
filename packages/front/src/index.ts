@@ -1,48 +1,47 @@
-import {LitElement, html} from 'lit';
+import {LitElement, css, html} from 'lit';
 import {state} from 'lit/decorators.js';
-import {customElement} from 'define-custom-element-decorator';
+import {customElement} from 'custom-element-decorator';
 import '@material/web/list/list.js';
 import '@material/web/list/list-item.js';
 import '@material/web/divider/divider.js';
-import {fetchInformation} from './util.js';
-import {loadTailwindBaseStyles, withTailwind} from 'vite-lit-with-tailwind';
-import styles from './styles.css?inline';
+import {getBlueList, getCmcLogoSrcUrl} from './util.js';
+import {loadTailwindBaseStyles} from 'vite-lit-with-tailwind';
 import {updateEvery} from './globals.js';
-import t from 'toastit';
-import {placeFireImg, placeSnailImg} from './assets.js';
+import type {BlueIndicator} from '@blueserver/types';
+import {withStyles} from 'lit-with-styles';
+import appStyles from './styles.css?inline';
 
 await loadTailwindBaseStyles('[hidden] { display: none }');
 
-export interface Indicator {
-	name: 'github' | 'twitter';
-	information: any;
-}
-export interface Asset {
-	name: string;
-	indicator: Indicator;
-}
-
-@withTailwind(styles)
 @customElement({inject: true})
+@withStyles([
+	appStyles,
+	css`
+		md-list {
+			display: block;
+			margin: 24px;
+		}
+	`,
+])
 class AppShell extends LitElement {
-	@state() assets: Asset[] = [];
+	@state() assets: BlueIndicator[] = [];
 
 	render() {
 		return html`
-			<header style="font-weight:100;"><i>[bluecode]</header>
+			<header style="font-weight:100;">${'<blueserver>'}</header>
 			<md-list>
 				${this.assets.map((asset, i) => {
-console.log(
-this.assets.length, i
-)
 					return html`
-						<md-list-item
-							headline=${asset.name}
-							supportingText="updated ${asset.indicator.information}"
-						>
-							<div slot="end">${asset.indicator.icon == 'fire' ? placeFireImg() : placeSnailImg()}</div>
+						<md-list-item headline=${asset.name!} @click=${() => {}}>
+							<div slot="start">
+								<img src="${getCmcLogoSrcUrl(asset.id!)}" width="24" />
+							</div>
+							<div slot="end">${asset.github.activity.total}</div>
 						</md-list-item>
-						<md-divider ?hidden=${i + 1 == this.assets.length}></md-divider>
+						<md-divider
+							?hidden=${i + 1 == this.assets.length}
+							inset
+						></md-divider>
 					`;
 				})}
 			</md-list>
@@ -50,19 +49,20 @@ this.assets.length, i
 	}
 
 	async _fetchInfo() {
-		const info = await fetchInformation();
-		const assets: Asset[] = [];
-		for (const asset of Object.keys(info)) {
-			assets.push({
-				name: asset,
-				indicator: {
-					name: 'github',
-					information: info[asset]['github'],
-					icon: info[asset]['icon']
-				},
-			});
-		}
-		this.assets = assets;
+		this.assets = await getBlueList();
+		const assets: BlueIndicator[] = [];
+		return;
+		// for (const asset of Object.keys(info)) {
+		// 	assets.push({
+		// 		name: asset,
+		// 		indicator: {
+		// 			name: 'github',
+		// 			information: info[asset]['github'],
+		// 			icon: info[asset]['icon'],
+		// 		},
+		// 	});
+		// }
+		// this.assets = assets;
 	}
 
 	protected firstUpdated() {

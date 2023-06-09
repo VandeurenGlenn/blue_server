@@ -32,7 +32,7 @@ export type CMCListing = {
  * Type of objects returned by CMC Currency information endpoint.
  */
 export type CMCAsset = {
-	id: string;
+	id: number;
 	name: string;
 	symbol: string;
 	category: string;
