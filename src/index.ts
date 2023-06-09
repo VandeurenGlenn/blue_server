@@ -1,73 +1,57 @@
-import dotenv from 'dotenv';
-import Koa from 'koa';
-import cors from 'koa-cors';
-import Router from 'koa-router';
-import pathlib from 'path';
-import {writeFile, readFile} from 'fs/promises';
-import type {BlueCache, CMCCurrency, DotEnvKeys} from './types.js';
-import {CronJob} from 'cron';
-import {fileURLToPath} from 'url';
-import fetch from 'node-fetch';
-const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
+import dotenv from 'dotenv'
+import Koa from 'koa'
+import cors from 'koa-cors'
+import Router from 'koa-router'
+import { blueCache, githubRepoResponse, githubReposResponse, top100Return } from './types.js'
+import { CronJob } from 'cron'
+import fetch from 'node-fetch'
 
-const envs = dotenv.config({
-	path: pathlib.join(__dirname, '..', '.env.vault'),
-}).parsed as DotEnvKeys | undefined;
-if (envs === undefined) {
-	console.log('env vars not found');
-	process.exit(1);
+const env = dotenv.config().parsed
+const router = new Router()
+// 7 days in ms
+const sevenDaysAgo = 604_800_000
+
+const cache: blueCache = {
+  currencies: []
 }
-const router = new Router();
-const oneHour = 3600_000;
-const jobs = [];
-
 let lastUpdated: EpochTimeStamp;
 
-// :P
-function shouldUpdate() {
-	return lastUpdated + oneHour <= new Date().getTime();
+const fetchGithub = (url) => {
+  const headers = new Headers();
+  headers.append("Authorization", `Bearer ${env.github}`);
+  headers.append("X-GitHub-Api-Version", `2022-11-28`)
+  return fetch(url, { headers })
 }
-
-const fetchGithub = async (url: string) => {
-	const headers = new Headers();
-	headers.append('Accept', 'application/vnd.github+json');
-	headers.append('Authorization', `Bearer ${envs.github}`);
-	headers.append('X-GitHub-Api-Version', `2022-11-28`);
-	// TODO: check if GH has typescript types so we can easily understand returned data.
-	return await fetch(url, {headers});
-};
 
 const fetchCoinmarketcap = async (url: string) => {
 	const headers = new Headers();
-	headers.append('X-CMC_PRO_API_KEY', envs.coinmarketcap);
+	headers.append('X-CMC_PRO_API_KEY', env.coinmarketcap);
 	return await fetch(url, {headers});
 };
 
-const getCodeFrequency = () => {
-	return fetchGithub(
-		`https://github.com/repos/{owner}/{repo}/stats/code_frequency`
-	);
-};
+const getCodeFrequency = async (owner, name) => {
+  const response = await fetchGithub(`https://api.github.com/repos/${owner}/${name}/stats/code_frequency`)
+  if (response.status === 404) return []
+  
+  const result: [number, number, number][] = await response.json()
+  if (result.length > 0) {
+    const [aggregate, additions, deletions] = result[0]
+    return { aggregate, additions, deletions }
+  }
+  return {}
+}
 
-const getRepos = async (name: string): Promise<string[]> => {
-	const response = await fetchGithub(
-		`https://api.github.com/users/${name}/repos`
-	);
-	if (response.status === 404) return [];
-	return (await response.json()) as string[];
-};
+const getRepos = async (name): Promise<githubReposResponse> => {
+  const response = await fetchGithub(`https://api.github.com/users/${name}/repos`)
+  if (response.status === 404) return []
+  return response.json()
+}
 
-const getOrgRepos = async (name: string) => {
-	// console.log(name);
-
-	const response = await fetchGithub(
-		`https://api.github.com/orgs/${name}/repos`
-	);
-	// console.log(response.status);
-
-	if (response.status === 404) return [];
-	return (await response.json()) as [];
-};
+const getOrgRepos = async (name): Promise<githubReposResponse> => {
+  const response = await fetchGithub(`https://api.github.com/orgs/${name}/repos`)
+  if (response.status === 404) return []
+  return response.json()
+}
 
 const getCurrencyInfo = async (ids: string[] | string) => {
 	if (!Array.isArray(ids)) ids = [ids];
@@ -81,14 +65,14 @@ const getCurrencyInfo = async (ids: string[] | string) => {
 	return (await response.json()).data;
 };
 
-const getTop100 = async (): Promise<CMCCurrency[]> => {
-	let currencies: CMCCurrency[];
+const getTop100 = async (): Promise<top100Return[]> => {
+	let currencies: top100Return[];
 	const response = await fetchCoinmarketcap(
 		'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?limit=100'
 	);
 
-	currencies = ((await response.json()) as unknown as {data: CMCCurrency[]})
-		.data as CMCCurrency[];
+	currencies = ((await response.json()) as unknown as {data: top100Return[]})
+		.data as top100Return[];
 
 	const slugs = [];
 	const ids = [];
@@ -100,7 +84,7 @@ const getTop100 = async (): Promise<CMCCurrency[]> => {
 	}
 
 	const metadata = await getCurrencyInfo(ids);
-	const list: CMCCurrency[] = [];
+	const list: top100Return[] = [];
 	for (let i = 1; i <= currencies.length; i++) {
 		const id = currencies[i - 1].id;
 		const sourceCode = metadata[id].urls.source_code?.[0];
@@ -127,78 +111,48 @@ const getTop100 = async (): Promise<CMCCurrency[]> => {
 			if (item.sourceCode) {
 				let url;
 
-				const urlParts = item.sourceCode.replace('https://', '').split('/');
+      const urlParts = item.sourceCode.replace('https://', '').split('/')
+      let repos: githubReposResponse
+      repos = await getOrgRepos(urlParts[1])
+      if (repos.length === 0) repos = await getRepos(urlParts[1])
+      if (repos.length > 0) item.github.repos = repos
 
-				// check if a link is a profile
-				// note: a profile could also be an organization
-				const isProfile = urlParts.length === 2;
-
-				if (isProfile) {
-					let repos;
-					repos = await getOrgRepos(urlParts[1]);
-					console.log(repos);
-					if (repos.length === 0) repos = await getRepos(urlParts[1]);
-					console.log(repos);
-				} else {
-					// If we trully want to have all dev activity for a project we atleast need to start with looping trough all the repos
-					let repos: string[];
-					repos = await getOrgRepos(urlParts[1]);
-					if (repos?.length === 0) {
-						repos = await getRepos(urlParts[1]);
-					}
-					item.github.repos = repos;
-				}
-
-				for (const repo of item.github.repos) {
-					// TODO: what the heck
-					console.log(repo);
-				}
-			}
-			return item;
-		})
-	);
-};
-
-/* main */
-
-const dataFilename = 'data.json';
-const cache: BlueCache = {
-	currencies: [],
-};
-
-/**
- * Convenient function to load data (local or remote).
- * It saves data locally when fetched remotely.
- */
-async function loadCurrencies({local = false} = {}) {
-	if (local) {
-		// Get data from local
-		try {
-			cache.currencies = JSON.parse(
-				(await readFile(pathlib.join(__dirname, '..', dataFilename))) + ''
-			);
-		} catch (_) {
-			cache.currencies = [];
-		}
-	} else {
-		// Get data from remote
-		cache.currencies = await getTop100();
-		writeFile(
-			pathlib.join(__dirname, '..', dataFilename),
-			JSON.stringify(cache.currencies)
-		);
-	}
+      let promises = []
+     
+      for (const repo of repos) {
+        // repo had activity within 7 days, so we try to get it's stats
+        if (new Date(repo.pushed_at).getTime() >= new Date().getTime() - sevenDaysAgo) {
+          const [owner, name] = repo.full_name.split('/')
+          console.log(owner, name);
+          
+          promises.push(getCodeFrequency(owner, name))
+        } else {
+          // there was no activity, remove the repo to keep data to front minimal
+          item.github.repos.splice(repos.indexOf(repo))
+        }
+        
+      }
+      promises = await Promise.all(promises)
+      item.github.activity = promises.reduce((previous, current) => {
+        previous.additions += current.additions
+        previous.deletions += current.deletions
+        previous.total += current.deletions + (current.additions)
+        return previous
+      }, { additions: 0, deletions: 0, total: 0 })
+    }
+    return item
+  }))
 }
-loadCurrencies({local: true});
+getTop100();
 
 router.get('/top-100', async (ctx) => (ctx.body = cache.currencies));
 
 // runs every minute
-new CronJob('* * * * *', loadCurrencies);
+new CronJob('* * * * *', getTop100);
 
 const server = new Koa();
 
 server.use(cors({origin: '*'}));
 server.use(router.routes()).use(router.allowedMethods());
 
-server.listen(envs.port);
+server.listen(env.port);
