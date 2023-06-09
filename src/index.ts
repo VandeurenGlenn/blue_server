@@ -109,38 +109,34 @@ const getTop100 = async (): Promise<top100Return[]> => {
 		list.map(async (item) => {
 			// todo: should we filter out those who don't have sourceCode?
 			if (item.sourceCode) {
-				let url;
+				const urlParts = item.sourceCode.replace('https://', '').split('/')
+				let repos: githubReposResponse
+				repos = await getOrgRepos(urlParts[1])
+				if (repos.length === 0) repos = await getRepos(urlParts[1])
+				// @ts-ignore
+				if (repos.length > 0) item.github.repos = repos 
 
-      const urlParts = item.sourceCode.replace('https://', '').split('/')
-      let repos: githubReposResponse
-      repos = await getOrgRepos(urlParts[1])
-      if (repos.length === 0) repos = await getRepos(urlParts[1])
-      // @ts-ignore
-      if (repos.length > 0) item.github.repos = repos 
-
-      let promises = []
-     
-      for (const repo of repos) {
-        // repo had activity within 7 days, so we try to get it's stats
-        if (new Date(repo.pushed_at).getTime() >= new Date().getTime() - sevenDaysAgo) {
-          const [owner, name] = repo.full_name.split('/')
-          console.log(owner, name);
-          
-          promises.push(getCodeFrequency(owner, name))
-        } else {
-          // there was no activity, remove the repo to keep data to front minimal
-          item.github.repos.splice(repos.indexOf(repo))
-        }
-        
-      }
-      promises = await Promise.all(promises)
-      item.github.activity = promises.reduce((previous, current) => {
-        previous.additions += current.additions
-        previous.deletions += current.deletions
-        previous.total += current.deletions + (current.additions)
-        return previous
-      }, { additions: 0, deletions: 0, total: 0 })
-    }
+				let promises = []
+			
+				for (const repo of repos) {
+					// repo had activity within 7 days, so we try to get it's stats
+					if (new Date(repo.pushed_at).getTime() + sevenDaysAgo >= new Date().getTime()) {
+						const [owner, name] = repo.full_name.split('/')
+						promises.push(getCodeFrequency(owner, name))
+					} else {
+						// there was no activity, remove the repo to keep data to front minimal
+						item.github.repos.splice(repos.indexOf(repo))
+					}
+					
+				}
+				promises = await Promise.all(promises)
+				item.github.activity = promises.reduce((previous, current) => {
+					previous.additions += current.additions
+					previous.deletions += current.deletions
+					previous.total +=  current.additions + (current.deletions)
+					return previous
+				}, { additions: 0, deletions: 0, total: 0 })
+			}
     return item
   }))
 }
@@ -153,7 +149,7 @@ await updateCache()
 // runs every minute
 new CronJob('* * * * *', updateCache);
 
-router.get('/top-100', async (ctx) => (ctx.body = JSON.stringify(cache.currencies, null, '\t')))
+router.get('/top-100', async (ctx) => (ctx.body = JSON.stringify(cache.currencies)))
 
 const server = new Koa();
 
