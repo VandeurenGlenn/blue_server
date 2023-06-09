@@ -12,6 +12,7 @@ export type CMCCurrency = {
     sourceCode: string;
     github: GithubProject;
 };
+
 export declare type GithubProjectResponse = {
     id: number;
     node_id: string;
