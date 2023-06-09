@@ -7,7 +7,7 @@ import '@material/web/divider/divider.js';
 import {getBlueList, getCmcLogoSrcUrl} from './util.js';
 import {loadTailwindBaseStyles} from 'vite-lit-with-tailwind';
 import {updateEvery} from './globals.js';
-import type {BlueIndicator} from '@blueserver/types';
+import type {BlueAsset} from '@blueserver/types';
 import {withStyles} from 'lit-with-styles';
 import appStyles from './styles.css?inline';
 
@@ -24,7 +24,7 @@ await loadTailwindBaseStyles('[hidden] { display: none }');
 	`,
 ])
 class AppShell extends LitElement {
-	@state() assets: BlueIndicator[] = [];
+	@state() assets: BlueAsset[] = [];
 
 	render() {
 		return html`
@@ -55,20 +55,6 @@ class AppShell extends LitElement {
 
 	async _fetchInfo() {
 		this.assets = await getBlueList();
-		console.log(this.assets);
-		const assets: BlueIndicator[] = [];
-		return;
-		// for (const asset of Object.keys(info)) {
-		// 	assets.push({
-		// 		name: asset,
-		// 		indicator: {
-		// 			name: 'github',
-		// 			information: info[asset]['github'],
-		// 			icon: info[asset]['icon'],
-		// 		},
-		// 	});
-		// }
-		// this.assets = assets;
 	}
 
 	protected firstUpdated() {

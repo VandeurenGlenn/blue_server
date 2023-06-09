@@ -1,15 +1,15 @@
-import { ENDPOINT } from "./constants.js";
+import {BlueAsset} from '@blueserver/types';
+import {ENDPOINT} from './constants.js';
 
-export async function getBlueList() {
+export async function getBlueList(): Promise<BlueAsset[]> {
 	try {
-		const r = await fetch(ENDPOINT)
-		return await r.json()
-	}
-	catch (e) {
+		const r = await fetch(ENDPOINT);
+		return await r.json();
+	} catch (e) {
 		throw e;
 	}
 }
 
-export function getCmcLogoSrcUrl (assetId: number) {
-	return `https://s2.coinmarketcap.com/static/img/coins/64x64/${assetId}.png`
+export function getCmcLogoSrcUrl(assetId: number) {
+	return `https://s2.coinmarketcap.com/static/img/coins/64x64/${assetId}.png`;
 }

@@ -1,4 +1,4 @@
-import {CMCAsset as CMCAsset, CMCListing} from '@blueserver/types';
+import {CMCAsset, CMCListing} from '@blueserver/types';
 import {env} from './envs.js';
 
 const headers = new Headers();

@@ -172,21 +172,27 @@ export declare type GithubProjectResponse = {
 	};
 };
 
+
 export type GithubActivity = {
 	additions: number;
 	deletions: number;
 	total: number;
 };
 
-export declare type GithubIndicator = {
+export declare type GithubProject = {
 	activity: GithubActivity;
 	repos: string[];
 	contributers: string[];
 };
 
-export type BlueIndicator = Partial<CMCAsset> & {
+// TODO
+export type buildGithubIndicator = {
+
+}
+
+export type BlueAsset = Partial<CMCAsset> & {
 	sourceCode: string;
-	github: GithubIndicator;
+	github: GithubProject;
 };
 
 export interface DotEnvKeys {

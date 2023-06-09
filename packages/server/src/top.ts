@@ -1,5 +1,5 @@
 import {
-	BlueIndicator,
+	BlueAsset,
 	CMCListing,
 	GithubProjectResponse,
 } from '@blueserver/types';
@@ -19,7 +19,7 @@ export async function getTopListings(top = 100) {
 /**
  *
  * @param top the number of projects in the top to fetch
- * @returns {BlueIndicator[]} list of blue indicators (for the front end)
+ * @returns {BlueAsset[]} list of blue indicators (for the front end)
  */
 export async function getTopBlueList(top = 100) {
 	const listings: CMCListing[] = await CoinMarketCap.getTopListings(top);
@@ -28,11 +28,11 @@ export async function getTopBlueList(top = 100) {
 		listings.map((l) => l.id)
 	);
 
-	const assets: BlueIndicator[] = [];
+	const assets: BlueAsset[] = [];
 	for (let i = 1; i <= listings.length; i++) {
 		const id = listings[i - 1].id;
 		const sourceCode = listingsInfo[id].urls.source_code?.[0];
-		assets[i - 1] = <BlueIndicator>{
+		assets[i - 1] = <BlueAsset>{
 			id: listingsInfo[id].id,
 			name: listingsInfo[id].name,
 			slug: listingsInfo[id].slug,
