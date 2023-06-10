@@ -7,7 +7,7 @@
       "import": "./lib/api/api.js",
       "types": "./lib/api/api.d.ts"
     },
-     "./cache": {
+    "./cache": {
       "types": "./lib/cache.d.ts",
       "import": "./lib/cache.js"
     },
@@ -56,7 +56,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "socket-request-client": "^1.7.5",
+    "socket-request-client": "^2.0.0",
     "socket-request-server": "^1.6.6"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@ import { ServerApi } from './api/api.js'
 import { writeFile, readFile } from 'fs/promises';
 
 // const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
-import {env} from '@blueserver/server/envs'
+import {env} from '@blueserver/env'
 import {LIST_SIZE, LOCAL_DATA_FILENAME} from '@blueserver/server/constants'
 import { BlueCache } from '@blueserver/types';
 
