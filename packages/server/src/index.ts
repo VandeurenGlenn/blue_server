@@ -1,7 +1,7 @@
 import {env} from './envs.js';
 import {CronJob} from 'cron';
 import HttpApiServer from '@blueserver/api/servers/http'
-import {cache, updateCacheWithRemote, init as initCache} from '@blueserver/cache';
+import {cache, updateCacheWithRemote, init as initCache} from './cache.js';
 
 async function loadData() {
 	try {

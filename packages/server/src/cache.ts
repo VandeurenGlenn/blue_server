@@ -6,12 +6,13 @@ import Api from '@blueserver/api'
 import { writeFile, readFile } from 'fs/promises';
 
 // const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
-import {env} from '@blueserver/server/envs'
-import {LIST_SIZE, LOCAL_DATA_FILENAME} from '@blueserver/server/constants'
+import {env} from './envs.js'
+import {LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
+import { BlueCache } from '@blueserver/types';
 
 const api = new Api(env)
 
-export const cache = {
+export const cache: BlueCache = {
 	bluelist: [],
 	github: {
 		repos: {

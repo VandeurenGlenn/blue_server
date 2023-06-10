@@ -61,7 +61,9 @@ export default class ServerApi {
           // TODO(@VandeurenGlenn): isn't that super risky, too much data
           // @Vdegenne yeah, not ideal, just there till we only return what we really need, then all the rest can go out
           // @ts-ignore
-          if (repos.length > 0) blueAsset.github.repos = repos;
+          if (repos.length > 0) blueAsset.github.repos = repos.map(repo => {
+            
+          });
 
           let promises = [];
           

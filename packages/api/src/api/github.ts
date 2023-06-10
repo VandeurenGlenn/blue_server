@@ -1,5 +1,5 @@
 import {GithubActivity, GithubProjectResponse} from '@blueserver/types';
-import {cache} from '@blueserver/cache'
+import {cache} from '@blueserver/server/cache'
 
 export class GitHub {
 	#headers = new Headers()
@@ -41,6 +41,8 @@ export class GitHub {
 		const headers = this.#headers
 		// @ts-ignore
 		headers.append('If-None-Match', cache.github.repos.tags[name])
+		// @ts-ignore
+		if (cache.github.repos.tags[name].type === 'Organization') type = 'orgs'
 		const response = await fetch(`https://api.github.com/${type}/${name}/repos`, 
 			{ headers }
 		)
