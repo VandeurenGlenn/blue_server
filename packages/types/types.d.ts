@@ -1,5 +1,5 @@
 export type BlueCache = {
-	bluelist: any[];
+	bluelist: BlueAsset[];
 };
 
 /**
