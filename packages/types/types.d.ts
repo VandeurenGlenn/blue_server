@@ -1,5 +1,11 @@
 export type BlueCache = {
 	bluelist: BlueAsset[];
+	github: {
+		repos: {
+			cached: {},
+			tags: {}
+		}
+	}
 };
 
 /**

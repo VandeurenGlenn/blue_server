@@ -8,7 +8,13 @@ import {fileURLToPath} from 'url';
 const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
 export const cache: BlueCache = {
-	bluelist: []
+	bluelist: [],
+	github: {
+		repos: {
+			cached: {},
+			tags: {}
+		}
+	}
 };
 
 export async function updateCacheWithRemote() {

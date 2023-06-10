@@ -1,5 +1,6 @@
 import {GithubActivity, GithubProjectResponse} from '@blueserver/types';
 import {env} from './envs.js';
+import { cache } from './cache.js';
 
 const githubHeaders = new Headers();
 githubHeaders.append('Authorization', `Bearer ${env.github}`);
@@ -26,20 +27,42 @@ export class GitHub {
 	static getUserRepositories = async (
 		name: string
 	): Promise<GithubProjectResponse[]> => {
+		// @ts-ignore
+		githubHeaders.append('If-None-Match', cache.github.repos.tags[name])
+
 		const response = await fetch(`https://api.github.com/users/${name}/repos`, {
 			headers: githubHeaders,
 		});
+		// @ts-ignore
+		if (response.status === 304) return cache.github.repos.cached[name]
+		// @ts-ignore
+		cache.github.repos.tags[name] = response.headers.get('ETag')
+
 		if (response.status === 404) return [];
-		return response.json() as Promise<GithubProjectResponse[]>;
+		// @ts-ignore
+		cache.github.repos.cached[name] = await response.json()
+		// @ts-ignore
+		return cache.github.repos.cached[name]
 	};
 
-	static async getOrganisationRepositories(
+	static getOrganisationRepositories = async (
 		name: string
-	): Promise<GithubProjectResponse[]> {
+	): Promise<GithubProjectResponse[]> => {
+		// @ts-ignore
+		githubHeaders.append('If-None-Match', cache.github.repos.tags[name])
 		const response = await fetch(`https://api.github.com/orgs/${name}/repos`, {
 			headers: githubHeaders,
 		});
+		// @ts-ignore
+		if (response.status === 304) return cache.github.repos.cached[name]
+		// @ts-ignore
+		cache.github.repos.tags[name] = response.headers.get('ETag')
+
 		if (response.status === 404) return [];
-		return response.json() as Promise<GithubProjectResponse[]>;
-	}
+		// @ts-ignore
+		cache.github.repos.cached[name] = await response.json();
+		// @ts-ignore
+		return cache.github.repos.cached[name]
+	
+	};
 }
