@@ -5,7 +5,7 @@
 		"moduleResolution": "nodenext",
 		"strict": true,
 		"rootDir": "src",
-		"outDir": "exports",
+		"outDir": "lib",
 		"declaration": true,
 		"sourceMap": true,
 		"allowSyntheticDefaultImports": true,

@@ -4,24 +4,24 @@
   "type": "module",
   "exports": {
     "./clients/http": {
-      "types": "./exports/client/http/index.d.ts",
-      "import": "./exports/client/http/index.js"
+      "types": "./lib/client/http/index.d.ts",
+      "import": "./lib/client/http/index.js"
     },
     "./clients/ws": {
-      "types": "./exports/client/ws/index.d.ts",
-      "import": "./exports/client/ws/index.js"
+      "types": "./lib/client/ws/index.d.ts",
+      "import": "./lib/client/ws/index.js"
     },
     "./servers/http": {
-      "import": "./exports/server/http/index.js",
-      "types": "./exports/server/http/index.d.ts"
+      "import": "./lib/server/http/index.js",
+      "types": "./lib/server/http/index.d.ts"
     },
     "./servers/ws": {
-      "import": "./exports/server/ws.js",
-      "types": "./exports/server/ws.d.ts"
+      "import": "./lib/server/ws.js",
+      "types": "./lib/server/ws.d.ts"
     },
     ".": {
-      "import": "./exports/api/api.js",
-      "types": "./exports/api/api.d.ts"
+      "import": "./lib/api/api.js",
+      "types": "./lib/api/api.d.ts"
     }
   },
   "scripts": {
@@ -37,7 +37,7 @@
         "src"
       ],
       "output": [
-        "exports"
+        "lib"
       ]
     }
   },
