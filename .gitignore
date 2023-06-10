@@ -7,3 +7,4 @@ lib
 .wireit
 packages/server/data.json
 packages/front/src/top100.json
+packages/api/exports
