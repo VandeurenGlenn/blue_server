@@ -6,10 +6,6 @@
 		"./constants": {
 			"types": "./lib/constants.d.ts",
 			"import": "./lib/constants.js"
-		},
-		"./envs": {
-			"types": "./lib/envs.d.ts",
-			"import": "./lib/envs.js"
 		}
 	},
 	"scripts": {
