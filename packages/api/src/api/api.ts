@@ -101,9 +101,12 @@ export class ServerApi {
           promises = await Promise.all(promises);
           blueAsset.github.activity = promises.reduce(
             (previous, current) => {
-              previous.additions += current.additions;
-              previous.deletions += current.deletions;
-              previous.total += current.additions + current.deletions;
+              if (current) {
+                previous.additions += current.additions;
+                previous.deletions += current.deletions;
+                previous.total += current.additions + current.deletions;
+              }
+              
               return previous;
             },
             {additions: 0, deletions: 0, total: 0}

@@ -2,12 +2,15 @@
 	"name": "@blueserver/env",
 	"version": "1.0.0",
 	"type": "module",
+	"module": "./lib/index.js",
+	"main": "./lib/index.js",
 	"scripts": {
 		"#todo": "lets wireit this command below",
 		"build": "tsc --pretty"
 	},
 	"exports": {
 		".": {
+			"default": "./lib/index.js",
 			"import": "./lib/index.js",
 			"types": "./lib/index.d.ts"
 		}
