@@ -1,8 +1,4 @@
-import {
-	BlueAsset,
-	CMCListing,
-	GithubProjectResponse,
-} from '@blueserver/types';
+import {BlueAsset, CMCListing, GithubProjectResponse} from '@blueserver/types';
 import {CoinMarketCap} from './coinmarketcap.js';
 import {GitHub} from './github.js';
 import {SEVEN_DAYS_AGO} from './constants.js';
@@ -10,44 +6,30 @@ import {SEVEN_DAYS_AGO} from './constants.js';
 /**
  *
  * @param top the number of projects in the top to fetch
- * @returns {CMCListing[]} list of indicators for
- */
-export async function getTopListings(top = 100) {
-	return await CoinMarketCap.getTopListings(top);
-}
-
-/**
- *
- * @param top the number of projects in the top to fetch
  * @returns {BlueAsset[]} list of blue indicators (for the front end)
  */
-export async function getTopBlueList(top = 100) {
+export async function getTopBlueList(top = 100): Promise<BlueAsset[]> {
 	const listings: CMCListing[] = await CoinMarketCap.getTopListings(top);
 
 	const listingsInfo = await CoinMarketCap.getListingInfo(
 		listings.map((l) => l.id)
 	);
 
-	const assets: BlueAsset[] = [];
-	for (let i = 1; i <= listings.length; i++) {
-		const id = listings[i - 1].id;
-		const sourceCode = listingsInfo[id].urls.source_code?.[0];
-		assets[i - 1] = <BlueAsset>{
-			id: listingsInfo[id].id,
-			name: listingsInfo[id].name,
-			slug: listingsInfo[id].slug,
-			logo: listingsInfo[id].logo,
-			symbol: listingsInfo[id].symbol,
-			// price: currencies[i - 1].price, // this one doesn't exist
-			description: listingsInfo[id].description,
-			sourceCode,
+	const assets: BlueAsset[] = Object.values(listingsInfo).map((asset) => {
+		return {
+			id: asset.id,
+			sourceCode: asset.urls.source_code?.[0],
 			github: {
 				activity: {deletions: 0, additions: 0, total: 0},
 				repos: [],
 				contributers: [],
 			},
-		};
-	}
+			indicators: {
+				github: null,
+			},
+		} as BlueAsset;
+	});
+
 
 	return Promise.all(
 		assets.map(async (asset) => {
@@ -92,4 +74,13 @@ export async function getTopBlueList(top = 100) {
 			return asset;
 		})
 	);
+}
+
+/**
+ *
+ * @param top the number of projects in the top to fetch
+ * @returns {CMCListing[]} list of indicators for
+ */
+export async function getTopListings(top = 100) {
+	return await CoinMarketCap.getTopListings(top);
 }
