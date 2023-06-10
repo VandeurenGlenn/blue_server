@@ -26,6 +26,14 @@
     "./server/ws": {
       "import": "./lib/server/ws.js",
       "types": "./lib/server/ws.d.ts"
+    },
+    "./server/github": {
+      "import": "./lib/api/github.js",
+      "types": "./lib/api/github.d.ts"
+    },
+    "./server/coinmarketcap": {
+      "import": "./lib/api/coinmarketcap.js",
+      "types": "./lib/api/coinmarketcap.d.ts"
     }
   },
   "scripts": {
