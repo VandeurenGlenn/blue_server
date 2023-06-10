@@ -3,11 +3,13 @@
 	"description": "blue server: API server",
 	"type": "module",
 	"exports": {
-		"./top": {
-			"import": "./lib/top.js"
+		"./constants": {
+			"types": "./lib/constants.d.ts",
+			"import": "./lib/constants.js"
 		},
-		"./coinmarketcap": {
-			"import": "./lib/coinmarketcap.js"
+		"./envs": {
+			"types": "./lib/envs.d.ts",
+			"import": "./lib/envs.js"
 		}
 	},
 	"scripts": {

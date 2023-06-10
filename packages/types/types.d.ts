@@ -4,6 +4,10 @@ export type BlueCache = {
 		repos: {
 			cached: {},
 			tags: {}
+		}, 
+		stats: {
+			cached: {},
+			tags: {}
 		}
 	}
 };
