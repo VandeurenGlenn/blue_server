@@ -3,6 +3,9 @@ import {writeFile} from 'fs/promises';
 import pathlib from 'path';
 import {getTopBlueList} from './top.js';
 import {LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js';
+import {fileURLToPath} from 'url';
+
+const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 
 export const cache: BlueCache = {
 	bluelist: []
