@@ -1,9 +1,11 @@
-import {getTopListings} from '@blueserver/server/top';
-import {CoinMarketCap} from '@blueserver/server/coinmarketcap';
-import fs from 'fs/promises';
+// import {ServerApi} from '@blueserver/api';
+import {env} from '@blueserver/env';
+import {CoinMarketCap} from '@blueserver/api/coinmarketcap';
 
-const listings = await getTopListings(100);
-const assets = await CoinMarketCap.getListingInfo(listings.map((l) => l.id));
+const cmc = new CoinMarketCap(env.coinmarketcap);
+
+const listings = await cmc.getLatestListings(100);
+const assets = await cmc.getListingInfo(listings.map((l) => l.id));
 fs.writeFile(
 	'src/top100.json',
 	JSON.stringify(

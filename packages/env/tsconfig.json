@@ -5,6 +5,7 @@
 		"moduleResolution": "nodenext",
 		"rootDir": "src",
 		"outDir": "lib",
+		"declaration": true,
 		"allowSyntheticDefaultImports": true
 	}
 }

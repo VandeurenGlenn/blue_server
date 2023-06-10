@@ -39,6 +39,8 @@
 		}
 	},
 	"devDependencies": {
+		"@blueserver/api": "*",
+		"@blueserver/env": "^1.0.0",
 		"@blueserver/server": "*",
 		"@blueserver/types": "^1.0.0",
 		"@material/web": "^1.0.0-pre.9",
