@@ -1,6 +1,7 @@
 import {GithubActivity, GithubProjectResponse} from '@blueserver/types';
 import {env} from './envs.js';
 import { cache } from './cache.js';
+import fetch from 'node-fetch'
 
 const githubHeaders = new Headers();
 githubHeaders.append('Authorization', `Bearer ${env.github}`);
