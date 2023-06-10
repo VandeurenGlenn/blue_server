@@ -1,6 +1,6 @@
 // import pathlib from 'path';
 // import {getTopBlueList} from '@blueserver/api';
-import Api from '@blueserver/api'
+import { ServerApi } from '@blueserver/api'
 // import {LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js';
 // import {fileURLToPath} from 'url';
 import { writeFile, readFile } from 'fs/promises';
@@ -10,7 +10,7 @@ import {env} from './envs.js'
 import {LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
 import { BlueCache } from '@blueserver/types';
 
-const api = new Api(env)
+const api = new ServerApi(env)
 
 export const cache: BlueCache = {
 	bluelist: [],
