@@ -3,7 +3,7 @@ import SocketRequestClient from 'socket-request-client'
 import { BlueAsset } from '@blueserver/types';
 
 
-export default class WSApiClient {
+export class WSApiClient {
   // @ts-ignore
   #client;
 

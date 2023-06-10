@@ -1,7 +1,7 @@
 import { BlueAsset } from '@blueserver/types'
 import fetch from 'node-fetch'
 
-export default class HttpApiClient {
+export class HttpApiClient {
   async #fetch(endpoint: string) {
     const response = await fetch(`https://blue.leofcoin.org/${endpoint}`)
     return response.json()

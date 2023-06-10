@@ -5,7 +5,7 @@ import {GitHub} from './github.js';
 
 import {SEVEN_DAYS_AGO} from '@blueserver/server/constants';
 
-export default class ServerApi {
+export class ServerApi {
   coinMarketCap: CoinMarketCap;
   gitHub: GitHub;
 
@@ -62,7 +62,7 @@ export default class ServerApi {
           // @Vdegenne yeah, not ideal, just there till we only return what we really need, then all the rest can go out
           // @ts-ignore
           if (repos.length > 0) blueAsset.github.repos = repos.map(repo => {
-            
+
           });
 
           let promises = [];

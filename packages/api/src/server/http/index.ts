@@ -3,7 +3,7 @@ import Koa from 'koa'
 import cors from 'koa-cors'
 import { routes, allowedMethods, availableRoutes } from './routes.js'
 
-export default class HttpApiServer {
+export class HttpApiServer {
   server: Koa = new Koa()
   constructor({ port = 9876 }: {port?: number}) {
     
