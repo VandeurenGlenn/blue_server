@@ -3,6 +3,10 @@
   "description": "> server/client api provider(s)",
   "type": "module",
   "exports": {
+    "./cache": {
+      "types": "./lib/cache.d.ts",
+      "import": "./lib/cache.js"
+    },
     "./clients/http": {
       "types": "./lib/client/http/index.d.ts",
       "import": "./lib/client/http/index.js"
