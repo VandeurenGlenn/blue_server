@@ -1,4 +1,3 @@
-import {env} from './envs.js';
 import {CronJob} from 'cron';
 import { HttpApiServer } from '@blueserver/api/server/http'
 import {cache, updateCacheWithRemote, init as initCache} from '@blueserver/api/cache';
@@ -18,4 +17,7 @@ await loadData();
 const job = await new CronJob('* * * * *', updateCacheWithRemote);
 job.start();
 
-const httpApiServer = new HttpApiServer({port: env.port})
+// TODO: move this value to a constant file
+const port = 9876
+
+const httpApiServer = new HttpApiServer({port})
