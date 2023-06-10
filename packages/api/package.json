@@ -1,0 +1,60 @@
+{
+  "name": "@blueserver/api",
+  "description": "> server/client api provider(s)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./lib/api/api.js",
+      "types": "./lib/api/api.d.ts"
+    },
+     "./cache": {
+      "types": "./lib/cache.d.ts",
+      "import": "./lib/cache.js"
+    },
+    "./client/http": {
+      "import": "./lib/client/http/index.js",
+      "types": "./lib/client/http/index.d.ts"
+    },
+    "./client/ws": {
+      "import": "./lib/client/ws/index.js",
+      "types": "./lib/client/ws/index.d.ts"
+    },
+    "./server/http": {
+      "import": "./lib/server/http/index.js",
+      "types": "./lib/server/http/index.d.ts"
+    },
+    "./server/ws": {
+      "import": "./lib/server/ws.js",
+      "types": "./lib/server/ws.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "wireit"
+  },
+  "wireit": {
+    "build": {
+      "command": "tsc --pretty",
+      "clean": "if-file-deleted",
+      "files": [
+        "tsconfig.json",
+        "src"
+      ],
+      "output": [
+        "lib"
+      ]
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "socket-request-client": "^1.7.5",
+    "socket-request-server": "^1.6.6"
+  },
+  "devDependencies": {
+    "@blueserver/server": "*",
+    "koa": "^2.14.2",
+    "koa-cors": "^0.0.16",
+    "koa-router": "^12.0.0"
+  }
+}

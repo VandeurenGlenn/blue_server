@@ -10,6 +10,7 @@ import {updateEvery} from './globals.js';
 import type {BlueAsset} from '@blueserver/types';
 import {withStyles} from 'lit-with-styles';
 import appStyles from './styles.css?inline';
+import { HttpApiClient } from '@blueserver/api/clients/http';
 
 await loadTailwindBaseStyles('[hidden] { display: none }');
 
@@ -25,6 +26,9 @@ await loadTailwindBaseStyles('[hidden] { display: none }');
 ])
 class AppShell extends LitElement {
 	@state() assets: BlueAsset[] = [];
+
+	// allows for easy switching between protocols
+	client: HttpApiClient = new HttpApiClient()
 
 	render() {
 		return html`
@@ -54,10 +58,11 @@ class AppShell extends LitElement {
 	}
 
 	async _fetchInfo() {
-		this.assets = await getBlueList();
+		this.assets = await this.client.top100();
 	}
 
 	protected firstUpdated() {
+		// When ws is finished setinterval can go away
 		setInterval(this._fetchInfo, updateEvery);
 		this._fetchInfo();
 	}

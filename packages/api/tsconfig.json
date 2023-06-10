@@ -1,17 +1,15 @@
 {
 	"compilerOptions": {
-		"module": "es2022",
-		"target": "es2022",
+		"module": "ES2022",
+		"target": "ES2022",
 		"moduleResolution": "nodenext",
 		"strict": true,
 		"rootDir": "src",
 		"outDir": "lib",
 		"declaration": true,
 		"sourceMap": true,
-		"experimentalDecorators": true,
 		"allowSyntheticDefaultImports": true,
-		"useDefineForClassFields": false,
-		"types": ["vite/client"]
+		"types": ["socket-request-client"]
 	},
 	"include": ["src/**/*"],
 	"exclude": []
