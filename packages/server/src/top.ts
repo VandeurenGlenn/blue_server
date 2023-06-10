@@ -2,6 +2,8 @@ import {BlueAsset, CMCListing, GithubProjectResponse} from '@blueserver/types';
 import {CoinMarketCap} from './coinmarketcap.js';
 import {GitHub} from './github.js';
 import {SEVEN_DAYS_AGO} from './constants.js';
+import { writeFile } from 'fs/promises';
+import { cache } from './cache.js';
 
 /**
  *
@@ -51,7 +53,13 @@ export async function getTopBlueList(top = 100): Promise<BlueAsset[]> {
 					orgRepos = await GitHub.getUserRepositories(urlParts[1]);
 				}
 
+				// Just to test
+				await writeFile('./repos.json', JSON.stringify(cache.github.repos.cached))
+				await writeFile('./tags.json', JSON.stringify(cache.github.repos.tags))
+				
+
 				// TODO(@VandeurenGlenn): isn't that super risky, too much data
+				// @Vdegenne yeah, not ideal, just there till we only return what we really need, then all the rest can go out
 				// @ts-ignore
 				if (orgRepos.length > 0) asset.github.repos = orgRepos;
 
