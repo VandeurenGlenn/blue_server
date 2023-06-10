@@ -30,17 +30,15 @@ export class GitHub {
 			cache.github.stats.tags[name] = response.headers.get('ETag')
 
 			const result: [number, number, number][] = (await response.json()) as [];
-			// @ts-ignore
-			cache.github.stats.cached[name] = {additions: 0, deletions: 0, total: 0}
 			if (result.length > 0) {
 				const [total, additions, deletions] = result[0];
-				
+				// @ts-ignore
+				cache.github.stats.cached[name] = {total, additions, deletions}
 			}
 		} catch (error) {
 			console.warn(error);
-			
 			// @ts-ignore
-			cache.github.stats.cached[name] = {total, additions, deletions}
+			cache.github.stats.cached[name] = {additions: 0, deletions: 0, total: 0}
 		}
 		// @ts-ignore
 		return cache.github.stats.cached[name];
