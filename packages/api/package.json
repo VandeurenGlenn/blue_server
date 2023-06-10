@@ -27,11 +27,11 @@
       "import": "./lib/server/ws.js",
       "types": "./lib/server/ws.d.ts"
     },
-    "./server/github": {
+    "./github": {
       "import": "./lib/api/github.js",
       "types": "./lib/api/github.d.ts"
     },
-    "./server/coinmarketcap": {
+    "./coinmarketcap": {
       "import": "./lib/api/coinmarketcap.js",
       "types": "./lib/api/coinmarketcap.d.ts"
     }
