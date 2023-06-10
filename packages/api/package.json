@@ -3,33 +3,34 @@
   "description": "> server/client api provider(s)",
   "type": "module",
   "exports": {
-    ".": {
-      "import": "./lib/api/api.js",
-      "types": "./lib/api/api.d.ts"
-    },
-     "./cache": {
+    "./cache": {
       "types": "./lib/cache.d.ts",
       "import": "./lib/cache.js"
     },
-    "./client/http": {
-      "import": "./lib/client/http/index.js",
-      "types": "./lib/client/http/index.d.ts"
+    "./clients/http": {
+      "types": "./lib/client/http/index.d.ts",
+      "import": "./lib/client/http/index.js"
     },
-    "./client/ws": {
-      "import": "./lib/client/ws/index.js",
-      "types": "./lib/client/ws/index.d.ts"
+    "./clients/ws": {
+      "types": "./lib/client/ws/index.d.ts",
+      "import": "./lib/client/ws/index.js"
     },
-    "./server/http": {
+    "./servers/http": {
       "import": "./lib/server/http/index.js",
       "types": "./lib/server/http/index.d.ts"
     },
-    "./server/ws": {
+    "./servers/ws": {
       "import": "./lib/server/ws.js",
       "types": "./lib/server/ws.d.ts"
+    },
+    ".": {
+      "import": "./lib/api/api.js",
+      "types": "./lib/api/api.d.ts"
     }
   },
   "scripts": {
-    "build": "wireit"
+    "build": "wireit",
+    "serve": "wireit"
   },
   "wireit": {
     "build": {
