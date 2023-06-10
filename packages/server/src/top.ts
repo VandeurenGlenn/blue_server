@@ -15,39 +15,49 @@ export async function getTopBlueList(top = 100): Promise<BlueAsset[]> {
 		listings.map((l) => l.id)
 	);
 
+	// Pre-mapping of CoinMarketCap information to a blue list
 	const assets: BlueAsset[] = Object.values(listingsInfo).map((asset) => {
-		return {
+		const blueAsset: BlueAsset = {
 			id: asset.id,
-			sourceCode: asset.urls.source_code?.[0],
+			website: asset.urls.website[0],
+			// This error is just a demonstration that we don't have
+			// other solution to force consistent types.
+			// sourceCode: asset.urls.source_code[0],
 			github: {
 				activity: {deletions: 0, additions: 0, total: 0},
-				repos: [],
+				repos: asset.urls.source_code.filter((source) =>
+					source.includes('github')
+				),
 				contributers: [],
 			},
 			indicators: {
 				github: null,
 			},
-		} as BlueAsset;
+		};
+		return blueAsset;
 	});
 
-
+	// This part is responsible of filling in the blanks (mainly github informations for now)
 	return Promise.all(
-		assets.map(async (asset) => {
-			// todo: should we filter out those who don't have sourceCode?
-			if (asset.sourceCode) {
-				const urlParts = asset.sourceCode.replace('https://', '').split('/');
-				let repos: GithubProjectResponse[];
-				repos = await GitHub.getOrganisationRepositories(urlParts[1]);
-				if (repos.length === 0)
-					repos = await GitHub.getUserRepositories(urlParts[1]);
+		assets.map(async (asset: BlueAsset) => {
+			// A github repo was present in CMC data, we fetch informations
+			if (asset.github.repos.length > 0) {
+				const urlParts = asset.github.repos[0]
+					.replace('https://', '')
+					.split('/');
+
+				let orgRepos = await GitHub.getOrganisationRepositories(urlParts[1]);
+				if (orgRepos.length === 0) {
+					orgRepos = await GitHub.getUserRepositories(urlParts[1]);
+				}
 
 				// TODO(@VandeurenGlenn): isn't that super risky, too much data
 				// @ts-ignore
-				if (repos.length > 0) asset.github.repos = repos;
+				if (orgRepos.length > 0) asset.github.repos = orgRepos;
 
 				let promises = [];
 
-				for (const repo of repos) {
+				for (const repo of orgRepos) {
 					// repo had activity within 7 days, so we try to get it's stats
 					if (
 						new Date(repo.pushed_at).getTime() + SEVEN_DAYS_AGO >=
@@ -57,7 +67,7 @@ export async function getTopBlueList(top = 100): Promise<BlueAsset[]> {
 						promises.push(GitHub.getRepositoryCodeFrequency(owner, name));
 					} else {
 						// there was no activity, remove the repo to keep data to front minimal
-						asset.github.repos.splice(repos.indexOf(repo));
+						asset.github.repos.splice(orgRepos.indexOf(repo));
 					}
 				}
 				promises = await Promise.all(promises);

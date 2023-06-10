@@ -42,7 +42,18 @@ export type CMCAsset = {
 	subreddit: string;
 	notice: string;
 	tags: string[] | null;
-	urls: {[type: string]: string[]};
+	urls: {
+		source_code: string[],
+		website: string[],
+		twitter: string[],
+		chat: [],
+		facebook: [],
+		explorer: [],
+		announcement: [],
+		message_board: [],
+		reddit: [],
+		technical_doc: string[]
+	};
 	date_added: string;
 	twitter_username: string | null;
 	is_hidden: 0 | 1;
@@ -189,7 +200,8 @@ export type GithubIndicator = {};
 
 export type BlueAsset = {
 	id: number;
-	sourceCode: string;
+	website: string|null;
+	// sourceCode: string;
 	github: GithubProject;
 	indicators: {
 		github: null;
