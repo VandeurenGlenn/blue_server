@@ -7,6 +7,10 @@
       "import": "./lib/api/api.js",
       "types": "./lib/api/api.d.ts"
     },
+     "./cache": {
+      "types": "./lib/cache.d.ts",
+      "import": "./lib/cache.js"
+    },
     "./client/http": {
       "import": "./lib/client/http/index.js",
       "types": "./lib/client/http/index.d.ts"

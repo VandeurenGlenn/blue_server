@@ -7,9 +7,9 @@
 			"types": "./lib/constants.d.ts",
 			"import": "./lib/constants.js"
 		},
-		"./cache": {
-			"types": "./lib/cache.d.ts",
-			"import": "./lib/cache.js"
+		"./envs": {
+			"types": "./lib/envs.d.ts",
+			"import": "./lib/envs.js"
 		}
 	},
 	"scripts": {

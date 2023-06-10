@@ -11,6 +11,6 @@
 		"allowSyntheticDefaultImports": true,
 		"types": []
 	},
-	"include": ["src/**/*", "../api/src/indicators.ts"],
+	"include": ["src/**/*"],
 	"exclude": []
 }

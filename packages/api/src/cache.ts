@@ -1,13 +1,13 @@
 // import pathlib from 'path';
 // import {getTopBlueList} from '@blueserver/api';
-import { ServerApi } from '@blueserver/api'
+import { ServerApi } from './api/api.js'
 // import {LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js';
 // import {fileURLToPath} from 'url';
 import { writeFile, readFile } from 'fs/promises';
 
 // const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
-import {env} from './envs.js'
-import {LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
+import {env} from '@blueserver/server/envs'
+import {LIST_SIZE, LOCAL_DATA_FILENAME} from '@blueserver/server/constants'
 import { BlueCache } from '@blueserver/types';
 
 const api = new ServerApi(env)

@@ -61,9 +61,26 @@ export class ServerApi {
           // TODO(@VandeurenGlenn): isn't that super risky, too much data
           // @Vdegenne yeah, not ideal, just there till we only return what we really need, then all the rest can go out
           // @ts-ignore
-          if (repos.length > 0) blueAsset.github.repos = repos.map(repo => {
-
-          });
+          if (repos.length > 0) blueAsset.github.repos = repos.map(repo => ({
+            name: repo.name,
+            full_name: repo.full_name,
+            private: repo.private,
+            url: repo.html_url,
+            description: repo.description,
+            fork: repo.fork,
+            pushed_at: repo.pushed_at,
+            created_at: repo.created_at,
+            size: repo.size,
+            watchers: repo.watchers,
+            forks: repo.forks,
+            visibility: repo.forks,
+            owner: {
+              name: repo.owner.login,
+              avatar: repo.owner.avatar_url,
+              gravatar: repo.owner.gravatar_id,
+              type: repo.owner.type
+            }
+          }));
 
           let promises = [];
           
