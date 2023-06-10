@@ -1,5 +1,6 @@
 import {GithubActivity, GithubProjectResponse} from '@blueserver/types';
 import {cache} from './../cache.js'
+import fetch from 'node-fetch';
 
 export class GitHub {
 	#headers = new Headers()
@@ -13,23 +14,31 @@ export class GitHub {
 		owner: string,
 		name: string
 	): Promise<GithubActivity> {
-		const headers = this.#headers
-		// @ts-ignore
-		headers.append('If-None-Match', cache.github.stats.tags[name])
-		const response = await fetch(
-			`https://api.github.com/repos/${owner}/${name}/stats/code_frequency`,
-			{ headers: this.#headers }
-		);
-		// @ts-ignore
-		if (response.status === 304) return cache.github.stats.cached[name]
-		// @ts-ignore
-		cache.github.stats.tags[name] = response.headers.get('ETag')
+		try {
+			const headers = this.#headers
+			// @ts-ignore
+			headers.set('If-None-Match', cache.github.stats.tags[name])
+			const response = await fetch(
+				`https://api.github.com/repos/${owner}/${name}/stats/code_frequency`,
+				{ headers: this.#headers }
+			);
+			
+			// @ts-ignore
+			if (response.status === 304) return cache.github.stats.cached[name]
+			if (response.status === 404) return {additions: 0, deletions: 0, total: 0};
+			// @ts-ignore
+			cache.github.stats.tags[name] = response.headers.get('ETag')
 
-		const result: [number, number, number][] = (await response.json()) as [];
-		// @ts-ignore
-		cache.github.stats.cached[name] = {additions: 0, deletions: 0, total: 0}
-		if (result.length > 0) {
-			const [total, additions, deletions] = result[0];
+			const result: [number, number, number][] = (await response.json()) as [];
+			// @ts-ignore
+			cache.github.stats.cached[name] = {additions: 0, deletions: 0, total: 0}
+			if (result.length > 0) {
+				const [total, additions, deletions] = result[0];
+				
+			}
+		} catch (error) {
+			console.warn(error);
+			
 			// @ts-ignore
 			cache.github.stats.cached[name] = {total, additions, deletions}
 		}
@@ -40,7 +49,7 @@ export class GitHub {
 	async _getRepos(name: string, type: string): Promise<GithubProjectResponse[]> {
 		const headers = this.#headers
 		// @ts-ignore
-		headers.append('If-None-Match', cache.github.repos.tags[name])
+		headers.set('If-None-Match', cache.github.repos.tags[name])
 		// @ts-ignore
 		if (cache.github.repos.cached[name]?.owner?.type === 'Organization') type = 'orgs'
 		const response = await fetch(`https://api.github.com/${type}/${name}/repos`, 

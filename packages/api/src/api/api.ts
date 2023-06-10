@@ -36,6 +36,7 @@ export class ServerApi {
       Object.values(listingsInfo).map(async (asset) => {
         const blueAsset: BlueAsset = {
           id: asset.id,
+          name: asset.name,
           website: asset.urls.website[0],
           // This error is just a demonstration that we don't have
           // other solution to force consistent types.
