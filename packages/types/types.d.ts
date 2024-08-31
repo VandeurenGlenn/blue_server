@@ -211,6 +211,7 @@ export type GithubIndicator = {};
 export type BlueAsset = {
 	id: number;
 	website: string|null;
+	name: string,
 	// sourceCode: string;
 	github: GithubProject;
 	indicators: {

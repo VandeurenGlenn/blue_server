@@ -10,7 +10,7 @@ import {updateEvery} from './globals.js';
 import type {BlueAsset} from '@blueserver/types';
 import {withStyles} from 'lit-with-styles';
 import appStyles from './styles.css?inline';
-import { HttpApiClient } from '@blueserver/api/clients/http';
+import { HttpApiClient } from '@blueserver/api/client/http';
 
 await loadTailwindBaseStyles('[hidden] { display: none }');
 

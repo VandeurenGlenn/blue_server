@@ -10,4 +10,7 @@ export class HttpApiClient {
   top100() {
     return this.#fetch('top-100') as Promise<BlueAsset[]> 
   }
+  top100Ids() {
+    return this.#fetch('top-100-ids') as Promise<string | number[]> 
+  }
 }
