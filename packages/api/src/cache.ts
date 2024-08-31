@@ -1,16 +1,24 @@
-// import pathlib from 'path';
-// import {getTopBlueList} from '@blueserver/api';
-import {ServerApi} from './api/api.js';
-// import {LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js';
-// import {fileURLToPath} from 'url';
-import {writeFile, readFile} from 'fs/promises';
+import {LOCAL_DATA_FILENAME} from '@blueserver/server/constants';
+import {type GithubActivity} from '@blueserver/types';
+import {readFile, writeFile} from 'fs/promises';
+import {type GithubProjectResponse} from './api/github.js';
+import {type BlueAsset} from './DataBuilder.js';
 
-// const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
-import {env} from '@blueserver/server/envs';
-import {LIST_SIZE, LOCAL_DATA_FILENAME} from '@blueserver/server/constants';
-import {BlueCache} from '@blueserver/types';
-
-const api = new ServerApi(env);
+export type BlueCache = {
+	bluelist: BlueAsset[];
+	github: {
+		repos: {
+			cached: {
+				[name: string]: GithubProjectResponse[];
+			};
+			tags: {[name: string]: string};
+		};
+		stats: {
+			cached: {[name: string]: GithubActivity};
+			tags: {[name: string]: string};
+		};
+	};
+};
 
 export const cache: BlueCache = {
 	bluelist: [],
@@ -50,7 +58,7 @@ export const init = async () => {
 };
 
 export async function updateCacheWithRemote() {
-	// cache.bluelist = await api.top100(LIST_SIZE);
+	// cache.bluelist = await dataBuilder.top100(LIST_SIZE);
 	// 	writeFile(
 	// 		LOCAL_DATA_FILENAME,
 	// 		JSON.stringify(cache.bluelist)
