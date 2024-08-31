@@ -1,7 +1,8 @@
 import {LOCAL_DATA_FILENAME} from '@blueserver/server/constants';
-import {GithubActivity, type BlueAsset} from '@blueserver/types';
+import {type GithubActivity} from '@blueserver/types';
 import {readFile, writeFile} from 'fs/promises';
 import {type GithubProjectResponse} from './api/github.js';
+import {type BlueAsset} from './DataBuilder.js';
 
 export type BlueCache = {
 	bluelist: BlueAsset[];
