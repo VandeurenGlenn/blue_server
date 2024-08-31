@@ -1,11 +1,15 @@
 import {env} from './envs.js';
 import {CronJob} from 'cron';
-import { HttpApiServer } from '@blueserver/api/server/http'
-import {cache, updateCacheWithRemote, init as initCache} from '@blueserver/api/cache';
+import {HttpApiServer} from '@blueserver/api/server/http';
+import {
+	cache,
+	updateCacheWithRemote,
+	init as initCache,
+} from '@blueserver/api/cache';
 
 async function loadData() {
 	try {
-		await initCache()
+		await initCache();
 		return cache.bluelist;
 	} catch (_) {
 		// no local data, so we update cache
@@ -15,7 +19,7 @@ async function loadData() {
 await loadData();
 
 // fetch remotely every minute
-const job = await new CronJob('* * * * *', updateCacheWithRemote);
+const job = new CronJob('* * * * * *', updateCacheWithRemote);
 job.start();
 
-const httpApiServer = new HttpApiServer({port: env.port})
+new HttpApiServer({port: env.port});
