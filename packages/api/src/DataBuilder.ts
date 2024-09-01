@@ -67,7 +67,6 @@ export class DataBuilder {
 
 					if (repos.length > 0) {
 						let promises = []
-
 						for (const repo of repos) {
 							// repo had activity within 7 days, so we try to get it's stats
 							if (new Date(repo.pushed_at).getTime() + SEVEN_DAYS_AGO >= new Date().getTime()) {
