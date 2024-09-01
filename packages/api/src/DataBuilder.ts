@@ -1,5 +1,5 @@
-import {SEVEN_DAYS_AGO} from '@blueserver/server/constants';
-import {env} from '@blueserver/server/envs';
+import {SEVEN_DAYS_AGO} from './constants.js';
+import {env} from '@blueserver/env';
 import {CMCListing} from '@blueserver/types';
 import {CoinMarketCap} from './api/coinmarketcap.js';
 import {

@@ -2,12 +2,6 @@
 	"name": "@blueserver/server",
 	"description": "blue server: API server",
 	"type": "module",
-	"exports": {
-		"./constants": {
-			"types": "./lib/constants.d.ts",
-			"import": "./lib/constants.js"
-		}
-	},
 	"scripts": {
 		"build": "wireit",
 		"serve": "wireit"
