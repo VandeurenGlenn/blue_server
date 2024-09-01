@@ -1,25 +1,21 @@
-import {env} from '@blueserver/env';
-import {CronCommand, CronJob} from 'cron';
-import {HttpApiServer} from '@blueserver/api/server/http';
-import {
-	cache,
-	updateCacheWithRemote,
-	init as initCache,
-} from '@blueserver/api/cache';
+import {env} from '@blueserver/env'
+import {CronCommand, CronJob} from 'cron'
+import {HttpApiServer} from '@blueserver/api/server/http'
+import {cache, updateCacheWithRemote, init as initCache} from '@blueserver/api/cache'
 
 async function loadData() {
 	try {
-		await initCache();
-		return cache.bluelist;
+		await initCache()
+		return cache.bluelist
 	} catch (_) {
 		// no local data, so we update cache
-		return updateCacheWithRemote();
+		return updateCacheWithRemote()
 	}
 }
-await loadData();
+await loadData()
 
 // fetch remotely every hour
-const job = new CronJob('0 * * * *', updateCacheWithRemote as unknown as CronCommand<any>);
-job.start();
+const job = new CronJob('0 * * * *', updateCacheWithRemote as unknown as CronCommand<any>)
+job.start()
 
-new HttpApiServer({port: env.port});
+new HttpApiServer({port: env.port})

@@ -1,5 +1,5 @@
-import {GithubIndicator} from '@blueserver/types';
-import {type GithubProjectResponse} from './github.js';
+import {GithubIndicator} from '@blueserver/types'
+import {type GithubProjectResponse} from './github.js'
 
 export function buildGithubIndicators(githubProject: GithubProjectResponse) {
 	// TODO
@@ -7,8 +7,6 @@ export function buildGithubIndicators(githubProject: GithubProjectResponse) {
 	// good
 }
 
-export function buildSuperMegaIndicatorFromAllIndicators(
-	githubIndicator: GithubIndicator
-) {
+export function buildSuperMegaIndicatorFromAllIndicators(githubIndicator: GithubIndicator) {
 	// TODO
 }
