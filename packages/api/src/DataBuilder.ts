@@ -78,6 +78,16 @@ export class DataBuilder {
 								// blueAsset.github.repos.splice(repos.indexOf(repo))
 							}
 						}
+						promises = await Promise.all(promises)
+						blueAsset.github.activity = promises.reduce(
+							(previous, current) => {
+								previous.additions += current.additions
+								previous.deletions += current.deletions
+								previous.total += current.additions + current.deletions
+								return previous
+							},
+							{additions: 0, deletions: 0, total: 0}
+						)
 
 						// Keep the main project if it exists or the first one.
 						const mainProject = repos.find(
@@ -110,17 +120,6 @@ export class DataBuilder {
 								}
 							} as Partial<GithubProjectResponse>)
 						}
-
-						promises = await Promise.all(promises)
-						blueAsset.github.activity = promises.reduce(
-							(previous, current) => {
-								previous.additions += current.additions
-								previous.deletions += current.deletions
-								previous.total += current.additions + current.deletions
-								return previous
-							},
-							{additions: 0, deletions: 0, total: 0}
-						)
 					}
 				}
 				return blueAsset
