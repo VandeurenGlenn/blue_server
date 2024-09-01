@@ -46,16 +46,19 @@ export class DataBuilder {
 					// sourceCode: asset.urls.source_code[0],
 					github: {
 						activity: {additions: 0, deletions: 0, total: 0},
-						repos: asset.urls.source_code.filter((source) => source.includes('github')),
+						repos: asset.urls.source_code,
 						contributers: []
 					},
 					indicators: {
 						github: null
 					}
 				}
+
+				const githubRepos = (blueAsset.github.repos as string[]).filter((source: string) => source.includes('github'))
+
 				// A github repo was present in CMC data, we fetch informations
-				if (blueAsset.github.repos.length > 0) {
-					const urlParts = (blueAsset.github.repos[0] as string).replace('https://', '').split('/')
+				if (githubRepos.length > 0) {
+					const urlParts = (githubRepos[0] as string).replace('https://', '').split('/')
 
 					let repos = await this.gitHub.getRepos(urlParts[1])
 					// TODO(@VandeurenGlenn): isn't that super risky, too much data
@@ -97,6 +100,16 @@ export class DataBuilder {
 							// blueAsset.github.repos.splice(repos.indexOf(repo))
 						}
 					}
+					// Keep the main project if it exists or the first one.
+					const mainProject = blueAsset.github.repos.find(
+						(repo) => repo instanceof Object && repo.name?.toLowerCase() === asset.name.toLowerCase()
+					)
+					if (mainProject) {
+						blueAsset.github.repos = [mainProject]
+					} else {
+						blueAsset.github.repos.splice(1)
+					}
+
 					promises = await Promise.all(promises)
 					blueAsset.github.activity = promises.reduce(
 						(previous, current) => {

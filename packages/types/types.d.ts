@@ -40,10 +40,6 @@ export type CMCAsset = {
 	tags: string[] | null
 	urls: {
 		source_code: string[]
-		/**
-		 * @deprecated
-		 * https://coinmarketcap.com/api/documentation/v1/#operation/getV1CryptocurrencyListingsLatest
-		 */
 		website: string[]
 		twitter: string[]
 		chat: []
