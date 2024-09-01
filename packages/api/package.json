@@ -66,6 +66,7 @@
 		"@types/koa__cors": "^5.0.0",
 		"@types/koa__router": "^12.0.4",
 		"@types/node-fetch": "^2.6.11",
+		"koa": "^2.15.3",
 		"node-fetch": "^3.3.2",
 		"socket-request-client": "^2.0.9",
 		"socket-request-server": "^1.6.6"
