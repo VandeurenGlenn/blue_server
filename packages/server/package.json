@@ -32,9 +32,6 @@
 			"#comment": "restart the server when the build files changed",
 			"command": "node ./lib/index.js",
 			"service": true,
-			"files": [
-				".env"
-			],
 			"dependencies": [
 				"build"
 			]
