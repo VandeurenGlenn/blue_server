@@ -1,6 +1,7 @@
-import {GithubIndicator, GithubProject} from '@blueserver/types';
+import {GithubIndicator} from '@blueserver/types';
+import {type GithubProjectResponse} from './github.js';
 
-export function buildGithubIndicators(githubProject: GithubProject) {
+export function buildGithubIndicators(githubProject: GithubProjectResponse) {
 	// TODO
 	// ok :D
 	// good

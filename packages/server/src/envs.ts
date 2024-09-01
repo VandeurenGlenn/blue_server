@@ -1,4 +1,4 @@
-import {DotEnvKeys} from '@blueserver/types';
+import {type DotEnvKeys} from '@blueserver/types';
 import dotenv from 'dotenv';
 import pathlib from 'path';
 import {fileURLToPath} from 'url';

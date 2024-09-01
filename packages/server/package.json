@@ -20,6 +20,9 @@
 		"build": {
 			"command": "tsc --pretty",
 			"clean": "if-file-deleted",
+			"dependencies": [
+				"../api:build"
+			],
 			"files": [
 				"tsconfig.json",
 				"src"
@@ -41,7 +44,7 @@
 		}
 	},
 	"devDependencies": {
-		"@blueserver/types": "^1.0.0",
+		"@blueserver/types": "*",
 		"@types/cron": "^2.0.1",
 		"@types/koa": "^2.15.0",
 		"@types/koa-cors": "^0.0.6",
