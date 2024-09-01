@@ -1,9 +1,9 @@
-import { LOCAL_DATA_FILENAME } from '@blueserver/server/constants'
-import { type GithubActivity } from '@blueserver/types'
-import { readFile, writeFile } from 'fs/promises'
-import { type GithubProjectResponse } from './api/github.js'
-import { dataBuilder, type BlueAsset } from './DataBuilder.js'
-import { LIST_SIZE as DEFAULT_LIST_SIZE } from './constants.js'
+import {LOCAL_DATA_FILENAME} from '@blueserver/server/constants'
+import {type GithubActivity} from '@blueserver/types'
+import {readFile, writeFile} from 'fs/promises'
+import {type GithubProjectResponse} from './api/github.js'
+import {dataBuilder, type BlueAsset} from './DataBuilder.js'
+import {LIST_SIZE as DEFAULT_LIST_SIZE} from './constants.js'
 
 export type BlueCache = {
   bluelist: BlueAsset[]
@@ -12,11 +12,11 @@ export type BlueCache = {
       cached: {
         [name: string]: GithubProjectResponse[]
       }
-      tags: { [name: string]: string }
+      tags: {[name: string]: string}
     }
     stats: {
-      cached: { [name: string]: GithubActivity }
-      tags: { [name: string]: string }
+      cached: {[name: string]: GithubActivity}
+      tags: {[name: string]: string}
     }
   }
 }
