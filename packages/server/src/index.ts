@@ -7,7 +7,7 @@ async function loadData() {
 	try {
 		await initCache()
 		return cache.bluelist
-	} catch (_) {
+	} catch {
 		// no local data, so we update cache
 		return updateCacheWithRemote()
 	}

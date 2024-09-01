@@ -3,6 +3,7 @@ import {customElement} from 'lit/decorators.js';
 import {withStyles} from 'lit-with-styles';
 import styles from './app-shell.css?inline';
 import {materialShellLoadingOff} from 'material-shell';
+import {HttpApiClient} from '@blueserver/api/client/http';
 
 declare global {
 	interface Window {
@@ -12,6 +13,8 @@ declare global {
 		'app-shell': AppShell;
 	}
 }
+
+HttpApiClient.top100();
 
 @customElement('app-shell')
 @withStyles(styles)

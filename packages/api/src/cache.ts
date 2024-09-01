@@ -35,15 +35,11 @@ export const cache: BlueCache = {
 }
 
 export const init = async () => {
-	try {
-		cache.bluelist = JSON.parse((await readFile(LOCAL_DATA_FILENAME)).toString())
-		cache.github.repos.cached = JSON.parse((await readFile('./repos.json')).toString())
-		cache.github.repos.tags = JSON.parse((await readFile('./tags.json')).toString())
-		cache.github.stats.cached = JSON.parse((await readFile('./stats.json')).toString())
-		cache.github.stats.tags = JSON.parse((await readFile('./statTags.json')).toString())
-	} catch (error) {
-		return []
-	}
+	cache.bluelist = JSON.parse((await readFile(LOCAL_DATA_FILENAME)).toString())
+	cache.github.repos.cached = JSON.parse((await readFile('./repos.json')).toString())
+	cache.github.repos.tags = JSON.parse((await readFile('./tags.json')).toString())
+	cache.github.stats.cached = JSON.parse((await readFile('./stats.json')).toString())
+	cache.github.stats.tags = JSON.parse((await readFile('./statTags.json')).toString())
 	return cache.bluelist
 }
 

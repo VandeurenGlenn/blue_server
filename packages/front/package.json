@@ -19,7 +19,7 @@
 		"lit": "^3.2.0",
 		"lit-with-styles": "^2.1.3",
 		"material-3-prompt-dialog": "^1.0.1",
-		"material-shell": "^1.2.5",
+		"material-shell": "^1.2.7",
 		"postcss": "^8.4.42",
 		"rollup-plugin-material-all": "^1.2.2",
 		"snar": "^2.2.0",
@@ -36,11 +36,14 @@
 	},
 	"wireit": {
 		"dev": {
-			"command": "vite --host",
-			"service": true,
 			"dependencies": [
-				"../api:build"
+				"../server:serve",
+				"serve"
 			]
+		},
+		"serve": {
+			"command": "vite --host",
+			"service": true
 		},
 		"build": {
 			"command": "vite build",
