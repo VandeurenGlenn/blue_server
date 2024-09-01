@@ -4,6 +4,7 @@ import {HttpApiServer} from '@blueserver/api/server/http'
 import {cache, updateCacheWithRemote, init as initCache} from '@blueserver/api/cache'
 
 async function loadData() {
+	return updateCacheWithRemote()
 	try {
 		await initCache()
 		return cache.bluelist

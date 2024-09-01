@@ -6,6 +6,7 @@ import {SEVEN_DAYS_AGO} from './constants.js'
 
 export type BlueAsset = {
 	id: number
+	name: string
 	website: string | null
 	// sourceCode: string;
 	github: GithubProject
@@ -31,7 +32,6 @@ export class DataBuilder {
 	 */
 	async createAssetList(limit = 100): Promise<BlueAsset[]> {
 		const listings: CMCListing[] = await this.coinMarketCap.getLatestListings(limit)
-
 		const listingsInfo = await this.coinMarketCap.getListingInfo(listings.map((l) => l.id))
 
 		// This part is responsible of filling in the blanks (mainly github informations for now)
@@ -39,6 +39,7 @@ export class DataBuilder {
 			Object.values(listingsInfo).map(async (asset) => {
 				const blueAsset: BlueAsset = {
 					id: asset.id,
+					name: asset.name,
 					website: asset.urls.website[0],
 					// This error is just a demonstration that we don't have
 					// other solution to force consistent types.

@@ -3,7 +3,8 @@ import {customElement} from 'lit/decorators.js';
 import {withStyles} from 'lit-with-styles';
 import styles from './app-shell.css?inline';
 import {materialShellLoadingOff} from 'material-shell';
-import {HttpApiClient} from '@blueserver/api/client/http';
+import {withController} from '@snar/lit';
+import {data} from '../data.js';
 
 declare global {
 	interface Window {
@@ -14,19 +15,23 @@ declare global {
 	}
 }
 
-HttpApiClient.top100();
-
 @customElement('app-shell')
 @withStyles(styles)
+@withController(data)
 export class AppShell extends LitElement {
 	firstUpdated() {
 		materialShellLoadingOff.call(this);
 	}
 
 	render() {
-		return html` <span class="font-bold bg-blue-200 text-orange-500">
-			hello world
-		</span>`;
+		return html`
+<md-list>
+  ${data.top100.map((asset) => {
+		return html` <md-list-item> </md-list-item> `;
+	})}
+  <md-list
+</md-list>
+`;
 	}
 }
 
