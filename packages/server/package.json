@@ -6,10 +6,6 @@
 		"./constants": {
 			"types": "./lib/constants.d.ts",
 			"import": "./lib/constants.js"
-		},
-		"./envs": {
-			"types": "./lib/envs.d.ts",
-			"import": "./lib/envs.js"
 		}
 	},
 	"scripts": {
@@ -21,6 +17,7 @@
 			"command": "tsc --pretty",
 			"clean": "if-file-deleted",
 			"dependencies": [
+				"../env:build",
 				"../api:build"
 			],
 			"files": [
@@ -45,6 +42,8 @@
 	},
 	"devDependencies": {
 		"@blueserver/types": "*",
+		"@blueserver/api": "*",
+		"@blueserver/env": "*",
 		"@types/cron": "^2.0.1",
 		"@types/koa": "^2.15.0",
 		"@types/koa-cors": "^0.0.6",
@@ -52,9 +51,7 @@
 		"@types/node": "^22.5.1",
 		"@types/node-fetch": "^2.6.11",
 		"dotenv": "^16.4.5",
-		"node-fetch": "^3.3.2"
-	},
-	"dependencies": {
+		"node-fetch": "^3.3.2",
 		"cron": "^3.1.7"
 	}
 }

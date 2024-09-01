@@ -8,15 +8,18 @@
 		"build": "wireit"
 	},
 	"wireit": {
-		"command": "tsc --pretty",
-		"clean": "if-file-deleted",
-		"files": [
-			"tsconfig.json",
-			"src"
-		],
-		"output": [
-			"lib"
-		]
+		"build": {
+			"command": "tsc --pretty",
+			"clean": "if-file-deleted",
+			"files": [
+				"tsconfig.json",
+        ".env",
+				"src"
+			],
+			"output": [
+				"lib"
+			]
+		}
 	},
 	"exports": {
 		".": {
