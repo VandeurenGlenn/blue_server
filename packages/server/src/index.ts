@@ -18,7 +18,7 @@ async function loadData() {
 }
 await loadData();
 
-// fetch remotely every minute
+// fetch remotely every hour
 const job = new CronJob('0 * * * *', updateCacheWithRemote);
 job.start();
 
