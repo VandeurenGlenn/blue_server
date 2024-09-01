@@ -13,13 +13,13 @@ We should have atleast a Websocket one and both http and ws should have the same
 
 #### client
 
-js```
+```js
 import HttpApiClient from '@blueserver/clients/http'
 
 const client = new HttpApiClient()
 await client.top100()
 
-````
+```
 
 ### ws
 #### client
