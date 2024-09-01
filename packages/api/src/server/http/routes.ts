@@ -1,4 +1,4 @@
-import Router from 'koa-router'
+import Router from '@koa/router'
 import {cache} from './../../cache.js'
 
 const router = new Router()

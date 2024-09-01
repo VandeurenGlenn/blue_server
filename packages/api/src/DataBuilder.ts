@@ -87,16 +87,13 @@ export class DataBuilder {
 					let promises = []
 
 					for (const repo of repos) {
-						if (asset.name === 'Bitcoin') {
-							console.log(repo)
-						}
 						// repo had activity within 7 days, so we try to get it's stats
 						if (new Date(repo.pushed_at).getTime() + SEVEN_DAYS_AGO >= new Date().getTime()) {
 							const [owner, name] = repo.full_name.split('/')
 							promises.push(this.gitHub.getRepositoryCodeFrequency(owner, name))
 						} else {
 							// there was no activity, remove the repo to keep data to front minimal
-							blueAsset.github.repos.splice(repos.indexOf(repo))
+							// blueAsset.github.repos.splice(repos.indexOf(repo))
 						}
 					}
 					promises = await Promise.all(promises)

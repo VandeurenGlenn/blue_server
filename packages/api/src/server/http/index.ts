@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import cors from 'koa-cors'
+import cors from '@koa/cors'
 import {routes, allowedMethods, availableRoutes} from './routes.js'
 
 export class HttpApiServer {
