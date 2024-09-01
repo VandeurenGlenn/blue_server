@@ -135,7 +135,7 @@ export class GitHub {
 		name: string
 	): Promise<GithubActivity> {
 		const headers = this.#headers;
-		headers.append('If-None-Match', cache.github.stats.tags[name]);
+		headers.set('If-None-Match', cache.github.stats.tags[name]);
 		const response = await fetch(
 			`https://api.github.com/repos/${owner}/${name}/stats/code_frequency`,
 			{headers: this.#headers}
@@ -159,7 +159,7 @@ export class GitHub {
 		type: string
 	): Promise<GithubProjectResponse[]> {
 		const headers = this.#headers;
-		headers.append('If-None-Match', cache.github.repos.tags[name]);
+		headers.set('If-None-Match', cache.github.repos.tags[name]);
 		if (type === 'Organization') {
 			type = 'orgs';
 		}
