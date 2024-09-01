@@ -37,11 +37,12 @@
 			]
 		}
 	},
-	"devDependencies": {
-		"@blueserver/types": "*",
+	"dependencies": {
 		"@blueserver/api": "*",
 		"@blueserver/env": "*",
-		"@types/cron": "^2.0.1",
 		"cron": "^3.1.7"
+	},
+	"devDependencies": {
+		"@types/cron": "^2.0.1"
 	}
 }
