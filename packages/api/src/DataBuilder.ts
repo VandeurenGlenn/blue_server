@@ -8,6 +8,7 @@ export type BlueAsset = {
 	id: number
 	name: string
 	website: string | null
+	repos: string[]
 	// sourceCode: string;
 	github: GithubProject
 	indicators: {
@@ -41,12 +42,10 @@ export class DataBuilder {
 					id: asset.id,
 					name: asset.name,
 					website: asset.urls.website[0],
-					// This error is just a demonstration that we don't have
-					// other solution to force consistent types.
-					// sourceCode: asset.urls.source_code[0],
+					repos: asset.urls.source_code,
 					github: {
 						activity: {additions: 0, deletions: 0, total: 0},
-						repos: asset.urls.source_code,
+						repos: [],
 						contributers: []
 					},
 					indicators: {
@@ -54,13 +53,10 @@ export class DataBuilder {
 					}
 				}
 
-				const githubRepos = (blueAsset.github.repos as string[]).filter((source: string) => source.includes('github'))
+				const githubRepos = blueAsset.repos.filter((repo) => repo.includes('github'))
 
 				// A github repo was present in CMC data, we fetch informations
 				if (githubRepos.length > 0) {
-					// Remove all github links since they will be converted to object
-					blueAsset.github.repos = blueAsset.github.repos.filter((repo) => !(repo as string).includes('github'))
-
 					const urlParts = (githubRepos[0] as string).replace('https://', '').split('/')
 
 					let repos = await this.gitHub.getRepos(urlParts[1])
@@ -88,39 +84,35 @@ export class DataBuilder {
 							{additions: 0, deletions: 0, total: 0}
 						)
 
-						// Keep the main project if it exists or the first one.
-						const mainProject = repos.find(
-							(repo) => repo instanceof Object && repo.name?.toLowerCase() === asset.name.toLowerCase()
-						)
-						if (mainProject) {
-							blueAsset.github.repos.push(mainProject)
-						} else {
-							// TODO: Needs a better selection algorithm here rather than choosing first one,
-							//            maybe choosing the last updated?
-							// TODO: Also needs a prop extract function for better reading
-							blueAsset.github.repos.push({
-								name: repos[0].name,
-								full_name: repos[0].full_name,
-								private: repos[0].private,
-								url: repos[0].html_url,
-								description: repos[0].description,
-								fork: repos[0].fork,
-								pushed_at: repos[0].pushed_at,
-								created_at: repos[0].created_at,
-								size: repos[0].size,
-								watchers: repos[0].watchers,
-								forks: repos[0].forks,
-								visibility: repos[0].visibility,
+						blueAsset.github.repos = repos.map((repo) => {
+							return {
+								name: repo.name,
+								full_name: repo.full_name,
+								private: repo.private,
+								url: repo.html_url,
+								description: repo.description,
+								fork: repo.fork,
+								pushed_at: repo.pushed_at,
+								created_at: repo.created_at,
+								size: repo.size,
+								watchers: repo.watchers,
+								forks: repo.forks,
+								visibility: repo.visibility,
 								owner: {
-									name: repos[0].owner.name,
-									avatar: repos[0].owner.avatar,
-									gravatar: repos[0].owner.gravatar,
-									type: repos[0].owner.type
+									name: repo.owner.name,
+									avatar: repo.owner.avatar,
+									gravatar: repo.owner.gravatar,
+									type: repo.owner.type
 								}
-							} as Partial<GithubProjectResponse>)
-						}
+							} as Partial<GithubProjectResponse>
+						})
+
+						blueAsset.github.repos.sort(
+							(rA, rB) => new Date(rB.pushed_at!).getTime() - new Date(rA.pushed_at!).getTime()
+						)
 					}
 				}
+
 				return blueAsset
 			})
 		)

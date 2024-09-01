@@ -1,14 +1,15 @@
+import {type GithubProjectResponse} from '@blueserver/api/github';
+import {withController} from '@snar/lit';
 import {LitElement, html} from 'lit';
+import {withStyles} from 'lit-with-styles';
 import {customElement} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
-import {withStyles} from 'lit-with-styles';
-import styles from './app-shell.css?inline';
 import {materialShellLoadingOff} from 'material-shell';
-import {withController} from '@snar/lit';
-import {SORTING_METHODS, SortingMethod, data} from '../data.js';
 import {BlueAsset} from '../../../api/lib/DataBuilder.js';
-import {type GithubProjectResponse} from '@blueserver/api/github';
+import {ago} from '../ago.js';
 import {SVG_GITHUB} from '../assets/assets.js';
+import {SORTING_METHODS, SortingMethod, data} from '../data.js';
+import styles from './app-shell.css?inline';
 
 declare global {
 	interface Window {
@@ -30,6 +31,17 @@ export class AppShell extends LitElement {
 	render() {
 		return html`
 			<header>
+				<md-filled-text-field
+					value="${data.search}"
+					placeholder="search..."
+					@input=${(e: Event) => {
+						const target = e.target as HTMLInputElement;
+						data.search = target.value;
+					}}
+				>
+					<md-icon slot="leading-icon">search</md-icon>
+				</md-filled-text-field>
+				<div class="flex-1"></div>
 				<md-filled-select
 					value=${data.sortingMethod}
 					@change=${(e: Event) => {
@@ -51,30 +63,42 @@ export class AppShell extends LitElement {
 	}
 
 	#renderList() {
-		let assets: BlueAsset[];
+		let assets: BlueAsset[] = data.top100;
+		if (data.search) {
+			const query = data.search.toLowerCase();
+			assets = assets.filter((asset) =>
+				asset.name.toLowerCase().includes(query),
+			);
+		}
 		switch (data.sortingMethod) {
-			case 'updated_at':
-				assets = data.top100.sort((a, b) => {
-					const aRepo = a.github.repos.find(
-						(repo) => repo instanceof Object,
-					) as Partial<GithubProjectResponse> | undefined;
-					const bRepo = b.github.repos.find(
-						(repo) => repo instanceof Object,
-					) as Partial<GithubProjectResponse> | undefined;
+			case 'pushed_at':
+				assets = assets
+					.filter((asset) => asset.github.repos.length)
+					.sort((a, b) => {
+						const aRepo = a.github.repos.find(
+							(repo) => repo instanceof Object,
+						) as Partial<GithubProjectResponse> | undefined;
+						const bRepo = b.github.repos.find(
+							(repo) => repo instanceof Object,
+						) as Partial<GithubProjectResponse> | undefined;
 
-					const aDate = aRepo?.updated_at
-						? new Date(aRepo.updated_at)
-						: new Date(0);
-					const bDate = bRepo?.updated_at
-						? new Date(bRepo.updated_at)
-						: new Date(100);
+						const aDate = aRepo?.pushed_at
+							? new Date(aRepo.pushed_at)
+							: new Date(0);
+						const bDate = bRepo?.pushed_at
+							? new Date(bRepo.pushed_at)
+							: new Date(100);
 
-					return aDate.getTime() - bDate.getTime();
-				});
+						return bDate.getTime() - aDate.getTime();
+					});
 				break;
 			case 'alphabet':
-				assets = data.top100.sort((a, b) => a.name.localeCompare(b.name));
+				assets = assets.sort((a, b) => a.name.localeCompare(b.name));
 				break;
+		}
+
+		if (assets.length === 0) {
+			return html`<div style="text-align:center;margin:48px;">no results</div>`;
 		}
 		return html`
 			<md-list>
@@ -82,21 +106,30 @@ export class AppShell extends LitElement {
 					assets,
 					(asset) => asset.id,
 					(asset) => {
-						const githubRepo = asset.github.repos.find(
+						const repo = asset.github.repos.find(
 							(r) => r instanceof Object,
 						) as GithubProjectResponse;
 
 						return html`
-							<md-list-item
-								@click=${() => {
-									console.log(asset, githubRepo);
-								}}
-							>
-								${githubRepo && githubRepo.updated_at
-									? html` <div slot="supporting-text">${'test'}</div> `
+							<md-list-item>
+								${repo && repo.pushed_at
+									? (() => {
+											const _ago = ago(repo.pushed_at);
+											return html`
+												${['now', 'min', 'ho'].some((m) => _ago.includes(m))
+													? html`<div slot="start">🔥</div>`
+													: null}
+												<div slot="supporting-text">${_ago}</div>
+											`;
+										})()
 									: null}
 								<span>${asset.name}</span>
-								<md-icon-button slot="end" ?disabled=${!githubRepo}>
+								<md-icon-button
+									slot="end"
+									?disabled=${!repo}
+									href="${repo?.url}"
+									target="_blank"
+								>
 									<md-icon>${SVG_GITHUB}</md-icon>
 								</md-icon-button>
 							</md-list-item>
