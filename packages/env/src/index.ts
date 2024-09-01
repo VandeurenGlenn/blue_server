@@ -1,7 +1,12 @@
-import {DotEnvKeys} from '@blueserver/types';
 import dotenv from 'dotenv';
 import pathlib from 'path';
 import {fileURLToPath} from 'url';
+
+export interface DotEnvKeys {
+	coinmarketcap: string;
+	github: string;
+	port: number;
+}
 
 const __dirname = pathlib.dirname(fileURLToPath(import.meta.url));
 

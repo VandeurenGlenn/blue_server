@@ -73,9 +73,3 @@ export type GithubActivity = {
 
 // TODO
 export type GithubIndicator = {};
-
-export interface DotEnvKeys {
-	coinmarketcap: string;
-	github: string;
-	port: number;
-}

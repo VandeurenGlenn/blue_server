@@ -5,13 +5,25 @@
 	"module": "./lib/index.js",
 	"main": "./lib/index.js",
 	"scripts": {
-		"#todo": "lets wireit this command below",
-		"build": "tsc --pretty"
+		"build": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"command": "tsc --pretty",
+			"clean": "if-file-deleted",
+			"files": [
+				"tsconfig.json",
+				".env",
+				"src"
+			],
+			"output": [
+				"lib"
+			]
+		}
 	},
 	"exports": {
 		".": {
 			"default": "./lib/index.js",
-			"import": "./lib/index.js",
 			"types": "./lib/index.d.ts"
 		}
 	}

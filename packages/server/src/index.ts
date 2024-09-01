@@ -1,4 +1,4 @@
-import {env} from './envs.js';
+import {env} from '@blueserver/env';
 import {CronJob} from 'cron';
 import {HttpApiServer} from '@blueserver/api/server/http';
 import {
