@@ -1,5 +1,5 @@
 import {env} from '@blueserver/env';
-import {CronJob} from 'cron';
+import {CronCommand, CronJob} from 'cron';
 import {HttpApiServer} from '@blueserver/api/server/http';
 import {
 	cache,
@@ -19,7 +19,7 @@ async function loadData() {
 await loadData();
 
 // fetch remotely every hour
-const job = new CronJob('0 * * * *', updateCacheWithRemote);
+const job = new CronJob('0 * * * *', updateCacheWithRemote as unknown as CronCommand<any>);
 job.start();
 
 new HttpApiServer({port: env.port});
