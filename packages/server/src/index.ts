@@ -18,9 +18,8 @@ async function loadData() {
 }
 await loadData();
 
-
-// update cache every hour
-const job = await new CronJob('0 * * * *', updateCacheWithRemote);
+// fetch remotely every hour
+const job = new CronJob('0 * * * *', updateCacheWithRemote);
 job.start();
 
 new HttpApiServer({port: env.port});
