@@ -1,0 +1,53 @@
+{
+	"name": "blue-front",
+	"version": "1.0.0",
+	"description": "front for blue",
+	"type": "module",
+	"author": "Valentin Degenne <vdegenne@gmail.com>",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"devDependencies": {
+		"@blueserver/api": "*",
+		"@material/web": "^1.5.1",
+		"@snar/lit": "^1.5.1",
+		"@vdegenne/about-dialog": "^0.4.2",
+		"@vdegenne/material-color-helpers": "^1.9.0",
+		"custom-element-decorator": "^0.4.0",
+		"lit": "^2.8.0",
+		"lit-with-styles": "^1.1.1",
+		"material-3-prompt-dialog": "^1.0.1",
+		"material-shell": "^1.2.5",
+		"postcss": "^8.4.42",
+		"rollup-plugin-material-all": "^1.2.2",
+		"snar": "^2.2.0",
+		"snar-save-to-local-storage": "^1.0.1",
+		"tailwindcss": "^3.4.10",
+		"toastit": "^0.0.4",
+		"vite": "^4.5.3",
+		"vite-lit-with-tailwind": "^2.1.1",
+		"vite-plugin-mdicon2svg": "^0.0.4"
+	},
+	"scripts": {
+		"dev": "wireit",
+		"build": "wireit"
+	},
+	"wireit": {
+		"dev": {
+			"command": "vite --host",
+			"service": true,
+			"dependencies": [
+				"../api:build"
+			]
+		},
+		"build": {
+			"command": "vite build",
+			"files": [
+				"src",
+				"vite.config.ts"
+			]
+		}
+	}
+}
