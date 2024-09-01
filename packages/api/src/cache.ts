@@ -2,7 +2,8 @@ import {LOCAL_DATA_FILENAME} from '@blueserver/server/constants';
 import {type GithubActivity} from '@blueserver/types';
 import {readFile, writeFile} from 'fs/promises';
 import {type GithubProjectResponse} from './api/github.js';
-import {type BlueAsset} from './DataBuilder.js';
+import {dataBuilder, type BlueAsset} from './DataBuilder.js';
+import {LIST_SIZE as DEFAULT_LIST_SIZE} from './constants.js';
 
 export type BlueCache = {
 	bluelist: BlueAsset[];
@@ -58,11 +59,8 @@ export const init = async () => {
 };
 
 export async function updateCacheWithRemote() {
-	// cache.bluelist = await dataBuilder.top100(LIST_SIZE);
-	// 	writeFile(
-	// 		LOCAL_DATA_FILENAME,
-	// 		JSON.stringify(cache.bluelist)
-	// 	)
+	cache.bluelist = await dataBuilder.createAssetList(DEFAULT_LIST_SIZE);
+	writeFile(LOCAL_DATA_FILENAME, JSON.stringify(cache.bluelist));
 
 	// Just to test
 	await writeFile('./repos.json', JSON.stringify(cache.github.repos.cached));

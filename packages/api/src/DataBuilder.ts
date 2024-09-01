@@ -30,11 +30,10 @@ export class DataBuilder {
 	}
 
 	/**
-	 *
 	 * @param top the number of projects in the top to fetch
 	 * @returns {BlueAsset[]} list of blue indicators (for the front end)
 	 */
-	async top100(limit = 100): Promise<BlueAsset[]> {
+	async createAssetList(limit = 100): Promise<BlueAsset[]> {
 		const listings: CMCListing[] = await this.coinMarketCap.getLatestListings(
 			limit
 		);
