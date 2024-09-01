@@ -26,5 +26,8 @@
 			"default": "./lib/index.js",
 			"types": "./lib/index.d.ts"
 		}
+	},
+	"dependencies": {
+		"dotenv": "^16.4.5"
 	}
 }

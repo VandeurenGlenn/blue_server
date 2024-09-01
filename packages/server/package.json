@@ -42,7 +42,6 @@
 		"@blueserver/api": "*",
 		"@blueserver/env": "*",
 		"@types/cron": "^2.0.1",
-		"dotenv": "^16.4.5",
 		"cron": "^3.1.7"
 	}
 }
