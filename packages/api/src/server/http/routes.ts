@@ -10,4 +10,3 @@ export const routes = router.routes()
 export const allowedMethods = router.allowedMethods()
 
 export const availableRoutes = ['/top-100']
-
