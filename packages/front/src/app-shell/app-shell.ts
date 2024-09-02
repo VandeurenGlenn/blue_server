@@ -116,10 +116,19 @@ export class AppShell extends LitElement {
 									? (() => {
 											const _ago = ago(repo.pushed_at);
 											return html`
-												${['now', 'min', 'ho'].some((m) => _ago.includes(m))
-													? html`<div slot="start">🔥</div>`
-													: null}
-												<div slot="supporting-text">${_ago}</div>
+												<md-icon-button
+													slot="start"
+													href="${asset.website}"
+													target="_blank"
+												>
+													<img src=${asset.logo} />
+												</md-icon-button>
+												<div slot="overline">${asset.symbol}</div>
+												<div slot="trailing-supporting-text">
+													${['now', 'min', 'ho'].some((m) => _ago.includes(m))
+														? '🔥 '
+														: null}${_ago}
+												</div>
 											`;
 										})()
 									: null}
