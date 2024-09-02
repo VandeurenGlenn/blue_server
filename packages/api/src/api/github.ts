@@ -119,7 +119,7 @@ export type GithubProjectResponse = {
 
 export declare type GithubProject = {
 	activity: GithubActivity
-	repos: (Partial<GithubProjectResponse> | string)[]
+	repos: Partial<GithubProjectResponse>[]
 	contributers: string[]
 }
 
