@@ -8,8 +8,8 @@ export function ago(dateString: string): string {
 		month: 2592000,
 		day: 86400,
 		hour: 3600,
-		minute: 60,
-		second: 1,
+		min: 60,
+		sec: 1,
 	};
 
 	for (const [unit, value] of Object.entries(intervals)) {
