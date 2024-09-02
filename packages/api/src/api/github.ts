@@ -153,13 +153,13 @@ export class GitHub {
 
 	async #getRepos(name: string, type: string): Promise<GithubProjectResponse[]> {
 		const headers = this.#headers
-		headers.set('If-None-Match', cache.github.repos.tags[name])
+		if (cache.github.repos.tags[name]) headers.set('If-None-Match', cache.github.repos.tags[name])
 		if (type === 'Organization') {
 			type = 'orgs'
 		}
 		const response = await fetch(`https://api.github.com/${type}/${name}/repos`, {headers})
 		if (response.status === 304) {
-			return []
+			return cache.github.repos.cached[name]
 		}
 		cache.github.repos.tags[name] = response.headers.get('ETag') as string
 		if (response.status === 404) return []
