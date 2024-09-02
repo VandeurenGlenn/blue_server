@@ -1,9 +1,0 @@
-node_modules
-
-lib
-
-.DS_Store
-.env
-.wireit
-packages/server/data.json
-packages/front/src/top100.json
