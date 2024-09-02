@@ -8,7 +8,7 @@ import {mdicon2svg} from 'vite-plugin-mdicon2svg';
 // import {VitePWA} from 'vite-plugin-pwa';
 
 export default defineConfig({
-	// base: './',
+	base: './',
 	resolve: {
 		// preserveSymlinks: true,
 	},

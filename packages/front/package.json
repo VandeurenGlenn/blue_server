@@ -47,6 +47,9 @@
 		},
 		"build": {
 			"command": "vite build",
+			"dependencies": [
+				"../api:build"
+			],
 			"files": [
 				"src",
 				"vite.config.ts"
