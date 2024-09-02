@@ -11,8 +11,21 @@
 		"url": "git+https://github.com/VandeurenGlenn/blue_server.git"
 	},
 	"scripts": {
-		"build": "npm run build --workspaces --if-present",
-		"start:server": "node packages/server/lib/index.js"
+		"build": "wireit",
+		"start:server": "wireit"
+	},
+	"wireit": {
+		"build": {
+			"dependencies": [
+				"./packages/server:build",
+				"./packages/front:build"
+			]
+		},
+		"start:server": {
+			"dependencies": [
+				"./packages/server:serve"
+			]
+		}
 	},
 	"keywords": [],
 	"author": "",
