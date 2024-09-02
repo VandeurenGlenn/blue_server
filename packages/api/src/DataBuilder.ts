@@ -7,6 +7,8 @@ import {SEVEN_DAYS_AGO} from './constants.js'
 export type BlueAsset = {
 	id: number
 	name: string
+	symbol: string
+	logo: string | null
 	website: string | null
 	repos: string[]
 	// sourceCode: string;
@@ -40,7 +42,9 @@ export class DataBuilder {
 			Object.values(listingsInfo).map(async (asset) => {
 				const blueAsset: BlueAsset = {
 					id: asset.id,
+					symbol: asset.symbol,
 					name: asset.name,
+					logo: asset.logo,
 					website: asset.urls.website[0],
 					repos: asset.urls.source_code,
 					github: {
