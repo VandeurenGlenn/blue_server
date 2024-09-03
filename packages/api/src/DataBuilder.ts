@@ -7,10 +7,12 @@ import {SEVEN_DAYS_AGO} from './constants.js'
 export type BlueAsset = {
 	id: number
 	name: string
+	rank: number
 	symbol: string
 	logo: string | null
 	website: string | null
 	repos: string[]
+	twentyFourHourPriceChange: number
 	// sourceCode: string;
 	github: GithubProject
 	indicators: {
@@ -36,12 +38,14 @@ export class DataBuilder {
 	async createAssetList(limit = 100): Promise<BlueAsset[]> {
 		const listings: CMCListing[] = await this.coinMarketCap.getLatestListings(limit)
 		const listingsInfo = await this.coinMarketCap.getListingInfo(listings.map((l) => l.id))
-
+		let i = 0
 		// This part is responsible of filling in the blanks (mainly github informations for now)
 		return Promise.all(
 			Object.values(listingsInfo).map(async (asset) => {
 				const blueAsset: BlueAsset = {
 					id: asset.id,
+					rank: listings[i].cmc_rank,
+					twentyFourHourPriceChange: listings[i].quote.USD.percent_change_24h,
 					symbol: asset.symbol,
 					name: asset.name,
 					logo: asset.logo,
@@ -116,6 +120,7 @@ export class DataBuilder {
 						)
 					}
 				}
+				i++
 
 				return blueAsset
 			})

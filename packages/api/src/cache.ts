@@ -3,9 +3,13 @@ import {readFile, writeFile} from 'fs/promises'
 import {type GithubProjectResponse} from './api/github.js'
 import {dataBuilder, type BlueAsset} from './DataBuilder.js'
 import {LIST_SIZE as DEFAULT_LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
+import LittlePubSub from '@vandeurenglenn/little-pubsub'
+
+const pubsub = new LittlePubSub()
 
 export type BlueCache = {
 	bluelist: BlueAsset[]
+	subscribe: typeof pubsub.subscribe
 	github: {
 		repos: {
 			cached: {
@@ -22,6 +26,7 @@ export type BlueCache = {
 
 export const cache: BlueCache = {
 	bluelist: [],
+	subscribe: pubsub.subscribe.bind(pubsub),
 	github: {
 		repos: {
 			cached: {},
@@ -45,6 +50,11 @@ export const init = async () => {
 
 export async function updateCacheWithRemote() {
 	cache.bluelist = await dataBuilder.createAssetList(DEFAULT_LIST_SIZE)
+	pubsub.publish('top100', cache.bluelist)
+	pubsub.publish(
+		'twentyFourHourPriceChange',
+		cache.bluelist.map((a) => ({id: a.id, change: a.twentyFourHourPriceChange}))
+	)
 	writeFile(LOCAL_DATA_FILENAME, JSON.stringify(cache.bluelist))
 
 	// Just to test

@@ -1,6 +1,9 @@
 import {env} from '@blueserver/env'
 import {CronCommand, CronJob} from 'cron'
 import {HttpApiServer} from '@blueserver/api/server/http'
+import {WSApiServer} from '@blueserver/api/server/ws'
+import {PORT, WS_PORT} from '@blueserver/api/constants'
+
 import {cache, updateCacheWithRemote, init as initCache} from '@blueserver/api/cache'
 
 // try {
@@ -14,4 +17,5 @@ await updateCacheWithRemote()
 const job = new CronJob('0 * * * *', updateCacheWithRemote as unknown as CronCommand<any>)
 job.start()
 
-new HttpApiServer({port: env.port})
+new HttpApiServer({port: PORT})
+new WSApiServer({port: WS_PORT})

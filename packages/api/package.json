@@ -7,6 +7,10 @@
 			"import": "./lib/api/api.js",
 			"types": "./lib/api/api.d.ts"
 		},
+		"./constants": {
+			"types": "./lib/constants.d.ts",
+			"import": "./lib/constants.js"
+		},
 		"./cache": {
 			"types": "./lib/cache.d.ts",
 			"import": "./lib/cache.js"
@@ -24,8 +28,8 @@
 			"types": "./lib/server/http/index.d.ts"
 		},
 		"./server/ws": {
-			"import": "./lib/server/ws.js",
-			"types": "./lib/server/ws.d.ts"
+			"import": "./lib/server/ws/index.js",
+			"types": "./lib/server/ws/index.d.ts"
 		},
 		"./github": {
 			"import": "./lib/api/github.js",

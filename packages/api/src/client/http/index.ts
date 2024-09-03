@@ -10,14 +10,18 @@ declare global {
 }
 
 export class HttpApiClient {
-	static async #fetch(endpoint: string) {
+	async #fetch(endpoint: string) {
 		const response = await fetch(
 			!import.meta.env.DEV ? `https://blue.leofcoin.org/${endpoint}` : `http://localhost:${PORT}/${endpoint}`
 		)
 		return response.json()
 	}
 
-	static top100() {
-		return this.#fetch('top-100') as Promise<BlueAsset[]>
+	top100() {
+		return this.#fetch('top100') as Promise<BlueAsset[]>
+	}
+
+	twentyFourHourPriceChange() {
+		return this.#fetch('twentyFourHourPriceChange') as Promise<BlueAsset[]>
 	}
 }
