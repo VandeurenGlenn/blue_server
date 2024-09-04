@@ -12,8 +12,13 @@ export type CMCListing = {
 	max_supply: number
 	circulating_supply: number
 	total_supply: number
-	// type to define
-	platform: any[]
+	platform: {
+		id: number
+		name: string
+		symbol: string
+		slug: string
+		token_address: string
+	} | null
 	infinite_supply: boolean
 	cmc_rank: number
 	self_reported_circulating_supply: number | null

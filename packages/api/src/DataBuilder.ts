@@ -9,6 +9,8 @@ export type BlueAsset = {
 	name: string
 	rank: number
 	symbol: string
+	platform: CMCListing['platform']
+	platforms: {contract_address: string; platform: CMCListing['platform']}[] | null
 	logo: string | null
 	website: string | null
 	repos: string[]
@@ -45,6 +47,8 @@ export class DataBuilder {
 				const blueAsset: BlueAsset = {
 					id: asset.id,
 					rank: listings[i].cmc_rank,
+					platform: listings[i].platform,
+					platforms: asset.contract_address,
 					change24h: listings[i].quote.USD.percent_change_24h,
 					symbol: asset.symbol,
 					name: asset.name,
