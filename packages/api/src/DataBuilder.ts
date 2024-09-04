@@ -12,7 +12,7 @@ export type BlueAsset = {
 	logo: string | null
 	website: string | null
 	repos: string[]
-	twentyFourHourPriceChange: number
+	change24h: number
 	// sourceCode: string;
 	github: GithubProject
 	indicators: {
@@ -45,7 +45,7 @@ export class DataBuilder {
 				const blueAsset: BlueAsset = {
 					id: asset.id,
 					rank: listings[i].cmc_rank,
-					twentyFourHourPriceChange: listings[i].quote.USD.percent_change_24h,
+					change24h: listings[i].quote.USD.percent_change_24h,
 					symbol: asset.symbol,
 					name: asset.name,
 					logo: asset.logo,

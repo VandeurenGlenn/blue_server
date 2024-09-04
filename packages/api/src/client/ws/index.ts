@@ -20,8 +20,8 @@ export class WSApiClient {
 		return this.#client.request({url: 'top100'})
 	}
 
-	twentyFourHourPriceChange(): Promise<{[id: string]: string}> {
-		return this.#client.request({url: 'twentyFourHourPriceChange'})
+	change24h(): Promise<{[id: string]: string}> {
+		return this.#client.request({url: 'change24h'})
 	}
 
 	subscribe(event: string, cb: Function) {

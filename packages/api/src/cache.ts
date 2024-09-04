@@ -52,8 +52,8 @@ export async function updateCacheWithRemote() {
 	cache.bluelist = await dataBuilder.createAssetList(DEFAULT_LIST_SIZE)
 	pubsub.publish('top100', cache.bluelist)
 	pubsub.publish(
-		'twentyFourHourPriceChange',
-		cache.bluelist.map((a) => ({id: a.id, change: a.twentyFourHourPriceChange}))
+		'change24h',
+		cache.bluelist.map((a) => ({id: a.id, change: a.change24h}))
 	)
 	writeFile(LOCAL_DATA_FILENAME, JSON.stringify(cache.bluelist))
 

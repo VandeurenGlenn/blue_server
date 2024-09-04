@@ -22,12 +22,12 @@ export class WSApiServer {
 				}
 		})
 
-		cache.subscribe('twentyFourhourPriceChange', () => {
+		cache.subscribe('change24h', () => {
 			if (this.#server?.connections)
 				for (const connection of this.#server?.connections) {
 					connection.send(
-						'twentyFourhourPriceChange',
-						cache.bluelist.map((a) => ({id: a.id, change: a.twentyFourHourPriceChange}))
+						'change24h',
+						cache.bluelist.map((a) => ({id: a.id, change: a.change24h}))
 					)
 				}
 		})
@@ -35,7 +35,6 @@ export class WSApiServer {
 
 	#api: {[index: string]: (params: any, response: SocketResponse) => void} = {
 		top100: (response) => response.send(cache.bluelist),
-		twentyFourHourPriceChange: (response) =>
-			response.send(cache.bluelist.map((a) => ({id: a.id, change: a.twentyFourHourPriceChange})))
+		twentyFourHourPriceChange: (response) => response.send(cache.bluelist.map((a) => ({id: a.id, change: a.change24h})))
 	}
 }
