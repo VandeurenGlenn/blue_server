@@ -1,19 +1,19 @@
 // @ts-ignore
 import SocketRequestClient from 'socket-request-client'
 import {type BlueAsset} from '../../DataBuilder.js'
+import {WS_PORT} from '../../constants.js'
+
+const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
 
 export class WSApiClient {
-	// @ts-ignore
-	#client
+	#client = new SocketRequestClient(url, 'protocol-blue')
 
 	constructor() {
 		this.#init()
 	}
 
 	async #init() {
-		// @ts-ignore
-		this.#client = new SocketRequestClient('ws://blue.leofcoin.org', 'protocol-blue')
-		this.#client.init()
+		this.#client = await this.#client.init()
 	}
 
 	top100(): Promise<BlueAsset[]> {
