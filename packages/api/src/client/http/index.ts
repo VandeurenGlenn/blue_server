@@ -1,14 +1,6 @@
 import {PORT} from '../../constants.js'
 import {type BlueAsset} from '../../DataBuilder.js'
 
-declare global {
-	interface ImportMeta {
-		env: {
-			DEV: boolean
-		}
-	}
-}
-
 export class HttpApiClient {
 	static async #fetch(endpoint: string) {
 		const response = await fetch(

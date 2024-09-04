@@ -23,14 +23,6 @@
 			"import": "./lib/client/ws/index.js",
 			"types": "./lib/client/ws/index.d.ts"
 		},
-		"./server/http": {
-			"import": "./lib/server/http/index.js",
-			"types": "./lib/server/http/index.d.ts"
-		},
-		"./server/ws": {
-			"import": "./lib/server/ws/index.js",
-			"types": "./lib/server/ws/index.d.ts"
-		},
 		"./github": {
 			"import": "./lib/api/github.js",
 			"types": "./lib/api/github.d.ts"

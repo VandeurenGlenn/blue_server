@@ -90,3 +90,11 @@ export type GithubActivity = {
 
 // TODO
 export type GithubIndicator = {}
+
+declare global {
+	interface ImportMeta {
+		env: {
+			DEV: boolean
+		}
+	}
+}

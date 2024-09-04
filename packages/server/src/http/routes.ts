@@ -1,5 +1,5 @@
 import Router from '@koa/router'
-import {cache} from './../../cache.js'
+import {cache} from '@blueserver/api/cache'
 
 const router = new Router()
 

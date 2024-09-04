@@ -1,5 +1,5 @@
 import socketRequestServer from 'socket-request-server'
-import {cache} from './../../cache.js'
+import {cache} from '@blueserver/api/cache'
 
 export type SocketResponse = {
 	send: (data: any, status?: number) => void

@@ -10,6 +10,7 @@ const pubsub = new LittlePubSub()
 export type BlueCache = {
 	bluelist: BlueAsset[]
 	subscribe: typeof pubsub.subscribe
+	lastUpdated: number
 	github: {
 		repos: {
 			cached: {
@@ -26,6 +27,7 @@ export type BlueCache = {
 
 export const cache: BlueCache = {
 	bluelist: [],
+	lastUpdated: 0,
 	subscribe: pubsub.subscribe.bind(pubsub),
 	github: {
 		repos: {
@@ -41,6 +43,7 @@ export const cache: BlueCache = {
 
 export const init = async () => {
 	cache.bluelist = JSON.parse((await readFile(LOCAL_DATA_FILENAME)).toString())
+	cache.lastUpdated = parseInt((await readFile('last-updated.txt')).toString())
 	cache.github.repos.cached = JSON.parse((await readFile('./repos.json')).toString())
 	cache.github.repos.tags = JSON.parse((await readFile('./tags.json')).toString())
 	cache.github.stats.cached = JSON.parse((await readFile('./stats.json')).toString())
@@ -55,7 +58,9 @@ export async function updateCacheWithRemote() {
 		'change24h',
 		cache.bluelist.map((a) => ({id: a.id, change: a.change24h}))
 	)
+
 	writeFile(LOCAL_DATA_FILENAME, JSON.stringify(cache.bluelist))
+	writeFile('last-updated.txt', Date.now().toString())
 
 	// Just to test
 	await writeFile('./repos.json', JSON.stringify(cache.github.repos.cached))
