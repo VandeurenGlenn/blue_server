@@ -1,6 +1,5 @@
-import {type GithubActivity} from '@blueserver/types'
 import {readFile, writeFile} from 'fs/promises'
-import {type GithubProjectResponse} from './api/github.js'
+import type {GithubActivity, GithubProjectResponse} from './api/github.js'
 import {dataBuilder, type BlueAsset} from './DataBuilder.js'
 import {LIST_SIZE as DEFAULT_LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
 import LittlePubSub from '@vandeurenglenn/little-pubsub'
