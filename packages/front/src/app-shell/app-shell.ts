@@ -1,6 +1,7 @@
 import {type GithubProjectResponse} from '@blueserver/api/github';
+import {MdItem} from '@material/web/labs/item/item.js';
 import {withController} from '@snar/lit';
-import {LitElement, html} from 'lit';
+import {LitElement, css, html} from 'lit';
 import {withStyles} from 'lit-with-styles';
 import {customElement} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
@@ -9,7 +10,14 @@ import {BlueAsset} from '../../../api/lib/DataBuilder.js';
 import {ago} from '../ago.js';
 import {SVG_GITHUB} from '../assets/assets.js';
 import {SORTING_METHODS, SortingMethod, data} from '../data.js';
+import '../price-change.js';
 import styles from './app-shell.css?inline';
+
+// @ts-ignore
+MdItem.elementStyles.push(css`
+.text {
+flex: 0.5;
+`);
 
 declare global {
 	interface Window {
@@ -92,6 +100,11 @@ export class AppShell extends LitElement {
 						return bDate.getTime() - aDate.getTime();
 					});
 				break;
+			case 'change 24h':
+				assets = assets.sort((a, b) => {
+					return b.change24h - a.change24h;
+				});
+				break;
 			case 'alphabet':
 				assets = assets.sort((a, b) => a.name.localeCompare(b.name));
 				break;
@@ -101,7 +114,7 @@ export class AppShell extends LitElement {
 			return html`<div style="text-align:center;margin:48px;">no results</div>`;
 		}
 		return html`
-			<md-list>
+			<md-list class="p-0 gap-2">
 				${repeat(
 					assets,
 					(asset) => asset.id,
@@ -111,28 +124,39 @@ export class AppShell extends LitElement {
 						) as GithubProjectResponse;
 
 						return html`
-							<md-list-item>
-								${repo && repo.pushed_at
-									? (() => {
-											const _ago = ago(repo.pushed_at);
-											return html`
-												<md-icon-button
-													slot="start"
-													href="${asset.website}"
-													target="_blank"
-												>
-													<img src=${asset.logo} />
-												</md-icon-button>
-												<div slot="overline">${asset.symbol}</div>
-												<div slot="trailing-supporting-text">
-													${['now', 'min', 'ho'].some((m) => _ago.includes(m))
+							<md-list-item
+								@click=${() => {
+									console.log(asset);
+								}}
+							>
+								<md-icon-button
+									slot="start"
+									href="${asset.website}"
+									target="_blank"
+								>
+									<img src=${asset.logo} />
+								</md-icon-button>
+								<div slot="overline" class="text-gray-300">#${asset.rank}</div>
+								<div slot="headline">${asset.symbol}</div>
+								<div slot="supporting-text">${asset.name}</div>
+								<div
+									slot="trailing-supporting-text"
+									class="flex-1 flex items-center justify-between"
+								>
+									<price-change change=${asset.change24h}></price-change>
+									${repo && repo.pushed_at
+										? (() => {
+												const _ago = ago(repo.pushed_at);
+												return html`
+													${['now', 'sec', 'min', 'ho'].some((m) =>
+														_ago.includes(m),
+													)
 														? '🔥 '
 														: null}${_ago}
-												</div>
-											`;
-										})()
-									: null}
-								<span>${asset.name}</span>
+												`;
+											})()
+										: null}
+								</div>
 								<md-icon-button
 									slot="end"
 									?disabled=${!repo}
