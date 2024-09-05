@@ -15,18 +15,16 @@ export class WSApiServer {
 		this.#connectionPromise = socketRequestServer({port: options.port, protocol: 'protocol-blue'}, this.#api)
 		this.#connectionPromise.then((server) => {
 			this.#server = server
-			PubSub.subscribe('top100', () => {
-				if (this.#server?.connections)
-					for (const connection of this.#server?.connections) {
-						connection.send(JSON.stringify({url: 'pubsub', params: {topic: 'top100', value: cache.bluelist}}))
-					}
+			PubSub.subscribe('top100', (data) => {
+				for (const connection of this.#server!.connections) {
+					connection.send(JSON.stringify({url: 'pubsub', params: {topic: 'top100', value: data}}))
+				}
 			})
 
-			PubSub.subscribe('change24h', () => {
-				if (this.#server?.connections)
-					for (const connection of this.#server?.connections) {
-						connection.send(JSON.stringify({url: 'pubsub', params: {topic: 'change24h', value: this.#change24h}}))
-					}
+			PubSub.subscribe('change24h', (data) => {
+				for (const connection of this.#server!.connections) {
+					connection.send(JSON.stringify({url: 'pubsub', params: {topic: 'change24h', value: data}}))
+				}
 			})
 		})
 	}

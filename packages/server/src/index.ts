@@ -1,9 +1,9 @@
-import {CronCommand, CronJob} from 'cron'
+import {PORT, WS_PORT} from '@blueserver/api/constants'
+import {CronJob} from 'cron'
 import {HttpApiServer} from './http/index.js'
 import {WSApiServer} from './ws/index.js'
-import {PORT, WS_PORT} from '@blueserver/api/constants'
 
-import {init, updateCacheWithRemote, cache} from '@blueserver/api/cache'
+import {cache, init, updateCacheWithRemote} from '@blueserver/api/cache'
 
 // todo: check if cache can be used, if not, update cache & if in dev mode update also
 try {
@@ -17,7 +17,6 @@ try {
 }
 
 // fetch remotely every hour
-const job = new CronJob('0 * * * *', updateCacheWithRemote as unknown as CronCommand<any>)
 job.start()
 
 new HttpApiServer({port: PORT})

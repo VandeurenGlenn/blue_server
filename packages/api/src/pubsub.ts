@@ -10,7 +10,7 @@ export interface ChangesList {
 const pubsub = new LittlePubSub()
 
 export class PubSub {
-	static subscribe(route: AvailableRoute, callback: () => void) {
+	static subscribe(route: AvailableRoute, callback: (data: any) => void) {
 		pubsub.subscribe(route, callback)
 	}
 
