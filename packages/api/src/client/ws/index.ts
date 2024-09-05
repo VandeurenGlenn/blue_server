@@ -1,13 +1,8 @@
 import {SocketRequestClient} from 'socket-request-client'
 import {type BlueAsset} from '../../DataBuilder.js'
-<<<<<<< HEAD
 import {type AvailableRoute, WS_PORT} from '../../constants.js'
 import ClientConnection from 'socket-request-client/connection'
 import {type ChangesList} from '../../pubsub.js'
-=======
-import {WS_PORT} from '../../constants.js'
-import ClientConnection from 'socket-request-client/connection'
->>>>>>> c3cd0ac (Fix socket client import)
 
 export class WSApiClient {
 	#connectionPromise
