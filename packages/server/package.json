@@ -40,6 +40,7 @@
 	"dependencies": {
 		"@blueserver/api": "*",
 		"@blueserver/env": "*",
+		"@vandeurenglenn/little-pubsub": "^1.4.8",
 		"cron": "^3.1.7"
 	},
 	"devDependencies": {

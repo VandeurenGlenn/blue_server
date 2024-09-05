@@ -12,16 +12,33 @@ export type CMCListing = {
 	max_supply: number
 	circulating_supply: number
 	total_supply: number
-	// type to define
-	platform: any[]
+	platform: {
+		id: number
+		name: string
+		symbol: string
+		slug: string
+		token_address: string
+	} | null
 	infinite_supply: boolean
 	cmc_rank: number
 	self_reported_circulating_supply: number | null
 	self_reported_market_cap: number | null
 	tvl_ratio: number | null
 	last_updated: string
-	// type to define
-	quote: any[]
+	quote: {
+		[key: string]: {
+			price: number
+			volume_24h: number
+			volume_change_24h: number
+			percent_change_1h: number
+			percent_change_24h: number
+			percent_change_7d: number
+			market_cap: number
+			market_cap_dominance: number
+			fully_diluted_market_cap: number
+			last_updated: string
+		}
+	}
 }
 
 /**
@@ -73,3 +90,11 @@ export type GithubActivity = {
 
 // TODO
 export type GithubIndicator = {}
+
+declare global {
+	interface ImportMeta {
+		env: {
+			DEV: boolean
+		}
+	}
+}

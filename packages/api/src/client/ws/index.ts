@@ -1,30 +1,30 @@
 // @ts-ignore
-import SocketRequestClient from 'socket-request-client';
-import {type BlueAsset} from '../../DataBuilder.js';
+import SocketRequestClient from 'socket-request-client'
+import {type BlueAsset} from '../../DataBuilder.js'
+import {WS_PORT} from '../../constants.js'
+
+const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
 
 export class WSApiClient {
-	// @ts-ignore
-	#client;
+	#client = new SocketRequestClient(url, 'protocol-blue')
 
 	constructor() {
-		this.#init();
+		this.#init()
 	}
 
 	async #init() {
-		// @ts-ignore
-		this.#client = new SocketRequestClient(
-			'ws://blue.leofcoin.org',
-			'protocol-blue'
-		);
-		this.#client.init();
+		this.#client = await this.#client.init()
 	}
 
 	top100(): Promise<BlueAsset[]> {
-		return this.#client.request({url: 'top-100'});
+		return this.#client.request({url: 'top100'})
+	}
+
+	change24h(): Promise<{[id: string]: string}> {
+		return this.#client.request({url: 'change24h'})
 	}
 
 	subscribe(event: string, cb: Function) {
-		return this.#client.pubsub.subscribe(event, cb);
+		return this.#client.pubsub.subscribe(event, cb)
 	}
 }
-
