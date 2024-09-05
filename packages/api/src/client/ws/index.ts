@@ -2,6 +2,7 @@ import {SocketRequestClient} from 'socket-request-client'
 import {type BlueAsset} from '../../DataBuilder.js'
 import {type AvailableRoute, WS_PORT} from '../../constants.js'
 import ClientConnection from 'socket-request-client/connection'
+import {type ChangesList} from '../../pubsub.js'
 
 export class WSApiClient {
 	#connectionPromise
@@ -26,7 +27,7 @@ export class WSApiClient {
 		return this.#client.request({url: 'top100'})
 	}
 
-	change24h(): Promise<{[id: string]: string}> {
+	change24h(): Promise<ChangesList[]> {
 		if (!this.#client) {
 			throw new Error('Client is not available.')
 		}
