@@ -18,14 +18,14 @@ export class WSApiServer {
 			PubSub.subscribe('top100', () => {
 				if (this.#server?.connections)
 					for (const connection of this.#server?.connections) {
-						connection.send('top100', cache.bluelist)
+						connection.send(JSON.stringify({url: 'pubsub', params: {topic: 'top100', value: cache.bluelist}}))
 					}
 			})
 
 			PubSub.subscribe('change24h', () => {
 				if (this.#server?.connections)
 					for (const connection of this.#server?.connections) {
-						connection.send('change24h', this.#change24h)
+						connection.send(JSON.stringify({url: 'pubsub', params: {topic: 'change24h', value: this.#change24h}}))
 					}
 			})
 		})
