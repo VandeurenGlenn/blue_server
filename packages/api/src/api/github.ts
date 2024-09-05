@@ -1,4 +1,3 @@
-import {GithubActivity} from '@blueserver/types'
 import {cache} from './../cache.js'
 import fetch from 'node-fetch'
 
@@ -114,6 +113,23 @@ export type GithubProjectResponse = {
 		push: boolean
 		triage: boolean
 		pull: boolean
+	}
+}
+
+export type GithubActivity = {
+	additions: number
+	deletions: number
+	total: number
+}
+
+// TODO: glenn do it lol
+export type GithubIndicator = {}
+
+declare global {
+	interface ImportMeta {
+		env: {
+			DEV: boolean
+		}
 	}
 }
 

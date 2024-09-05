@@ -1,6 +1,7 @@
 import Koa from 'koa'
 import cors from '@koa/cors'
-import {routes, allowedMethods, availableRoutes} from './routes.js'
+import {routes, allowedMethods} from './routes.js'
+import {availableRoutes} from '@blueserver/api/constants'
 
 export class HttpApiServer {
 	server: Koa = new Koa()
@@ -13,8 +14,9 @@ export class HttpApiServer {
 		this.server.listen(port)
 		console.group('available endpoints')
 		for (const endpoint of availableRoutes) {
-			console.log(`endpoint at http://localhost:${port}${endpoint}`)
+			console.log(`endpoint at http://localhost:${port}/${endpoint}`)
 		}
 		console.groupEnd()
 	}
 }
+

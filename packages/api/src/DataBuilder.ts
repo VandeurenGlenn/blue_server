@@ -1,6 +1,5 @@
 import {env} from '@blueserver/env'
-import {CMCListing} from '@blueserver/types'
-import {CoinMarketCap} from './api/coinmarketcap.js'
+import {type CMCListing, CoinMarketCap, type CMCPlatform} from './api/coinmarketcap.js'
 import {GitHub, type GithubProject, type GithubProjectResponse} from './api/github.js'
 import {SEVEN_DAYS_AGO} from './constants.js'
 
@@ -9,13 +8,15 @@ export type BlueAsset = {
 	name: string
 	rank: number
 	symbol: string
-	platform: CMCListing['platform']
-	platforms: {contract_address: string; platform: CMCListing['platform']}[] | null
-	logo: string | null
-	website: string | null
+	platform?: CMCPlatform
+	platforms: {
+		contract_address: string
+		platform: CMCPlatform
+	}[]
+	logo?: string
+	website: string
 	repos: string[]
 	change24h: number
-	// sourceCode: string;
 	github: GithubProject
 	indicators: {
 		github: null
@@ -40,10 +41,9 @@ export class DataBuilder {
 	async createAssetList(limit = 100): Promise<BlueAsset[]> {
 		const listings: CMCListing[] = await this.coinMarketCap.getLatestListings(limit)
 		const listingsInfo = await this.coinMarketCap.getListingInfo(listings.map((l) => l.id))
-		let i = 0
-		// This part is responsible of filling in the blanks (mainly github informations for now)
+
 		return Promise.all(
-			Object.values(listingsInfo).map(async (asset) => {
+			Object.values(listingsInfo).map(async (asset, i) => {
 				const blueAsset: BlueAsset = {
 					id: asset.id,
 					rank: listings[i].cmc_rank,

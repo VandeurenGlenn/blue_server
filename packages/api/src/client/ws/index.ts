@@ -1,30 +1,43 @@
-// @ts-ignore
-import SocketRequestClient from 'socket-request-client'
+import {SocketRequestClient} from 'socket-request-client'
 import {type BlueAsset} from '../../DataBuilder.js'
-import {WS_PORT} from '../../constants.js'
-
-const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
+import {type AvailableRoute, WS_PORT} from '../../constants.js'
+import ClientConnection from 'socket-request-client/connection'
+import {type ChangesList} from '../../pubsub.js'
 
 export class WSApiClient {
-	#client = new SocketRequestClient(url, 'protocol-blue')
+	#connectionPromise
+	#client: ClientConnection | undefined
 
 	constructor() {
-		this.#init()
+		const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
+		this.#connectionPromise = new SocketRequestClient(url, 'protocol-blue').init()
+		this.#connectionPromise.then((client) => {
+			this.#client = client
+		})
 	}
 
-	async #init() {
-		this.#client = await this.#client.init()
+	get clientReady() {
+		return this.#connectionPromise
 	}
 
 	top100(): Promise<BlueAsset[]> {
+		if (!this.#client) {
+			throw new Error('Client is not available.')
+		}
 		return this.#client.request({url: 'top100'})
 	}
 
-	change24h(): Promise<{[id: string]: string}> {
+	change24h(): Promise<ChangesList[]> {
+		if (!this.#client) {
+			throw new Error('Client is not available.')
+		}
 		return this.#client.request({url: 'change24h'})
 	}
 
-	subscribe(event: string, cb: Function) {
+	subscribe(event: AvailableRoute, cb: Function) {
+		if (!this.#client) {
+			throw new Error('Client is not available.')
+		}
 		return this.#client.pubsub.subscribe(event, cb)
 	}
 }
