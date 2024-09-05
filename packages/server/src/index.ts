@@ -17,6 +17,9 @@ try {
 }
 
 // fetch remotely every hour
+const job = new CronJob('0 * * * *', function () {
+	updateCacheWithRemote()
+})
 job.start()
 
 new HttpApiServer({port: PORT})
