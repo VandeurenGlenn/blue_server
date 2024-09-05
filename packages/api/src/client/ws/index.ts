@@ -1,6 +1,6 @@
 import {SocketRequestClient} from 'socket-request-client'
 import {type BlueAsset} from '../../DataBuilder.js'
-import {WS_PORT} from '../../constants.js'
+import {type AvailableRoute, WS_PORT} from '../../constants.js'
 import ClientConnection from 'socket-request-client/connection'
 
 export class WSApiClient {
@@ -33,7 +33,7 @@ export class WSApiClient {
 		return this.#client.request({url: 'change24h'})
 	}
 
-	subscribe(event: string, cb: Function) {
+	subscribe(event: AvailableRoute, cb: Function) {
 		if (!this.#client) {
 			throw new Error('Client is not available.')
 		}
