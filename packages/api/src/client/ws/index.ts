@@ -1,16 +1,16 @@
-// @ts-ignore
-import SocketRequestClient from 'socket-request-client'
+import {SocketRequestClient} from 'socket-request-client'
 import {type BlueAsset} from '../../DataBuilder.js'
 import {WS_PORT} from '../../constants.js'
+import ClientConnection from 'socket-request-client/connection'
 
 export class WSApiClient {
 	#connectionPromise
-	#client: any
+	#client: ClientConnection | undefined
 
 	constructor() {
-		const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
+		const url = !import.meta.env.DEV ? `ws://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
 		this.#connectionPromise = new SocketRequestClient(url, 'protocol-blue').init()
-		this.#connectionPromise.then((client: any) => {
+		this.#connectionPromise.then((client) => {
 			this.#client = client
 		})
 	}
@@ -20,14 +20,23 @@ export class WSApiClient {
 	}
 
 	top100(): Promise<BlueAsset[]> {
+		if (!this.#client) {
+			throw new Error('Client is not available.')
+		}
 		return this.#client.request({url: 'top100'})
 	}
 
 	change24h(): Promise<{[id: string]: string}> {
+		if (!this.#client) {
+			throw new Error('Client is not available.')
+		}
 		return this.#client.request({url: 'change24h'})
 	}
 
 	subscribe(event: string, cb: Function) {
+		if (!this.#client) {
+			throw new Error('Client is not available.')
+		}
 		return this.#client.pubsub.subscribe(event, cb)
 	}
 }
