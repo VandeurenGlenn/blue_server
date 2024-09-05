@@ -44,9 +44,6 @@ export class DataBuilder {
 
 		return Promise.all(
 			Object.values(listingsInfo).map(async (asset, i) => {
-				if (i === 0) {
-					console.log(asset)
-				}
 				const blueAsset: BlueAsset = {
 					id: asset.id,
 					rank: listings[i].cmc_rank,
