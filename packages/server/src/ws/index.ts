@@ -8,7 +8,7 @@ export type SocketResponse = {
 }
 
 export class WSApiServer {
-	#server: {close: Function; connections: any[]} | undefined
+	#server: {close: Function; connections: WebSocket[]} | undefined
 	#connectionPromise
 
 	constructor(options: {port: number}) {
