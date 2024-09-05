@@ -15,8 +15,9 @@ export class DataCtrl extends ReactiveController {
 
 		// Connnecting to the Websocket
 		const ws = new WSApiClient();
-		ws.clientReady.then(async (client) => {
-			client.pubsub.subscribe('top100', (data) => {
+		ws.clientReady.then(() => {
+			ws.subscribe('top100', (data) => {
+				// Should print data in the console when the pubsub updates.
 				console.log(data);
 			});
 		});

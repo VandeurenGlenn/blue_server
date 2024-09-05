@@ -17,6 +17,7 @@ try {
 }
 
 // fetch remotely every hour
+// For debugging use something `*/20 * * * * *` = every 20s
 const job = new CronJob('0 * * * *', function () {
 	updateCacheWithRemote()
 })
