@@ -1,5 +1,6 @@
 import socketRequestServer from 'socket-request-server'
 import {cache} from '@blueserver/api/cache'
+import {PubSub, type ChangesList} from '@blueserver/api/pubsub'
 
 export type SocketResponse = {
 	send: (data: any, status?: number) => void
@@ -14,14 +15,14 @@ export class WSApiServer {
 		this.#connectionPromise = socketRequestServer({port: options.port, protocol: 'protocol-blue'}, this.#api)
 		this.#connectionPromise.then((server) => {
 			this.#server = server
-			cache.subscribe('top100', () => {
+			PubSub.subscribe('top100', () => {
 				if (this.#server?.connections)
 					for (const connection of this.#server?.connections) {
 						connection.send('top100', cache.bluelist)
 					}
 			})
 
-			cache.subscribe('change24h', () => {
+			PubSub.subscribe('change24h', () => {
 				if (this.#server?.connections)
 					for (const connection of this.#server?.connections) {
 						connection.send('change24h', this.#change24h)
@@ -35,7 +36,7 @@ export class WSApiServer {
 	}
 
 	get #change24h() {
-		return cache.bluelist.map((a) => ({id: a.id, change: a.change24h}))
+		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change24h: a.change24h}))
 	}
 
 	#api: {[index: string]: (params: any, response: SocketResponse) => void} = {

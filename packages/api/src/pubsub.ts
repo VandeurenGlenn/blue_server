@@ -1,5 +1,6 @@
 import LittlePubSub from '@vandeurenglenn/little-pubsub'
 import {cache} from './cache.js'
+import {type AvailableRoute} from './constants.js'
 
 export interface ChangesList {
 	id: number
@@ -9,6 +10,10 @@ export interface ChangesList {
 const pubsub = new LittlePubSub()
 
 export class PubSub {
+	static subscribe(route: AvailableRoute, callback: () => void) {
+		pubsub.subscribe(route, callback)
+	}
+
 	static publishTop100() {
 		pubsub.publish('top100', cache.bluelist)
 	}

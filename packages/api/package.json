@@ -23,13 +23,9 @@
 			"import": "./lib/client/ws/index.js",
 			"types": "./lib/client/ws/index.d.ts"
 		},
-		"./github": {
-			"import": "./lib/api/github.js",
-			"types": "./lib/api/github.d.ts"
-		},
-		"./coinmarketcap": {
-			"import": "./lib/api/coinmarketcap.js",
-			"types": "./lib/api/coinmarketcap.d.ts"
+		"./pubsub": {
+			"import": "./lib/pubsub.js",
+			"types": "./lib/pubsub.d.ts"
 		}
 	},
 	"scripts": {
