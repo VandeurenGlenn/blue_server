@@ -9,7 +9,7 @@ export class WSApiClient {
 	#client: ClientConnection | undefined
 
 	constructor() {
-		const url = !import.meta.env.DEV ? `ws://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
+		const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
 		this.#connectionPromise = new SocketRequestClient(url, 'protocol-blue').init()
 		this.#connectionPromise.then((client) => {
 			this.#client = client
