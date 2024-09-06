@@ -5,7 +5,8 @@
 	"module": "./lib/index.js",
 	"main": "./lib/index.js",
 	"scripts": {
-		"build": "wireit"
+		"build": "wireit",
+		"ncu": "ncu -u --install always"
 	},
 	"wireit": {
 		"build": {
