@@ -15,12 +15,11 @@ export class DataCtrl extends ReactiveController {
 
 		// Connnecting to the Websocket
 		const ws = new WSApiClient();
-		ws.clientReady.then((client) => {
+
+		ws.clientReady.then(async () => {
 			ws.subscribe('top100', (data) => {
-				// Should print data in the console when the pubsub updates.
-				console.log(data);
+				this.top100 = data;
 			});
-			console.log(client.pubsub.subscribers); // that shows broken information
 		});
 	}
 }

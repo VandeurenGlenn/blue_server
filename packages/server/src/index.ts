@@ -3,7 +3,8 @@ import {CronJob} from 'cron'
 import {HttpApiServer} from './http/index.js'
 import {WSApiServer} from './ws/index.js'
 
-import {cache, init, updateCacheWithRemote} from '@blueserver/api/cache'
+import {init, updateCacheWithRemote, cache} from '@blueserver/api/cache'
+import {PubSub} from '@blueserver/api/pubsub'
 
 // todo: check if cache can be used, if not, update cache & if in dev mode update also
 try {
@@ -15,6 +16,9 @@ try {
 	// no local data, so we update cache
 	await updateCacheWithRemote()
 }
+
+PubSub.publishTop100()
+PubSub.publishChange24h()
 
 // fetch remotely every hour
 // For debugging use something `*/20 * * * * *` = every 20s
