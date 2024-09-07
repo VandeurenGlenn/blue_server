@@ -1,4 +1,5 @@
 import socketRequestServer from 'socket-request-server'
+import type {SocketRequestConnection} from 'socket-request-server/connection'
 import {cache} from '@blueserver/api/cache'
 import {PubSub, type ChangesList} from '@blueserver/api/pubsub'
 
@@ -8,7 +9,7 @@ export type SocketResponse = {
 }
 
 export class WSApiServer {
-	#server: {close: Function; connections: WebSocket[]} | undefined
+	#server: {close: Function; connections: SocketRequestConnection[]} | undefined
 	#connectionPromise
 
 	constructor(options: {port: number}) {
