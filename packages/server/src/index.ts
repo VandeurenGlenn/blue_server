@@ -1,9 +1,10 @@
-import {CronCommand, CronJob} from 'cron'
+import {PORT, WS_PORT} from '@blueserver/api/constants'
+import {CronJob} from 'cron'
 import {HttpApiServer} from './http/index.js'
 import {WSApiServer} from './ws/index.js'
-import {PORT, WS_PORT} from '@blueserver/api/constants'
 
 import {init, updateCacheWithRemote, cache} from '@blueserver/api/cache'
+import {PubSub} from '@blueserver/api/pubsub'
 
 // todo: check if cache can be used, if not, update cache & if in dev mode update also
 try {
@@ -16,8 +17,14 @@ try {
 	await updateCacheWithRemote()
 }
 
+PubSub.publishTop100()
+PubSub.publishChange24h()
+
 // fetch remotely every hour
-const job = new CronJob('0 * * * *', updateCacheWithRemote as unknown as CronCommand<any>)
+// For debugging use something `*/20 * * * * *` = every 20s
+const job = new CronJob('0 * * * *', function () {
+	updateCacheWithRemote()
+})
 job.start()
 
 new HttpApiServer({port: PORT})

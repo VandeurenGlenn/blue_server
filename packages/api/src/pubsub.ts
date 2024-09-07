@@ -7,10 +7,14 @@ export interface ChangesList {
 	change24h: number
 }
 
-const pubsub = new LittlePubSub()
+declare global {
+	var pubsub: LittlePubSub
+}
+
+globalThis.pubsub = globalThis.pubsub || new LittlePubSub()
 
 export class PubSub {
-	static subscribe(route: AvailableRoute, callback: () => void) {
+	static subscribe(route: AvailableRoute, callback: (data: any) => void) {
 		pubsub.subscribe(route, callback)
 	}
 

@@ -10,7 +10,8 @@
 	},
 	"scripts": {
 		"build": "wireit",
-		"serve": "wireit"
+		"serve": "wireit",
+		"ncu": "ncu -u --install always"
 	},
 	"wireit": {
 		"build": {
@@ -40,7 +41,7 @@
 	"dependencies": {
 		"@blueserver/api": "*",
 		"@blueserver/env": "*",
-		"@vandeurenglenn/little-pubsub": "^1.4.8",
+		"@vandeurenglenn/little-pubsub": "^1.4.9",
 		"cron": "^3.1.7"
 	},
 	"devDependencies": {

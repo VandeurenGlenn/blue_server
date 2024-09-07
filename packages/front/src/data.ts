@@ -15,19 +15,12 @@ export class DataCtrl extends ReactiveController {
 
 		// Connnecting to the Websocket
 		const ws = new WSApiClient();
+
 		ws.clientReady.then(async () => {
-			// ws.subscribe('top100', (data) => {
-			// 	console.log(data);
-			// });
-			this.top100 = await ws.top100();
-			// console.log(client.subscribe);
-			// client.subscribe('top100', () => {
-			// 	console.log('test');
-			// });
+			ws.subscribe('top100', (data) => {
+				this.top100 = data;
+			});
 		});
-		// HttpApiClient.top100().then(
-		// 	(top100: BlueAsset[]) => (this.top100 = top100),
-		// );
 	}
 }
 

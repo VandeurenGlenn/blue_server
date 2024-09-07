@@ -34,7 +34,7 @@ export class WSApiClient {
 		return this.#client.request({url: 'change24h'})
 	}
 
-	subscribe(event: AvailableRoute, cb: Function) {
+	subscribe(event: AvailableRoute, cb: (data: any) => void) {
 		if (!this.#client) {
 			throw new Error('Client is not available.')
 		}
