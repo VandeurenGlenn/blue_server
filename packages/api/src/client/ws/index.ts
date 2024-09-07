@@ -34,6 +34,13 @@ export class WSApiClient {
 		return this.#client.request({url: 'change24h'})
 	}
 
+	change1h(): Promise<ChangesList[]> {
+		if (!this.#client) {
+			throw new Error('Client is not available.')
+		}
+		return this.#client.request({url: 'change1h'})
+	}
+
 	subscribe(event: AvailableRoute, cb: (data: any) => void) {
 		if (!this.#client) {
 			throw new Error('Client is not available.')

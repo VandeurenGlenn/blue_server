@@ -17,6 +17,7 @@ export type BlueAsset = {
 	website: string
 	repos: string[]
 	change24h: number
+	change1h: number
 	github: GithubProject
 	indicators: {
 		github: null
@@ -50,6 +51,7 @@ export class DataBuilder {
 					platform: listings[i].platform,
 					platforms: asset.contract_address,
 					change24h: listings[i].quote.USD.percent_change_24h,
+					change1h: listings[i].quote.USD.percent_change_1h,
 					symbol: asset.symbol,
 					name: asset.name,
 					logo: asset.logo,

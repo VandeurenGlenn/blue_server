@@ -36,11 +36,16 @@ export class WSApiServer {
 	}
 
 	get #change24h() {
-		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change24h: a.change24h}))
+		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, value: a.change24h}))
+	}
+
+	get #change1h() {
+		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, value: a.change1h}))
 	}
 
 	#api: {[index: string]: (params: any, response: SocketResponse) => void} = {
 		top100: (response) => response.send(cache.bluelist),
-		change24h: (response) => response.send(this.#change24h)
+		change24h: (response) => response.send(this.#change24h),
+		change1h: (response) => response.send(this.#change1h)
 	}
 }
