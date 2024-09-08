@@ -1,5 +1,5 @@
 import {__dirname} from './__dirname.js'
-import {join} from 'node:path'
+import {join} from 'path'
 
 export const SEVEN_DAYS_AGO = 604_800_000
 export const LIST_SIZE = 100
