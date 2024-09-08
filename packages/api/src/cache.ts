@@ -1,10 +1,10 @@
 import {readFile, writeFile} from 'fs/promises'
+import {mkdir} from 'node:fs/promises'
+import {join} from 'node:path'
 import {dataBuilder, type BlueAsset} from './DataBuilder.js'
 import type {GithubActivity, GithubProjectResponse} from './api/github.js'
-import {CACHE_ROOT_DIRECTORY, LIST_SIZE as DEFAULT_LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
+import {CACHE_ROOT_DIRECTORY, LIST_SIZE} from './constants.js'
 import {PubSub} from './pubsub.js'
-import {join} from 'node:path'
-import {mkdir} from 'node:fs/promises'
 
 export type BlueCache = {
 	bluelist: BlueAsset[]
@@ -51,7 +51,7 @@ export const init = async () => {
 }
 
 export async function updateCacheWithRemote() {
-	cache.bluelist = await dataBuilder.createAssetList(DEFAULT_LIST_SIZE)
+	cache.bluelist = await dataBuilder.createAssetList(LIST_SIZE)
 	PubSub.publishTop100()
 	PubSub.publishChange24h()
 
