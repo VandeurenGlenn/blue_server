@@ -16,19 +16,6 @@ export class WSApiServer {
 		this.#connectionPromise = socketRequestServer({port: options.port, protocol: 'protocol-blue'}, this.#api)
 		this.#connectionPromise.then((server) => {
 			this.#server = server
-			PubSub.subscribe('top100', () => {
-				if (this.#server?.connections)
-					for (const connection of this.#server?.connections) {
-						connection.publish('top100', cache.bluelist)
-					}
-			})
-
-			PubSub.subscribe('change24h', () => {
-				if (this.#server?.connections)
-					for (const connection of this.#server?.connections) {
-						connection.publish('change24h', this.#change24h)
-					}
-			})
 		})
 	}
 
