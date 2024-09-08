@@ -3,13 +3,15 @@ import {type BlueAsset} from '../../DataBuilder.js'
 import {type AvailableRoute, WS_PORT} from '../../constants.js'
 import ClientConnection from 'socket-request-client/connection'
 import {type ChangesList} from '../../pubsub.js'
+import {resolveLocalIP} from '../../util.js'
 
 export class WSApiClient {
 	#connectionPromise
 	#client: ClientConnection | undefined
 
 	constructor() {
-		const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://localhost:${WS_PORT}`
+		const localAddress = resolveLocalIP() ?? 'localhost'
+		const url = !import.meta.env.DEV ? `wss://blue.leofcoin.org` : `ws://${localAddress}:${WS_PORT}`
 		this.#connectionPromise = new SocketRequestClient(url, 'protocol-blue').init()
 		this.#connectionPromise.then((client) => {
 			this.#client = client

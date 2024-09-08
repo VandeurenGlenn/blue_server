@@ -1,10 +1,12 @@
 import {PORT} from '../../constants.js'
 import {type BlueAsset} from '../../DataBuilder.js'
+import {resolveLocalIP} from '../../util.js'
 
 export class HttpApiClient {
 	static async #fetch(endpoint: string) {
+		const localAddress = resolveLocalIP() ?? 'localhost'
 		const response = await fetch(
-			!import.meta.env.DEV ? `https://blue.leofcoin.org/${endpoint}` : `http://localhost:${PORT}/${endpoint}`
+			!import.meta.env.DEV ? `https://blue.leofcoin.org/${endpoint}` : `http://${localAddress}:${PORT}/${endpoint}`
 		)
 		return response.json()
 	}
