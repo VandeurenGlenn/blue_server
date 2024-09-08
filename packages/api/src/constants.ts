@@ -7,7 +7,8 @@ export const LOCAL_DATA_FILENAME = 'data.json'
 export const PORT = 9876
 export const WS_PORT = 9877
 
-export const CACHE_ROOT_DIRECTORY = join(__dirname, '.cache')
+// One directory down because this script operates from 'lib' not the root
+export const CACHE_ROOT_DIRECTORY = join(__dirname, '..', '.cache')
 
 export const availableRoutes = ['top100', 'change24h'] as const
 
