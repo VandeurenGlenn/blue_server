@@ -20,9 +20,9 @@ try {
 PubSub.publishTop100()
 PubSub.publishChange24h()
 
-// fetch remotely every hour
-// For debugging use something like `*/20 * * * * *` = every 20s
-const job = new CronJob('0 * * * *', function () {
+const cronTime = '0 * * * *' // every hour
+// const cronTime = '*/20 * * * * *' // every 20s
+const job = new CronJob(cronTime, function () {
 	updateCacheWithRemote()
 })
 job.start()
