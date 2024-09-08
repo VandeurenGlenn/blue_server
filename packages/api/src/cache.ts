@@ -1,7 +1,9 @@
 import {readFile, writeFile} from 'fs/promises'
-import type {GithubActivity, GithubProjectResponse} from './api/github.js'
+import {mkdir} from 'node:fs/promises'
+import {join} from 'node:path'
 import {dataBuilder, type BlueAsset} from './DataBuilder.js'
-import {LIST_SIZE as DEFAULT_LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
+import type {GithubActivity, GithubProjectResponse} from './api/github.js'
+import {CACHE_ROOT_DIRECTORY, LIST_SIZE} from './constants.js'
 import {PubSub} from './pubsub.js'
 
 export type BlueCache = {
@@ -39,28 +41,34 @@ export const cache: BlueCache = {
 }
 
 export const init = async () => {
-	cache.bluelist = JSON.parse((await readFile(LOCAL_DATA_FILENAME)).toString())
-	cache.lastUpdated = parseInt((await readFile('last-updated.txt')).toString())
-	cache.github.repos.cached = JSON.parse((await readFile('./repos.json')).toString())
-	cache.github.repos.tags = JSON.parse((await readFile('./tags.json')).toString())
-	cache.github.stats.cached = JSON.parse((await readFile('./stats.json')).toString())
-	cache.github.stats.tags = JSON.parse((await readFile('./statTags.json')).toString())
+	cache.bluelist = JSON.parse((await readFile(join(CACHE_ROOT_DIRECTORY, 'cache.json'))).toString())
+	cache.lastUpdated = parseInt((await readFile(join(CACHE_ROOT_DIRECTORY, 'last-updated.txt'))).toString())
+	cache.github.repos.cached = JSON.parse((await readFile(join(CACHE_ROOT_DIRECTORY, 'repos.json'))).toString())
+	cache.github.repos.tags = JSON.parse((await readFile(join(CACHE_ROOT_DIRECTORY, 'tags.json'))).toString())
+	cache.github.stats.cached = JSON.parse((await readFile(join(CACHE_ROOT_DIRECTORY, 'stats.json'))).toString())
+	cache.github.stats.tags = JSON.parse((await readFile(join(CACHE_ROOT_DIRECTORY, 'statTags.json'))).toString())
 	return cache.bluelist
 }
 
 export async function updateCacheWithRemote() {
-	cache.bluelist = await dataBuilder.createAssetList(DEFAULT_LIST_SIZE)
+	cache.bluelist = await dataBuilder.createAssetList(LIST_SIZE)
 	PubSub.publishTop100()
 	PubSub.publishChange24h()
 
-	writeFile(LOCAL_DATA_FILENAME, JSON.stringify(cache.bluelist))
-	writeFile('last-updated.txt', Date.now().toString())
+	try {
+		// Making sure cache directory exists
+		await mkdir(CACHE_ROOT_DIRECTORY)
+	} catch {
+		// Ignore if it does
+	}
 
-	// Just to test
-	await writeFile('./repos.json', JSON.stringify(cache.github.repos.cached))
-	await writeFile('./tags.json', JSON.stringify(cache.github.repos.tags))
-	await writeFile('./stats.json', JSON.stringify(cache.github.stats.cached))
-	await writeFile('./statTags.json', JSON.stringify(cache.github.stats.tags))
+	writeFile(join(CACHE_ROOT_DIRECTORY, 'cache.json'), JSON.stringify(cache.bluelist))
+	writeFile(join(CACHE_ROOT_DIRECTORY, 'last-updated.txt'), Date.now().toString())
+
+	await writeFile(join(CACHE_ROOT_DIRECTORY, 'repos.json'), JSON.stringify(cache.github.repos.cached))
+	await writeFile(join(CACHE_ROOT_DIRECTORY, 'tags.json'), JSON.stringify(cache.github.repos.tags))
+	await writeFile(join(CACHE_ROOT_DIRECTORY, 'stats.json'), JSON.stringify(cache.github.stats.cached))
+	await writeFile(join(CACHE_ROOT_DIRECTORY, 'statTags.json'), JSON.stringify(cache.github.stats.tags))
 
 	return cache.bluelist
 }

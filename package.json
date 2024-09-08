@@ -12,9 +12,9 @@
 	},
 	"scripts": {
 		"build": "wireit",
-		"dev": "cd packages/front && npm run dev",
-		"start:server": "wireit",
-		"ncu": "npm run ncu --workspaces --if-present"
+		"front:dev": "wireit",
+		"ncu": "npm run ncu --workspaces --if-present",
+		"server:serve": "wireit"
 	},
 	"wireit": {
 		"build": {
@@ -23,7 +23,12 @@
 				"./packages/front:build"
 			]
 		},
-		"start:server": {
+		"front:dev": {
+			"dependencies": [
+				"./packages/front:dev"
+			]
+		},
+		"server:serve": {
 			"dependencies": [
 				"./packages/server:serve"
 			]
