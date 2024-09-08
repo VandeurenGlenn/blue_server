@@ -6,11 +6,18 @@ import {mdicon2svg} from 'vite-plugin-mdicon2svg';
 // import {minifyHtml} from '@vdegenne/rollup-plugin-minify-html';
 // import {viteSingleFile} from 'vite-plugin-singlefile';
 // import {VitePWA} from 'vite-plugin-pwa';
+import {join} from 'path';
+
+const emptyPolyfills = join(__dirname, 'empty-polyfills.js');
 
 export default defineConfig({
 	base: './',
 	resolve: {
 		// preserveSymlinks: true,
+		alias: {
+			path: emptyPolyfills,
+			url: emptyPolyfills,
+		},
 	},
 	server: {
 		// proxy: {'/api': 'http://localhost:45085'},
