@@ -57,7 +57,7 @@ export async function updateCacheWithRemote() {
 
 	try {
 		// Making sure cache directory exists
-		mkdir(CACHE_ROOT_DIRECTORY)
+		await mkdir(CACHE_ROOT_DIRECTORY)
 	} catch {
 		// Ignore if it does
 	}
