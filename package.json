@@ -12,6 +12,7 @@
 	},
 	"scripts": {
 		"build": "wireit",
+		"dev": "cd packages/front && npm run dev",
 		"start:server": "wireit",
 		"ncu": "npm run ncu --workspaces --if-present"
 	},
