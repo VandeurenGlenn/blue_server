@@ -3,7 +3,6 @@ import {join} from 'node:path'
 
 export const SEVEN_DAYS_AGO = 604_800_000
 export const LIST_SIZE = 100
-export const LOCAL_DATA_FILENAME = 'data.json'
 export const PORT = 9876
 export const WS_PORT = 9877
 
