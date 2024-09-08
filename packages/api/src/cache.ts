@@ -4,6 +4,7 @@ import type {GithubActivity, GithubProjectResponse} from './api/github.js'
 import {CACHE_ROOT_DIRECTORY, LIST_SIZE as DEFAULT_LIST_SIZE, LOCAL_DATA_FILENAME} from './constants.js'
 import {PubSub} from './pubsub.js'
 import {join} from 'node:path'
+import {mkdir} from 'node:fs/promises'
 
 export type BlueCache = {
 	bluelist: BlueAsset[]
@@ -53,6 +54,13 @@ export async function updateCacheWithRemote() {
 	cache.bluelist = await dataBuilder.createAssetList(DEFAULT_LIST_SIZE)
 	PubSub.publishTop100()
 	PubSub.publishChange24h()
+
+	try {
+		// Making sure cache directory exists
+		mkdir(CACHE_ROOT_DIRECTORY)
+	} catch {
+		// Ignore if it does
+	}
 
 	writeFile(join(CACHE_ROOT_DIRECTORY, 'cache.json'), JSON.stringify(cache.bluelist))
 	writeFile(join(CACHE_ROOT_DIRECTORY, 'last-updated.txt'), Date.now().toString())
