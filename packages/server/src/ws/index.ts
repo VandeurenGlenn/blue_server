@@ -1,7 +1,6 @@
+import {cache} from '@blueserver/api/cache'
 import socketRequestServer from 'socket-request-server'
 import type {SocketRequestConnection} from 'socket-request-server/connection'
-import {cache} from '@blueserver/api/cache'
-import {PubSub, type ChangesList} from '@blueserver/api/pubsub'
 
 export type SocketResponse = {
 	send: (data: any, status?: number) => void
@@ -24,11 +23,11 @@ export class WSApiServer {
 	}
 
 	get #change24h() {
-		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, value: a.change24h}))
+		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change24h}))
 	}
 
 	get #change1h() {
-		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, value: a.change1h}))
+		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change1h}))
 	}
 
 	#api: {[index: string]: (params: any, response: SocketResponse) => void} = {

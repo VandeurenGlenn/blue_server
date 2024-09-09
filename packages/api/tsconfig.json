@@ -10,7 +10,7 @@
 		"declarationMap": true,
 		"sourceMap": true,
 		"allowSyntheticDefaultImports": true,
-		"types": ["socket-request-client", "socket-request-server", "node"]
+		"types": ["socket-request-client", "socket-request-server", "node", "./types", "vite/client"]
 	},
 	"include": ["src/**/*"],
 	"exclude": []
