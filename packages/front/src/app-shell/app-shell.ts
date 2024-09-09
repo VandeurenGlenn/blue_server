@@ -1,23 +1,23 @@
-import {type GithubProjectResponse} from '@blueserver/api/github';
-import {MdItem} from '@material/web/labs/item/item.js';
+import '@material/mwc-top-app-bar';
+import {MdElevation} from '@material/web/elevation/elevation.js';
 import {withController} from '@snar/lit';
-import {LitElement, css, html} from 'lit';
+import 'inspector-elements';
+import {LitElement, html} from 'lit';
 import {withStyles} from 'lit-with-styles';
-import {customElement} from 'lit/decorators.js';
+import {customElement, query} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
+import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {materialShellLoadingOff} from 'material-shell';
-import {BlueAsset} from '../../../api/lib/DataBuilder.js';
 import {ago} from '../ago.js';
-import {SVG_GITHUB} from '../assets/assets.js';
-import {SORTING_METHODS, SortingMethod, data} from '../data.js';
+import {SVG_GITHUB, SVG_LOGO} from '../assets/assets.js';
 import '../price-change.js';
+import '../select-chip.js';
+import {appstate} from '../state.js';
 import styles from './app-shell.css?inline';
-
-// @ts-ignore
-MdItem.elementStyles.push(css`
-.text {
-flex: 0.5;
-`);
+import type {MdFab} from '@material/web/all.js';
+import type {TopAppBar} from '@material/mwc-top-app-bar';
+import {bindInput} from 'relit';
+import toast from 'toastit';
 
 declare global {
 	interface Window {
@@ -30,56 +30,107 @@ declare global {
 
 @customElement('app-shell')
 @withStyles(styles)
-@withController(data)
+@withController(appstate)
 export class AppShell extends LitElement {
+	@query('mwc-top-app-bar') topAppBar!: TopAppBar;
+	@query('md-fab#go-top-fab') goTopFab!: MdFab;
+
 	firstUpdated() {
 		materialShellLoadingOff.call(this);
+		appstate.bind(this);
+
+		const elevation = new MdElevation();
+		elevation.style.cssText =
+			'opacity:0.5;transition:box-shadow 0.3s ease-in-out;';
+		this.topAppBar.updateComplete.then(() => {
+			this.topAppBar.renderRoot.querySelector('header').appendChild(elevation);
+		});
 	}
 
 	render() {
 		return html`
+			<mwc-top-app-bar>
+				<md-icon-button
+					slot="navigationIcon"
+					style="--md-icon-button-icon-size: 36px;"
+				>
+					<md-icon> ${unsafeSVG(SVG_LOGO)} </md-icon>
+				</md-icon-button>
+
+				<div slot="actionItems" class="flex gap-4">
+					<md-outlined-text-field ${bindInput(appstate, 'search')}>
+						<md-icon slot="leading-icon">search</md-icon>
+						<div slot="trailing-icon" class="hidden"></div>
+						${appstate.search
+							? html`
+									<md-icon-button
+										slot="trailing-icon"
+										@click=${() => (appstate.search = '')}
+									>
+										<md-icon>close</md-icon>
+									</md-icon-button>
+								`
+							: null}
+					</md-outlined-text-field>
+
+					<md-icon-button>
+						<md-icon>settings</md-icon>
+					</md-icon-button>
+				</div>
+
+				<div id="content">${this.#renderContent()}</div>
+
+				<md-fab
+					id="go-top-fab"
+					size="large"
+					class="fixed bottom-8 right-8 hidden"
+					@click=${() => {
+						window.scrollTo({top: 0, behavior: 'smooth'});
+					}}
+				>
+					<md-icon slot="icon">arrow_upward</md-icon>
+				</md-fab>
+			</mwc-top-app-bar>
+		`;
+	}
+
+	#renderContent() {
+		return html`
 			<header>
 				<md-filled-text-field
-					value="${data.search}"
+					value="${appstate.search}"
 					placeholder="search..."
 					@input=${(e: Event) => {
 						const target = e.target as HTMLInputElement;
-						data.search = target.value;
+						appstate.search = target.value;
 					}}
 				>
-					<md-icon slot="leading-icon">search</md-icon>
+					<md-icon slot="icon">search</md-icon>
 				</md-filled-text-field>
 				<div class="flex-1"></div>
-				<md-filled-select
-					value=${data.sortingMethod}
-					@change=${(e: Event) => {
-						const target = e.target as HTMLInputElement;
-						data.sortingMethod = target.value as SortingMethod;
-					}}
-				>
-					${SORTING_METHODS.map(
-						(method) =>
-							html`<md-select-option value=${method}
-								>${method}</md-select-option
-							>`,
-					)}
-				</md-filled-select>
+				<select-chip></select-chip>
 			</header>
 
-			${data.top100 ? this.#renderList() : html`loading....`}
+			${appstate.top100
+				? this.#renderList()
+				: html`
+						<div class="m-16 text-center">
+							<md-circular-progress indeterminate></md-circular-progress>
+						</div>
+					`}
 		`;
 	}
 
 	#renderList() {
-		let assets: BlueAsset[] = data.top100;
-		if (data.search) {
-			const query = data.search.toLowerCase();
+		let assets: BlueAsset[] = appstate.top100;
+		if (appstate.search) {
+			const query = appstate.search.toLowerCase();
 			assets = assets.filter((asset) =>
 				asset.name.toLowerCase().includes(query),
 			);
 		}
-		switch (data.sortingMethod) {
-			case 'pushed_at':
+		switch (appstate.sortingMethod) {
+			case 'pushed at':
 				assets = assets
 					.filter((asset) => asset.github.repos.length)
 					.sort((a, b) => {
@@ -111,10 +162,15 @@ export class AppShell extends LitElement {
 		}
 
 		if (assets.length === 0) {
-			return html`<div style="text-align:center;margin:48px;">no results</div>`;
+			return html`<div class="text-center m-16">
+				No
+				results${appstate.search
+					? html` for <b>"${appstate.search}"</b>`
+					: null}
+			</div>`;
 		}
 		return html`
-			<md-list class="p-0 gap-2">
+			<md-list class="p-0 gap-1">
 				${repeat(
 					assets,
 					(asset) => asset.id,
@@ -125,7 +181,9 @@ export class AppShell extends LitElement {
 
 						return html`
 							<md-list-item
+								type="button"
 								@click=${() => {
+									toast('More info coming soon');
 									console.log(asset);
 								}}
 							>
@@ -137,8 +195,8 @@ export class AppShell extends LitElement {
 									<img src=${asset.logo} />
 								</md-icon-button>
 								<div slot="overline" class="text-gray-300">#${asset.rank}</div>
-								<div slot="headline">${asset.symbol}</div>
-								<div slot="supporting-text">${asset.name}</div>
+								<div slot="headline">${asset.name}</div>
+								<div slot="supporting-text">$${asset.symbol}</div>
 								<div
 									slot="trailing-supporting-text"
 									class="flex-1 flex items-center justify-between"

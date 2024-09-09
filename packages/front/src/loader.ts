@@ -4,6 +4,7 @@
 import './styles/shared.js';
 
 import '@material/web/all.js';
+import './material/outlined-field-patch.js';
 
 import {app} from './app-shell/app-shell.js';
 document.querySelector<HTMLElement>('material-shell').appendChild(app);
