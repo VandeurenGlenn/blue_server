@@ -36,7 +36,7 @@ export function renderColorPicker() {
 
 export function renderThemeElements() {
 	return html`
-		<div style="display:flex;align-items:center;gap:18px;">
+		<div style="display:flex;align-items:center;gap:6px;">
 			${renderColorPicker()} ${renderColorModePicker()}
 		</div>
 	`;

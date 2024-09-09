@@ -2,7 +2,7 @@ import '@material/mwc-top-app-bar';
 import {MdElevation} from '@material/web/elevation/elevation.js';
 import {withController} from '@snar/lit';
 import 'inspector-elements';
-import {LitElement, html} from 'lit';
+import {LitElement, html, css} from 'lit';
 import {withStyles} from 'lit-with-styles';
 import {customElement, query} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
@@ -18,6 +18,14 @@ import type {MdFab} from '@material/web/all.js';
 import type {TopAppBar} from '@material/mwc-top-app-bar';
 import {bindInput} from 'relit';
 import toast from 'toastit';
+import {MdItem} from '@material/web/labs/item/item.js';
+import {getSettingsDialog} from '../imports.js';
+
+// @ts-ignore
+MdItem.elementStyles.push(css`
+:host([multiline]) .text {
+flex: 0.5;
+`);
 
 declare global {
 	interface Window {
@@ -52,12 +60,12 @@ export class AppShell extends LitElement {
 			<mwc-top-app-bar>
 				<md-icon-button
 					slot="navigationIcon"
-					style="--md-icon-button-icon-size: 36px;"
+					style="--md-icon-button-icon-size: 30px;"
 				>
 					<md-icon> ${unsafeSVG(SVG_LOGO)} </md-icon>
 				</md-icon-button>
 
-				<div slot="actionItems" class="flex gap-4">
+				<div slot="actionItems" class="flex gap-2">
 					<md-outlined-text-field ${bindInput(appstate, 'search')}>
 						<md-icon slot="leading-icon">search</md-icon>
 						<div slot="trailing-icon" class="hidden"></div>
@@ -73,7 +81,9 @@ export class AppShell extends LitElement {
 							: null}
 					</md-outlined-text-field>
 
-					<md-icon-button>
+					<md-icon-button
+						@click=${async () => (await getSettingsDialog()).show()}
+					>
 						<md-icon>settings</md-icon>
 					</md-icon-button>
 				</div>
