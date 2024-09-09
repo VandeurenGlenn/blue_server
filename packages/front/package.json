@@ -16,6 +16,8 @@
 		"@snar/lit": "^1.5.1",
 		"@vdegenne/about-dialog": "^0.4.2",
 		"@vdegenne/material-color-helpers": "^1.9.0",
+		"@vdegenne/rollup-plugin-minify-html": "^1.0.6",
+		"@vite-pwa/assets-generator": "^0.2.6",
 		"custom-element-decorator": "^0.6.0",
 		"inspector-elements": "^0.1.0",
 		"lit": "^3.2.0",
@@ -25,22 +27,27 @@
 		"postcss": "^8.4.45",
 		"relit": "^2.6.0",
 		"rollup-plugin-material-all": "^1.2.2",
+		"rollup-plugin-minify-template-literals": "^1.1.7",
 		"snar": "^2.2.0",
 		"snar-save-to-local-storage": "^1.0.1",
 		"tailwindcss": "^3.4.10",
 		"toastit": "^0.1.0",
 		"vite-lit-with-tailwind": "^2.1.1",
-		"vite-plugin-mdicon2svg": "^0.0.4"
+		"vite-plugin-mdicon2svg": "^0.0.4",
+		"vite-plugin-pwa": "^0.20.5",
+		"vite-plugin-singlefile": "^2.0.2"
 	},
 	"scripts": {
 		"dev": "wireit",
-		"build": "wireit"
+		"build": "wireit",
+		"pwa-assets": "wireit"
 	},
 	"wireit": {
 		"dev": {
 			"dependencies": [
 				"../server:serve",
-				"serve"
+				"serve",
+				"pwa-assets"
 			]
 		},
 		"serve": {
@@ -50,12 +57,28 @@
 		"build": {
 			"command": "vite build",
 			"dependencies": [
-				"../api:build"
+				"../api:build",
+				"pwa-assets"
 			],
 			"files": [
 				"src",
 				"vite.config.ts"
 			]
+		},
+		"pwa-assets": {
+			"command": "pwa-assets-generator --preset minimal-2023 --html.preset 2023 ./public/logo.svg",
+			"files": [
+				"./public/logo.svg"
+			],
+			"output": [
+				"./public/pwa-64x64.png",
+				"./public/pwa-192x192.png",
+				"./public/pwa-512x512.png",
+				"./public/maskable-icon-512x512.png",
+				"./public/apple-touch-icon-180x180.png",
+				"./public/favicon.ico"
+			]
 		}
 	}
 }
+

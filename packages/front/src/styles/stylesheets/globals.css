@@ -4,7 +4,7 @@
 :root {
 	/* --md-icon-font: 'Material Symbols Rounded'; */
 	/*--md-list-container-color: transparent;*/
-	background-color: var(--md-sys-color-surface);
+	background-color: var(--md-sys-color-background);
 	--md-elevation-level: 4;
 }
 
