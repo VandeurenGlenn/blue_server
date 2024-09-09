@@ -20,6 +20,7 @@ import {bindInput} from 'relit';
 import toast from 'toastit';
 import {MdItem} from '@material/web/labs/item/item.js';
 import {getSettingsDialog} from '../imports.js';
+import {getCMCHref} from '../utils.js';
 
 // @ts-ignore
 MdItem.elementStyles.push(css`
@@ -199,7 +200,7 @@ export class AppShell extends LitElement {
 							>
 								<md-icon-button
 									slot="start"
-									href="${asset.website}"
+									href="${getCMCHref(asset.slug)}"
 									target="_blank"
 								>
 									<img src=${asset.logo} />
