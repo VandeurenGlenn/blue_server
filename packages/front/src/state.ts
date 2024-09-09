@@ -14,7 +14,7 @@ declare global {
 
 @saveToLocalStorage('blue-front:state')
 class AppState extends ReactiveController {
-	@state() top100: BlueAsset[] = [];
+	@state() top100: BlueAsset[] = undefined;
 	@state() sortingMethod: SortingMethod = SORTING_METHODS[0];
 	@state() search = '';
 
