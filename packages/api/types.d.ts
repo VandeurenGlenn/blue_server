@@ -218,6 +218,7 @@ declare global {
 		id: number
 		name: string
 		rank: number
+		slug: string
 		symbol: string
 		platform?: CMCPlatform
 		platforms: {

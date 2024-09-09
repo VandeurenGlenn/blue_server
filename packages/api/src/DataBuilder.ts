@@ -1,7 +1,10 @@
 import {env} from '@blueserver/env'
 import {CoinMarketCap} from './api/coinmarketcap.js'
 import {GitHub} from './api/github.js'
-import {SEVEN_DAYS_AGO} from './constants.js'
+import {CACHE_ROOT_DIRECTORY, SEVEN_DAYS_AGO} from './constants.js'
+import {writeFile} from 'fs/promises'
+import {join} from 'node:path'
+import {createCacheDirectory} from './cache.js'
 
 export class DataBuilder {
 	coinMarketCap: CoinMarketCap
@@ -20,17 +23,28 @@ export class DataBuilder {
 	 */
 	async createAssetList(limit = 100): Promise<BlueAsset[]> {
 		const listings: CMCListing[] = await this.coinMarketCap.getLatestListings(limit)
+		await createCacheDirectory()
+		writeFile(join(CACHE_ROOT_DIRECTORY, 'cmclistings.json'), JSON.stringify(listings))
 		const listingsInfo = await this.coinMarketCap.getListingInfo(listings.map((l) => l.id))
+		const listingsInfoMap = Object.values(listingsInfo)
+		writeFile(join(CACHE_ROOT_DIRECTORY, 'listingsinfo.json'), JSON.stringify(listingsInfoMap))
 
 		return Promise.all(
-			Object.values(listingsInfo).map(async (asset, i) => {
+			listingsInfoMap.map(async (asset) => {
+				const slug = asset.slug
+				const listing = listings.find((l) => l.slug === slug)
+				// This is temporary to see if this solution works over time
+				if (!listing) {
+					throw new Error('listing not found from listingInfo object')
+				}
 				const blueAsset: BlueAsset = {
 					id: asset.id,
-					rank: listings[i].cmc_rank,
-					platform: listings[i].platform,
+					slug,
+					rank: listing.cmc_rank,
+					platform: listing.platform,
 					platforms: asset.contract_address,
-					change24h: listings[i].quote.USD.percent_change_24h,
-					change1h: listings[i].quote.USD.percent_change_1h,
+					change24h: listing.quote.USD.percent_change_24h,
+					change1h: listing.quote.USD.percent_change_1h,
 					symbol: asset.symbol,
 					name: asset.name,
 					logo: asset.logo,
@@ -105,7 +119,6 @@ export class DataBuilder {
 						)
 					}
 				}
-				i++
 
 				return blueAsset
 			})
