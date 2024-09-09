@@ -10,7 +10,7 @@
 		"declarationMap": true,
 		"sourceMap": true,
 		"allowSyntheticDefaultImports": true,
-		"types": []
+		"types": ["@blueserver/api/types"]
 	},
 	"include": ["src/**/*"],
 	"exclude": []
