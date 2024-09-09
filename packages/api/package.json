@@ -26,6 +26,9 @@
 		"./pubsub": {
 			"import": "./lib/pubsub.js",
 			"types": "./lib/pubsub.d.ts"
+		},
+		"./types": {
+			"types": "./types.d.ts"
 		}
 	},
 	"scripts": {

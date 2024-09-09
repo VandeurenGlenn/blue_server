@@ -1,5 +1,4 @@
 import {PORT} from '../../constants.js'
-import {type BlueAsset} from '../../DataBuilder.js'
 import {resolveLocalIP} from '../../util.js'
 
 export class HttpApiClient {

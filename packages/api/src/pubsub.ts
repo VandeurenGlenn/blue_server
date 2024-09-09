@@ -2,11 +2,6 @@ import LittlePubSub from '@vandeurenglenn/little-pubsub'
 import {cache} from './cache.js'
 import {type AvailableRoute} from './constants.js'
 
-export interface ChangesList {
-	id: number
-	value: number
-}
-
 declare global {
 	var pubsub: LittlePubSub
 }
@@ -36,7 +31,7 @@ export class PubSub {
 	static publishChange24h() {
 		pubsub.publish(
 			'change24h',
-			cache.bluelist.map<ChangesList>((a) => ({id: a.id, value: a.change24h}))
+			cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change24h}))
 		)
 	}
 
@@ -55,7 +50,7 @@ export class PubSub {
 	static publishChange1h() {
 		pubsub.publish(
 			'change1h',
-			cache.bluelist.map<ChangesList>((a) => ({id: a.id, value: a.change1h}))
+			cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change1h}))
 		)
 	}
 }

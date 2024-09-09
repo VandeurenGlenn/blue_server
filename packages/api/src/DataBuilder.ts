@@ -1,28 +1,7 @@
 import {env} from '@blueserver/env'
-import {type CMCListing, CoinMarketCap, type CMCPlatform} from './api/coinmarketcap.js'
-import {GitHub, type GithubProject, type GithubProjectResponse} from './api/github.js'
+import {CoinMarketCap} from './api/coinmarketcap.js'
+import {GitHub} from './api/github.js'
 import {SEVEN_DAYS_AGO} from './constants.js'
-
-export type BlueAsset = {
-	id: number
-	name: string
-	rank: number
-	symbol: string
-	platform?: CMCPlatform
-	platforms: {
-		contract_address: string
-		platform: CMCPlatform
-	}[]
-	logo?: string
-	website: string
-	repos: string[]
-	change24h: number
-	change1h: number
-	github: GithubProject
-	indicators: {
-		github: null
-	}
-}
 
 export class DataBuilder {
 	coinMarketCap: CoinMarketCap

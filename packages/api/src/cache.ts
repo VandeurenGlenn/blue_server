@@ -1,8 +1,7 @@
 import {readFile, writeFile} from 'fs/promises'
 import {mkdir} from 'node:fs/promises'
 import {join} from 'node:path'
-import {dataBuilder, type BlueAsset} from './DataBuilder.js'
-import type {GithubActivity, GithubProjectResponse} from './api/github.js'
+import {dataBuilder} from './DataBuilder.js'
 import {CACHE_ROOT_DIRECTORY, LIST_SIZE} from './constants.js'
 import {PubSub} from './pubsub.js'
 
