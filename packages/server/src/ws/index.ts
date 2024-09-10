@@ -1,7 +1,7 @@
-import {cache} from '@blueserver/api/cache'
 import {protocol} from '@blueserver/api/constants'
 import socketRequestServer from 'socket-request-server'
 import type {SocketRequestConnection} from 'socket-request-server/connection'
+import {change1h, change24h, top100} from '../shared.js'
 
 export type SocketResponse = {
 	send: <T>(data: T, status?: number) => void
@@ -23,17 +23,9 @@ export class WSApiServer {
 		return this.#connectionPromise
 	}
 
-	get #change24h() {
-		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change24h}))
-	}
-
-	get #change1h() {
-		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change1h}))
-	}
-
 	#api: {[name: string]: (response: SocketResponse, params: any) => void} = {
-		top100: (response) => response.send<Top100ResponseLoad>(cache.bluelist),
-		change24h: (response) => response.send<ChangesList[]>(this.#change24h),
-		change1h: (response) => response.send<ChangesList[]>(this.#change1h)
+		top100: (response) => response.send<Top100ResponseLoad>(top100()),
+		change24h: (response) => response.send<ChangesList[]>(change24h()),
+		change1h: (response) => response.send<ChangesList[]>(change1h())
 	}
 }
