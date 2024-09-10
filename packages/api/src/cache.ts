@@ -5,6 +5,15 @@ import {dataBuilder} from './DataBuilder.js'
 import {CACHE_ROOT_DIRECTORY, LIST_SIZE} from './constants.js'
 import {PubSub} from './pubsub.js'
 
+export async function createCacheDirectory() {
+	try {
+		// Making sure cache directory exists
+		await mkdir(CACHE_ROOT_DIRECTORY)
+	} catch {
+		// Ignore if it does
+	}
+}
+
 export type BlueCache = {
 	bluelist: BlueAsset[]
 	// subscribe: typeof pubsub.subscribe
@@ -51,15 +60,11 @@ export const init = async () => {
 
 export async function updateCacheWithRemote() {
 	cache.bluelist = await dataBuilder.createAssetList(LIST_SIZE)
+
 	PubSub.publishTop100()
 	PubSub.publishChange24h()
 
-	try {
-		// Making sure cache directory exists
-		await mkdir(CACHE_ROOT_DIRECTORY)
-	} catch {
-		// Ignore if it does
-	}
+	await createCacheDirectory()
 
 	writeFile(join(CACHE_ROOT_DIRECTORY, 'cache.json'), JSON.stringify(cache.bluelist))
 	writeFile(join(CACHE_ROOT_DIRECTORY, 'last-updated.txt'), Date.now().toString())
