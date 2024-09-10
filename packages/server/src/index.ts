@@ -8,7 +8,6 @@ import {PubSub} from '@blueserver/api/pubsub'
 
 try {
 	await init()
-	// TODO(glenn): lastUpdated could be undefined on fresh install
 	if (cache.lastUpdated + 3600000 < Date.now()) {
 		await updateCacheWithRemote()
 	}
