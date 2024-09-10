@@ -1,31 +1,30 @@
 import '@material/mwc-top-app-bar';
+import type {TopAppBar} from '@material/mwc-top-app-bar';
+import type {MdFab, MdList} from '@material/web/all.js';
 import {MdElevation} from '@material/web/elevation/elevation.js';
+import {MdItem} from '@material/web/labs/item/item.js';
 import {withController} from '@snar/lit';
 import 'inspector-elements';
-import {LitElement, html, css} from 'lit';
+import {LitElement, css, html} from 'lit';
 import {withStyles} from 'lit-with-styles';
 import {customElement, query} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {materialShellLoadingOff} from 'material-shell';
-import {ago} from '../ago.js';
+import {bindInput} from 'relit';
 import {SVG_GITHUB, SVG_LOGO} from '../assets/assets.js';
+import '../date/date-element.js';
+import {getSettingsDialog} from '../imports.js';
 import '../price-change.js';
 import '../select-chip.js';
 import {appstate} from '../state.js';
-import styles from './app-shell.css?inline';
-import type {MdFab, MdList} from '@material/web/all.js';
-import type {TopAppBar} from '@material/mwc-top-app-bar';
-import {bindInput} from 'relit';
-import toast from 'toastit';
-import {MdItem} from '@material/web/labs/item/item.js';
-import {getSettingsDialog} from '../imports.js';
 import {getCMCHref} from '../utils.js';
+import styles from './app-shell.css?inline';
 
 // @ts-ignore
 MdItem.elementStyles.push(css`
 :host([multiline]) .text {
-flex: 0.5;
+flex: 0.7;
 `);
 
 declare global {
@@ -189,60 +188,47 @@ export class AppShell extends LitElement {
 				${repeat(
 					assets,
 					(asset) => asset.id,
-					(asset) => {
-						const repo = asset.github.repos.find(
-							(r) => r instanceof Object,
-						) as GithubProjectResponse;
-
-						return html`
-							<md-list-item
-								type="button"
-								@click=${() => {
-									toast('More info coming soon');
-									console.log(asset);
-								}}
-							>
-								<md-icon-button
-									slot="start"
-									href="${getCMCHref(asset.slug)}"
-									target="_blank"
-								>
-									<img src=${asset.logo} />
-								</md-icon-button>
-								<div slot="overline" class="text-gray-300">#${asset.rank}</div>
-								<div slot="headline">${asset.name}</div>
-								<div slot="supporting-text">$${asset.symbol}</div>
-								<div
-									slot="trailing-supporting-text"
-									class="flex-1 flex items-center justify-between"
-								>
-									<price-change change=${asset.change24h}></price-change>
-									${repo && repo.pushed_at
-										? (() => {
-												const _ago = ago(repo.pushed_at);
-												return html`
-													${['now', 'sec', 'min', 'ho'].some((m) =>
-														_ago.includes(m),
-													)
-														? '🔥 '
-														: null}${_ago}
-												`;
-											})()
-										: null}
-								</div>
-								<md-icon-button
-									slot="end"
-									?disabled=${!repo}
-									href="${repo?.url}"
-									target="_blank"
-								>
-									<md-icon>${SVG_GITHUB}</md-icon>
-								</md-icon-button>
-							</md-list-item>
-						`;
-					},
+					(asset) => this.#renderListItem(asset),
 				)}
 			</md-list>
+		`;
+	}
+
+	#renderListItem(asset: BlueAsset) {
+		const repo = asset.github.repos.find(
+			(r) => r instanceof Object,
+		) as GithubProjectResponse;
+
+		return html`
+			<md-list-item class="asset" @click=${() => {}}>
+				<md-icon-button
+					slot="start"
+					href="${getCMCHref(asset.slug)}"
+					target="_blank"
+				>
+					<img src=${asset.logo} />
+				</md-icon-button>
+				<div slot="overline">#${asset.rank}</div>
+				<div slot="headline">${asset.name}</div>
+				<div slot="supporting-text">$${asset.symbol}</div>
+				<div
+					slot="trailing-supporting-text"
+					class="flex-1 flex items-center justify-between"
+				>
+					<price-change change=${asset.change24h}></price-change>
+					${repo
+						? html`<date-element date=${repo.pushed_at}></date-element>`
+						: null}
+				</div>
+				<md-icon-button
+					slot="end"
+					?disabled=${!repo}
+					href="${repo?.url}"
+					target="_blank"
+				>
+					<md-icon>${SVG_GITHUB}</md-icon>
+				</md-icon-button>
+			</md-list-item>
 		`;
 	}
 

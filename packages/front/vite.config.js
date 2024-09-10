@@ -45,8 +45,8 @@ export default defineConfig({
 		mdicon2svg({
 			variant: 'rounded',
 			include: [
-				'src/**/*.ts',
-				'node_modules/@vdegenne/material-color-helpers/lib/elements/**/*.js',
+				'./src/**/*.ts',
+				'../../node_modules/@vdegenne/material-color-helpers/lib/elements/**/*.js',
 			],
 		}),
 

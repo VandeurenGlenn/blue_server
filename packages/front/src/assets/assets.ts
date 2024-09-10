@@ -3,6 +3,7 @@ import {html} from 'lit';
 /** Export individual assets for helping tree-shaking */
 // export {default as MY_IMAGE} from './img/my-image.png?inline';
 // etc...
+export {default as GIF_FIRE} from './img/fire.gif?inline';
 
 // Note: Assets from public directory can't be inlined.
 // Instead a url to the resource will be used in place.
