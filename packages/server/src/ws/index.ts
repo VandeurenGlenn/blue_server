@@ -12,7 +12,10 @@ export class WSApiServer {
 	#connectionPromise
 
 	constructor(options: {port: number}) {
-		this.#connectionPromise = socketRequestServer({port: options.port, protocol: 'protocol-blue'}, this.#api)
+		this.#connectionPromise = socketRequestServer(
+			{port: options.port, protocol: 'protocol-blue', keepValue: true},
+			this.#api
+		)
 		this.#connectionPromise.then((server) => {
 			this.#server = server
 		})
