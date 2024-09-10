@@ -5,6 +5,7 @@ export const SEVEN_DAYS_AGO = 604_800_000
 export const LIST_SIZE = 100
 export const PORT = 9876
 export const WS_PORT = 9877
+export const protocol = 'protocol-blue'
 
 // One directory down because this script operates from 'lib' not the root
 export const CACHE_ROOT_DIRECTORY = join(__dirname, '..', '.cache')
