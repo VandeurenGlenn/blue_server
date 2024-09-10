@@ -71,3 +71,19 @@ md-list-item.asset [slot='overline'] {
 md-list-item.asset [slot='supporting-text'] {
 	color: var(--md-sys-color-primary);
 }
+
+md-list-item.asset [slot='headline'] {
+	white-space: nowrap;
+}
+
+md-list-item.asset [slot='end'] {
+	width: 100px;
+	font-size: 0.6875rem;
+}
+md-list-item.asset [slot='end'] md-icon-button {
+	z-index: 1;
+}
+md-list-item.asset [slot='end'] date-element {
+	min-width: 70px;
+	z-index: 0;
+}

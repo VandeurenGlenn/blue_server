@@ -3,22 +3,34 @@ export type ColorPair = {
 	foreground: string;
 };
 
-const thresholds: number[] = [0.3, 5, 10, 25, 50, 100];
+const thresholds: number[] = [0.3, 2, 5, 10, 25, 50, 100];
 
 const grayColor: ColorPair = {background: '#bdbdbd', foreground: '#000000'};
 
 const greenGradients: ColorPair[] = [
-	{background: '#7ec17e', foreground: '#000000'},
-	{background: '#518651', foreground: '#ffffff'},
-	{background: '#215e2c', foreground: '#ffffff'},
-	{background: '#17421e', foreground: '#ffffff'},
+	{background: '#1b5e20', foreground: '#fff'}, // 10 (dark)
+	{background: '#2e7d32', foreground: '#fff'}, // 9
+	{background: '#388e3c', foreground: '#fff'}, // 8
+	{background: '#43a047', foreground: '#fff'}, // 7
+	{background: '#4caf50', foreground: '#fff'}, // 6
+	{background: '#66bb6a', foreground: '#000'}, // 5
+	{background: '#81c784', foreground: '#000'}, // 4
+	// {background: '#a5d6a7', foreground: '#000'}, // 3
+	// {background: '#c8e6c9', foreground: '#000'}, // 2
+	// {background: '#e8f5e9', foreground: '#000'}, // 1 (bright)
 ];
 
 const redGradients: ColorPair[] = [
-	{background: '#ed7171', foreground: '#ffffff'},
-	{background: '#c84040', foreground: '#ffffff'},
-	{background: '#aa2121', foreground: '#ffffff'},
-	{background: '#801010', foreground: '#ffffff'},
+	// {background: '#ffebee', foreground: '#000'}, // 1 (bright)
+	// {background: '#ffcdd2', foreground: '#000'}, // 2
+	// {background: '#ef9a9a', foreground: '#000'}, // 3
+	{background: '#e57373', foreground: '#fff'}, // 4
+	{background: '#ef5350', foreground: '#fff'}, // 5
+	{background: '#f44336', foreground: '#fff'}, // 6
+	{background: '#e53935', foreground: '#fff'}, // 7
+	{background: '#d32f2f', foreground: '#fff'}, // 8
+	{background: '#c62828', foreground: '#fff'}, // 9
+	{background: '#b71c1c', foreground: '#fff'}, // 10 (dark)
 ];
 
 export function determineColor(change: number): ColorPair {

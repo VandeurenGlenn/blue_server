@@ -3,7 +3,7 @@ import {type MdMenu} from '@material/web/menu/menu.js';
 import {withController} from '@snar/lit';
 import {LitElement, PropertyValues, css, html} from 'lit';
 import {customElement, query, state} from 'lit/decorators.js';
-import {SORTING_METHODS, appstate} from './state.js';
+import {appstate, SortingMethod} from './state.js';
 
 @customElement('select-chip')
 @withController(appstate)
@@ -52,7 +52,7 @@ export class SelectChip extends LitElement {
 				?stay-open-on-outside-click=${false /* true for testing */}
 				?stay-open-on-focusout=${false /* true for testing */}
 			>
-				${SORTING_METHODS.map(
+				${Object.values(SortingMethod).map(
 					(method) => html`
 						<md-menu-item
 							@click=${() => {
