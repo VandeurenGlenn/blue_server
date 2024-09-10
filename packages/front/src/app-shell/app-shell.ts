@@ -14,7 +14,7 @@ import '../price-change.js';
 import '../select-chip.js';
 import {appstate} from '../state.js';
 import styles from './app-shell.css?inline';
-import type {MdFab} from '@material/web/all.js';
+import type {MdFab, MdList} from '@material/web/all.js';
 import type {TopAppBar} from '@material/mwc-top-app-bar';
 import {bindInput} from 'relit';
 import toast from 'toastit';
@@ -43,8 +43,9 @@ declare global {
 export class AppShell extends LitElement {
 	@query('mwc-top-app-bar') topAppBar!: TopAppBar;
 	@query('md-fab#go-top-fab') goTopFab!: MdFab;
+	@query('md-list') list!: MdList;
 
-	firstUpdated() {
+	async firstUpdated() {
 		materialShellLoadingOff.call(this);
 		appstate.bind(this);
 
@@ -54,6 +55,9 @@ export class AppShell extends LitElement {
 		this.topAppBar.updateComplete.then(() => {
 			this.topAppBar.renderRoot.querySelector('header').appendChild(elevation);
 		});
+
+		await this.list.updateComplete;
+		this.list.items[0].tabIndex = -1;
 	}
 
 	render() {
@@ -240,6 +244,13 @@ export class AppShell extends LitElement {
 				)}
 			</md-list>
 		`;
+	}
+
+	activePreviousItem() {
+		this.list.activatePreviousItem();
+	}
+	activeNextItem() {
+		this.list.activateNextItem();
 	}
 }
 
