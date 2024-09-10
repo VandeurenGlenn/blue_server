@@ -242,6 +242,8 @@ declare global {
 		/** Value of change for the given period */
 		change: number
 	}
+
+	type Top100ResponseLoad = {lastUpdated: number; list: BlueAsset[]}
 }
 
 export {}

@@ -11,7 +11,7 @@ export class HttpApiClient {
 	}
 
 	static top100() {
-		return this.#fetch('top100') as Promise<BlueAsset[]>
+		return this.#fetch('top100') as Promise<Top100ResponseLoad>
 	}
 
 	static change24h() {
