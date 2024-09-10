@@ -61,11 +61,15 @@ export function getElementsTree(node: Element): Promise<Element[]> {
 }
 export async function getElementInTree(
 	from: Element,
-	condition: (element: Element) => boolean
+	condition: (element: Element) => boolean,
 ): Promise<Element | undefined> {
 	for (const element of await getElementsTree(from)) {
 		if (condition(element)) {
 			return element;
 		}
 	}
+}
+
+export function getCMCHref(slug: string) {
+	return `https://coinmarketcap.com/en/currencies/${slug}/`;
 }

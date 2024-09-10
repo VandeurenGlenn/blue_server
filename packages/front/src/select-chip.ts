@@ -5,15 +5,6 @@ import {LitElement, PropertyValues, css, html} from 'lit';
 import {customElement, query, state} from 'lit/decorators.js';
 import {SORTING_METHODS, appstate} from './state.js';
 
-// @ts-ignore
-// MdFilterChip.elementStyles.push(css`
-// 	.trailing.icon {
-// 		display: flex;
-// 		justify-content: center;
-// 		align-items: center;
-// 	}
-// `);
-
 @customElement('select-chip')
 @withController(appstate)
 export class SelectChip extends LitElement {

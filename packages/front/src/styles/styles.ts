@@ -13,7 +13,7 @@ class ThemeStore extends ReactiveController {
 	 * and also 'theme-color' meta tag in html header.
 	 * Material default theme seed is '#6750A4'
 	 */
-	@state() themeColor = '#6750A4';
+	@state() themeColor = '#00DDFA';
 
 	async updated(changed: PropertyValues) {
 		if (changed.has('colorMode')) {
@@ -26,7 +26,7 @@ class ThemeStore extends ReactiveController {
 			this.themeColor,
 			ThemeManager.appliedColorScheme === 'dark',
 			'vibrant',
-			0
+			0,
 		);
 		applyTheme(document, theme!);
 	}
