@@ -2,7 +2,7 @@
 /* @import url(./japanese.css); */
 
 :root {
-	/* --md-icon-font: 'Material Symbols Rounded'; */
+	--md-icon-font: 'Material Symbols Rounded';
 	/*--md-list-container-color: transparent;*/
 	background-color: var(--md-sys-color-background);
 	--md-elevation-level: 4;
