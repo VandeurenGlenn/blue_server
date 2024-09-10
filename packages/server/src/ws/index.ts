@@ -1,4 +1,5 @@
 import {cache} from '@blueserver/api/cache'
+import {protocol} from '@blueserver/api/constants'
 import socketRequestServer from 'socket-request-server'
 import type {SocketRequestConnection} from 'socket-request-server/connection'
 
@@ -12,7 +13,7 @@ export class WSApiServer {
 	#connectionPromise
 
 	constructor(options: {port: number}) {
-		this.#connectionPromise = socketRequestServer({port: options.port, protocol: 'protocol-blue'}, this.#api)
+		this.#connectionPromise = socketRequestServer({port: options.port, protocol, keepValue: true}, this.#api)
 		this.#connectionPromise.then((server) => {
 			this.#server = server
 		})

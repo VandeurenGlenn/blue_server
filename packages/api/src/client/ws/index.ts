@@ -1,5 +1,5 @@
 import {SocketRequestClient} from 'socket-request-client'
-import {type AvailableRoute, WS_PORT} from '../../constants.js'
+import {type AvailableRoute, protocol, WS_PORT} from '../../constants.js'
 import ClientConnection from 'socket-request-client/connection'
 import {resolveLocalIP} from '../../util.js'
 
@@ -10,7 +10,7 @@ export class WSApiClient {
 	constructor() {
 		const localAddress = resolveLocalIP() ?? 'localhost'
 		const url = !import.meta.env.DEV ? `wss://ws-blue.leofcoin.org` : `ws://${localAddress}:${WS_PORT}`
-		this.#connectionPromise = new SocketRequestClient(url, 'protocol-blue').init()
+		this.#connectionPromise = new SocketRequestClient(url, protocol).init()
 		this.#connectionPromise.then((client) => {
 			this.#client = client
 		})
