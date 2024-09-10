@@ -200,7 +200,7 @@ export class AppShell extends LitElement {
 		) as GithubProjectResponse;
 
 		return html`
-			<md-list-item class="asset" @click=${() => {}}>
+			<md-list-item class="asset" type="button" @click=${() => {}}>
 				<md-icon-button
 					slot="start"
 					href="${getCMCHref(asset.slug)}"
