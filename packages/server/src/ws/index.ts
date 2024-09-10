@@ -4,8 +4,8 @@ import socketRequestServer from 'socket-request-server'
 import type {SocketRequestConnection} from 'socket-request-server/connection'
 
 export type SocketResponse = {
-	send: (data: any, status?: number) => void
-	error: (message: any) => void
+	send: <T>(data: T, status?: number) => void
+	error: (message: string) => void
 }
 
 export class WSApiServer {
@@ -31,9 +31,9 @@ export class WSApiServer {
 		return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change1h}))
 	}
 
-	#api: {[index: string]: (params: any, response: SocketResponse) => void} = {
-		top100: (response) => response.send(cache.bluelist as Top100ResponseLoad),
-		change24h: (response) => response.send(this.#change24h),
-		change1h: (response) => response.send(this.#change1h)
+	#api: {[name: string]: (response: SocketResponse, params: any) => void} = {
+		top100: (response) => response.send<Top100ResponseLoad>(cache.bluelist),
+		change24h: (response) => response.send<ChangesList[]>(this.#change24h),
+		change1h: (response) => response.send<ChangesList[]>(this.#change1h)
 	}
 }
