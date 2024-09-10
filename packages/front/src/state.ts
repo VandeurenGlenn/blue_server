@@ -28,6 +28,7 @@ class AppState extends ReactiveController {
 				// TODO: Calculate the hash and do not update if there were no changes
 				// since the last update
 				this.top100 = data;
+				// inspect(this.top100[0]);
 				this.requestUpdate();
 			});
 		});
