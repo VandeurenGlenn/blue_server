@@ -20,7 +20,7 @@ export class WSApiClient {
 		return this.#connectionPromise
 	}
 
-	top100(): Promise<BlueAsset[]> {
+	top100(): Promise<Top100ResponseLoad> {
 		if (!this.#client) {
 			throw new Error('Client is not available.')
 		}

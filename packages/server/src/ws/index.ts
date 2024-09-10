@@ -32,7 +32,7 @@ export class WSApiServer {
 	}
 
 	#api: {[index: string]: (params: any, response: SocketResponse) => void} = {
-		top100: (response) => response.send(cache.bluelist),
+		top100: (response) => response.send(cache.bluelist as Top100ResponseLoad),
 		change24h: (response) => response.send(this.#change24h),
 		change1h: (response) => response.send(this.#change1h)
 	}
