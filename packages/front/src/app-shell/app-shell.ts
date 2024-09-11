@@ -150,7 +150,7 @@ export class AppShell extends LitElement {
 				break;
 			case SortingMethod.Change24h:
 				assets = assets.sort((a, b) => {
-					return b.change24h - a.change24h;
+					return b.changes.percent_24h - a.changes.percent_24h;
 				});
 				break;
 			case SortingMethod.Github:
