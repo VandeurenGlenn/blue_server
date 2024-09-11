@@ -212,6 +212,8 @@ declare global {
 		contributers: string[]
 	}
 
+	type AvailableExchange = 'binance' | 'kraken' | 'coinbase'
+
 	// TODO: glenn do it lol
 	type GithubIndicator = {}
 	type BlueAsset = {
@@ -226,7 +228,7 @@ declare global {
 			contract_address: string
 			platform: CMCPlatform
 		}[]
-		exchanges: ('binance' | 'kraken' | 'coinbase')[]
+		exchanges: AvailableExchange[]
 		logo?: string
 		website: string
 		repos: string[]
@@ -271,33 +273,6 @@ declare global {
 				decimals: number
 				display_decimals: number
 				status: string
-			}
-		}
-	}
-
-	type BlueCache = {
-		bluelist: BlueAsset[]
-		exchanges: {
-			binance: {
-				lastUpdated: number
-				list: Pair[]
-			}
-			kraken: {
-				lastUpdated: number
-				list: KrakenAssetList['result']
-			}
-		}
-		lastUpdated: number
-		github: {
-			repos: {
-				cached: {
-					[name: string]: GithubProjectResponse[]
-				}
-				tags: {[name: string]: string}
-			}
-			stats: {
-				cached: {[name: string]: GithubActivity}
-				tags: {[name: string]: string}
 			}
 		}
 	}
