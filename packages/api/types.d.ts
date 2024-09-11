@@ -278,6 +278,10 @@ declare global {
 	type BlueCache = {
 		bluelist: BlueAsset[]
 		exchanges: {
+			binance: {
+				lastUpdated: number
+				list: Pair[]
+			}
 			kraken: {
 				lastUpdated: number
 				list: KrakenAssetList['result']

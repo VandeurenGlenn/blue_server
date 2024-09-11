@@ -25,6 +25,11 @@ export class DataBuilder {
 		return this.kraken.getAssetList()
 	}
 
+	async createBinanceAssetList() {
+		await Binance.fetchAvailablePairs()
+		return Binance.getAllPairsOfQuote('USDT')
+	}
+
 	/**
 	 * @param top the number of projects in the top to fetch
 	 * @returns {BlueAsset[]} list of blue indicators (for the front end)
@@ -36,9 +41,6 @@ export class DataBuilder {
 		const listingsInfo = await this.coinMarketCap.getListingInfo(listings.map((l) => l.id))
 		const listingsInfoMap = Object.values(listingsInfo)
 		writeFile(join(CACHE_ROOT_DIRECTORY, 'listingsinfo.json'), JSON.stringify(listingsInfoMap))
-
-		await Binance.fetchComplete
-		const binanceUSDTpairs = Binance.getAllPairsOfQuote('USDT')
 
 		return Promise.all(
 			listingsInfoMap.map(async (asset) => {
@@ -78,6 +80,7 @@ export class DataBuilder {
 						github: null
 					}
 				}
+				const binanceUSDTpairs = cache.exchanges.binance.list
 
 				// Check if Binance exchange is available
 				if (binanceUSDTpairs.some((pair) => pair.base === asset.symbol)) {

@@ -17,6 +17,10 @@ export async function createCacheDirectory() {
 export const cache: BlueCache = {
 	bluelist: [],
 	exchanges: {
+		binance: {
+			lastUpdated: 0,
+			list: []
+		},
 		kraken: {
 			lastUpdated: 0,
 			list: {}
@@ -55,6 +59,11 @@ export async function updateCacheWithRemote() {
 		cache.exchanges.kraken.list = await dataBuilder.createKrakenAssetList()
 		cache.exchanges.kraken.lastUpdated = Date.now()
 	}
+	if (Date.now() - cache.exchanges.binance.lastUpdated >= TWENTY_FOUR_HOURS) {
+		cache.exchanges.binance.list = await dataBuilder.createBinanceAssetList()
+		cache.exchanges.binance.lastUpdated = Date.now()
+	}
+
 	cache.bluelist = await dataBuilder.createAssetList(LIST_SIZE)
 	PubSub.publishTop100()
 	PubSub.publishChange24h()
