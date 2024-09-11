@@ -1,4 +1,5 @@
 import '@material/mwc-top-app-bar';
+import {live} from 'lit/directives/live.js';
 import type {TopAppBar} from '@material/mwc-top-app-bar';
 import type {MdFab, MdList} from '@material/web/all.js';
 import {MdElevation} from '@material/web/elevation/elevation.js';
@@ -7,7 +8,7 @@ import {withController} from '@snar/lit';
 import 'inspector-elements';
 import {LitElement, css, html} from 'lit';
 import {withStyles} from 'lit-with-styles';
-import {customElement, query} from 'lit/decorators.js';
+import {customElement, query, state} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {materialShellLoadingOff} from 'material-shell';
@@ -18,7 +19,7 @@ import {getSettingsDialog} from '../imports.js';
 import '../price-change.js';
 import '../select-chip.js';
 import {appstate, SortingMethod} from '../state.js';
-import {getCMCHref} from '../utils.js';
+import {binanceHref, getCMCHref} from '../utils.js';
 import styles from './app-shell.css?inline';
 
 // @ts-ignore
@@ -43,6 +44,8 @@ export class AppShell extends LitElement {
 	@query('mwc-top-app-bar') topAppBar!: TopAppBar;
 	@query('md-fab#go-top-fab') goTopFab!: MdFab;
 	@query('md-list') list!: MdList;
+
+	@state() listItemsAreButtons = false;
 
 	async firstUpdated() {
 		materialShellLoadingOff.call(this);
@@ -185,12 +188,14 @@ export class AppShell extends LitElement {
 			</div>`;
 		}
 		return html`
-			<md-list class="p-0">
+			<md-list class="p-0 gap-1">
 				${repeat(
 					assets,
 					(asset) => asset.id,
 					(asset) =>
-						html`${this.#renderListItem(asset)}<md-divider></md-divider>`,
+						html`${this.#renderListItem(
+								asset,
+							)}<!--<md-divider></md-divider>-->`,
 				)}
 			</md-list>
 		`;
@@ -202,23 +207,33 @@ export class AppShell extends LitElement {
 		) as GithubProjectResponse;
 
 		return html`
-			<md-list-item class="asset" type="button" @click=${() => {}}>
-				<md-icon-button
+			<md-list-item
+				class="asset"
+				.type=${this.listItemsAreButtons ? 'button' : 'text'}
+				@click=${() => {
+					console.log(asset);
+				}}
+			>
+				<md-filled-tonal-icon-button
 					slot="start"
 					href="${getCMCHref(asset.slug)}"
 					target="_blank"
 				>
 					<img src=${asset.logo} />
-				</md-icon-button>
+				</md-filled-tonal-icon-button>
 				<div slot="overline">#${asset.rank}</div>
 				<div slot="headline" title=${asset.name}>${asset.name}</div>
 				<div slot="supporting-text">$${asset.symbol}</div>
 				<div slot="trailing-supporting-text" class="flex-1 flex flex-start">
-					<div class="flex flex-col items-center gap-1">
+					<div class="flex flex-col items-center gap-0">
 						<price-change change=${asset.changes.percent_24h}></price-change>
 						${asset.exchanges.includes('binance')
 							? html`
-									<md-icon-button small>
+									<md-icon-button
+										small
+										href=${binanceHref(asset.symbol, 'USDT')}
+										target="_blank"
+									>
 										<md-icon>${SVG_BINANCE}</md-icon>
 									</md-icon-button>
 								`

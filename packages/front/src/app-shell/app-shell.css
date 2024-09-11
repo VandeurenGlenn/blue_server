@@ -62,6 +62,14 @@ md-list {
 
 md-list-item.asset {
 	background-color: var(--md-sys-color-surface-container);
+	border-radius: 24px;
+}
+
+md-list-item.asset md-filled-tonal-icon-button[slot='start'] {
+	/*--md-filled-tonal-icon-button-container-color: red;*/
+	--md-sys-color-secondary-container: var(
+		--md-sys-color-surface-container-highest
+	);
 }
 
 md-list-item.asset [slot='overline'] {
