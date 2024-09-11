@@ -225,7 +225,7 @@ export class AppShell extends LitElement {
 				<div slot="headline" title=${asset.name}>${asset.name}</div>
 				<div slot="supporting-text">$${asset.symbol}</div>
 				<div slot="trailing-supporting-text" class="flex-1 flex flex-start">
-					<div class="flex flex-col items-center gap-0">
+					<div class="flex flex-col items-center gap-1 relative top-1">
 						<price-change change=${asset.changes.percent_24h}></price-change>
 						${asset.exchanges.includes('binance')
 							? html`
