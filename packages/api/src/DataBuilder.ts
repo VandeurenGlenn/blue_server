@@ -51,7 +51,7 @@ export class DataBuilder {
 
 				const blueAsset: BlueAsset = {
 					id: asset.id,
-					hash: '',
+					// hash: '',
 					slug,
 					rank: listing.cmc_rank,
 					platform: listing.platform,
@@ -138,7 +138,7 @@ export class DataBuilder {
 					}
 				}
 
-				blueAsset.hash = await hashIt(encode(JSON.stringify(blueAsset)))
+				// blueAsset.hash = await hashIt(encode(JSON.stringify(blueAsset)))
 				return blueAsset
 			})
 		)

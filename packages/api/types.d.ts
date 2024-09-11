@@ -216,7 +216,7 @@ declare global {
 	type GithubIndicator = {}
 	type BlueAsset = {
 		id: number
-		hash: string
+		// hash: string
 		name: string
 		rank: number
 		slug: string
