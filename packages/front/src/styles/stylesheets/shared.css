@@ -44,8 +44,8 @@
 	top: -2px;
 } */
 
-md-filled-tonal-icon-button[small] {
-	--md-filled-tonal-icon-button-icon-size: 16px;
-	--md-filled-tonal-icon-button-container-height: 24px;
-	--md-filled-tonal-icon-button-container-width: 24px;
+md-icon-button[small] {
+	--md-icon-button-icon-size: 16px;
+	width: 24px;
+	height: 24px;
 }

@@ -217,9 +217,9 @@ export class AppShell extends LitElement {
 						<price-change change=${asset.changes.percent_24h}></price-change>
 						${asset.exchanges.includes('binance')
 							? html`
-									<md-filled-tonal-icon-button small>
+									<md-icon-button small>
 										<md-icon>${SVG_BINANCE}</md-icon>
-									</md-filled-tonal-icon-button>
+									</md-icon-button>
 								`
 							: null}
 					</div>
