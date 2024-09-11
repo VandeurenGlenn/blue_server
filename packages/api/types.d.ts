@@ -225,6 +225,7 @@ declare global {
 			contract_address: string
 			platform: CMCPlatform
 		}[]
+		exchanges: ('binance' | 'kraken' | 'coinbase')[]
 		logo?: string
 		website: string
 		repos: string[]

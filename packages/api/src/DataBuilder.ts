@@ -5,6 +5,7 @@ import {CACHE_ROOT_DIRECTORY, SEVEN_DAYS_AGO} from './constants.js'
 import {writeFile} from 'fs/promises'
 import {join} from 'node:path'
 import {createCacheDirectory} from './cache.js'
+import {Binance} from './api/Binance.js'
 
 export class DataBuilder {
 	coinMarketCap: CoinMarketCap
@@ -29,6 +30,9 @@ export class DataBuilder {
 		const listingsInfoMap = Object.values(listingsInfo)
 		writeFile(join(CACHE_ROOT_DIRECTORY, 'listingsinfo.json'), JSON.stringify(listingsInfoMap))
 
+		await Binance.fetchComplete
+		const binanceUSDTpairs = Binance.getAllPairsOfQuote('USDT')
+
 		return Promise.all(
 			listingsInfoMap.map(async (asset) => {
 				const slug = asset.slug
@@ -37,12 +41,20 @@ export class DataBuilder {
 				if (!listing) {
 					throw new Error('listing not found from listingInfo object')
 				}
+
+				const exchanges: BlueAsset['exchanges'] = []
+				// Check if Binance exchange is available
+				if (binanceUSDTpairs.some((pair) => pair.base === asset.symbol)) {
+					exchanges.push('binance')
+				}
+
 				const blueAsset: BlueAsset = {
 					id: asset.id,
 					slug,
 					rank: listing.cmc_rank,
 					platform: listing.platform,
 					platforms: asset.contract_address,
+					exchanges,
 					change24h: listing.quote.USD.percent_change_24h,
 					change1h: listing.quote.USD.percent_change_1h,
 					symbol: asset.symbol,
