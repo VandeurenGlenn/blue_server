@@ -185,7 +185,7 @@ export class AppShell extends LitElement {
 			</div>`;
 		}
 		return html`
-			<md-list class="p-0 gap-1">
+			<md-list class="p-0">
 				${repeat(
 					assets,
 					(asset) => asset.id,
