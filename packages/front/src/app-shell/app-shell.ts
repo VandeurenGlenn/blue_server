@@ -189,7 +189,8 @@ export class AppShell extends LitElement {
 				${repeat(
 					assets,
 					(asset) => asset.id,
-					(asset) => this.#renderListItem(asset),
+					(asset) =>
+						html`${this.#renderListItem(asset)}<md-divider></md-divider>`,
 				)}
 			</md-list>
 		`;
