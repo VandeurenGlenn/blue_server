@@ -4,19 +4,25 @@ import {GitHub} from './api/github.js'
 import {CACHE_ROOT_DIRECTORY, SEVEN_DAYS_AGO} from './constants.js'
 import {writeFile} from 'fs/promises'
 import {join} from 'node:path'
-import {createCacheDirectory} from './cache.js'
+import {cache, createCacheDirectory} from './cache.js'
 import {Binance} from './api/Binance.js'
+import {Kraken} from './api/exchange/kraken.js'
 
 export class DataBuilder {
 	coinMarketCap: CoinMarketCap
 	gitHub: GitHub
+	kraken: Kraken
 
 	constructor(keys: {coinmarketcap: string; github: string}) {
 		if (!keys) throw new Error('no api keys found (did you setup env?)')
 
 		this.coinMarketCap = new CoinMarketCap(keys.coinmarketcap)
 		this.gitHub = new GitHub(keys.github)
-		// this.kraken = new Kraken(keys.kraken)
+		this.kraken = new Kraken()
+	}
+
+	async createKrakenAssetList() {
+		return this.kraken.getAssetList()
 	}
 
 	/**
@@ -43,12 +49,6 @@ export class DataBuilder {
 					throw new Error('listing not found from listingInfo object')
 				}
 
-				const exchanges: BlueAsset['exchanges'] = []
-				// Check if Binance exchange is available
-				if (binanceUSDTpairs.some((pair) => pair.base === asset.symbol)) {
-					exchanges.push('binance')
-				}
-
 				const blueAsset: BlueAsset = {
 					id: asset.id,
 					// hash: '',
@@ -68,6 +68,7 @@ export class DataBuilder {
 					logo: asset.logo,
 					website: asset.urls.website[0],
 					repos: asset.urls.source_code,
+					exchanges: [],
 					github: {
 						activity: {additions: 0, deletions: 0, total: 0},
 						repos: [],
@@ -76,6 +77,16 @@ export class DataBuilder {
 					indicators: {
 						github: null
 					}
+				}
+
+				// Check if Binance exchange is available
+				if (binanceUSDTpairs.some((pair) => pair.base === asset.symbol)) {
+					blueAsset.exchanges.push('binance')
+				}
+
+				const krakenAsset = cache.exchanges.kraken.list[asset.symbol]
+				if (krakenAsset) {
+					blueAsset.exchanges.push('kraken')
 				}
 
 				const githubRepos = blueAsset.repos.filter((repo) => repo.includes('github'))

@@ -261,6 +261,42 @@ declare global {
 		 */
 		quote: string
 	}
+
+	type KrakenAssetList = {
+		error: string[]
+		result: {
+			[key: string]: {
+				altname: string
+				aclass: string
+				decimals: number
+				display_decimals: number
+				status: string
+			}
+		}
+	}
+
+	type BlueCache = {
+		bluelist: BlueAsset[]
+		exchanges: {
+			kraken: {
+				lastUpdated: number
+				list: KrakenAssetList['result']
+			}
+		}
+		lastUpdated: number
+		github: {
+			repos: {
+				cached: {
+					[name: string]: GithubProjectResponse[]
+				}
+				tags: {[name: string]: string}
+			}
+			stats: {
+				cached: {[name: string]: GithubActivity}
+				tags: {[name: string]: string}
+			}
+		}
+	}
 }
 
 export {}
