@@ -216,6 +216,7 @@ declare global {
 	type GithubIndicator = {}
 	type BlueAsset = {
 		id: number
+		hash: string
 		name: string
 		rank: number
 		slug: string
@@ -229,8 +230,10 @@ declare global {
 		logo?: string
 		website: string
 		repos: string[]
-		change24h: number
-		change1h: number
+		changes: {
+			percent_1h: number
+			percent_24h: number
+		}
 		github: GithubProject
 		indicators: {
 			github: null

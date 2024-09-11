@@ -16,6 +16,7 @@ export class DataBuilder {
 
 		this.coinMarketCap = new CoinMarketCap(keys.coinmarketcap)
 		this.gitHub = new GitHub(keys.github)
+		// this.kraken = new Kraken(keys.kraken)
 	}
 
 	/**
@@ -50,13 +51,18 @@ export class DataBuilder {
 
 				const blueAsset: BlueAsset = {
 					id: asset.id,
+					hash: '',
 					slug,
 					rank: listing.cmc_rank,
 					platform: listing.platform,
 					platforms: asset.contract_address,
-					exchanges,
-					change24h: listing.quote.USD.percent_change_24h,
-					change1h: listing.quote.USD.percent_change_1h,
+					// price: listing.quote.USD.price,
+					// marketCap: listing.quote.USD.market_cap,
+					// circulating_supply: listing.circulating_supply,
+					changes: {
+						percent_1h: listing.quote.USD.percent_change_1h,
+						percent_24h: listing.quote.USD.percent_change_24h
+					},
 					symbol: asset.symbol,
 					name: asset.name,
 					logo: asset.logo,
@@ -132,6 +138,7 @@ export class DataBuilder {
 					}
 				}
 
+				blueAsset.hash = await hashIt(encode(JSON.stringify(blueAsset)))
 				return blueAsset
 			})
 		)
