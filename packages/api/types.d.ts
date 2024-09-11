@@ -244,6 +244,19 @@ declare global {
 	}
 
 	type Top100ResponseLoad = {lastUpdated: number; list: BlueAsset[]}
+
+	type Pair = {
+		/**
+		 * Base of the Pair
+		 * e.g. base of BTC/USD is BTC
+		 */
+		base: string
+		/**
+		 * Quote of the Pair
+		 * e.g. quote of BTC/USD is USD
+		 */
+		quote: string
+	}
 }
 
 export {}
