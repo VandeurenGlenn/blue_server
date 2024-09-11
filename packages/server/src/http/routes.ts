@@ -1,5 +1,5 @@
 import Router from '@koa/router'
-import {change1h, change24h, top100} from '../shared.js'
+import {change1h, change24h, top100} from '@blueserver/api/server/shared'
 
 const router = new Router()
 

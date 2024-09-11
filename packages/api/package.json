@@ -23,6 +23,10 @@
 			"import": "./lib/client/ws/index.js",
 			"types": "./lib/client/ws/index.d.ts"
 		},
+		"./server/shared": {
+			"import": "./lib/server/shared.js",
+			"types": "./lib/server/shared.d.ts"
+		},
 		"./pubsub": {
 			"import": "./lib/pubsub.js",
 			"types": "./lib/pubsub.d.ts"
