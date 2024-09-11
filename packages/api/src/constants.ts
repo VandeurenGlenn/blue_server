@@ -2,6 +2,7 @@ import {__dirname} from './__dirname.js'
 import {join} from 'path'
 
 export const SEVEN_DAYS_AGO = 604_800_000
+export const TWENTY_FOUR_HOURS = 86_400_000
 export const LIST_SIZE = 100
 export const PORT = 9876
 export const WS_PORT = 9877

@@ -18,6 +18,7 @@ try {
 
 PubSub.publishTop100()
 PubSub.publishChange24h()
+PubSub.publishChange1h()
 
 const cronTime = '0 * * * *' // every hour
 // const cronTime = '*/20 * * * * *' // every 20s

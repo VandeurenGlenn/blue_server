@@ -216,6 +216,7 @@ declare global {
 	type GithubIndicator = {}
 	type BlueAsset = {
 		id: number
+		// hash: string
 		name: string
 		rank: number
 		slug: string
@@ -229,8 +230,10 @@ declare global {
 		logo?: string
 		website: string
 		repos: string[]
-		change24h: number
-		change1h: number
+		changes: {
+			percent_1h: number
+			percent_24h: number
+		}
 		github: GithubProject
 		indicators: {
 			github: null
@@ -257,6 +260,46 @@ declare global {
 		 * e.g. quote of BTC/USD is USD
 		 */
 		quote: string
+	}
+
+	type KrakenAssetList = {
+		error: string[]
+		result: {
+			[key: string]: {
+				altname: string
+				aclass: string
+				decimals: number
+				display_decimals: number
+				status: string
+			}
+		}
+	}
+
+	type BlueCache = {
+		bluelist: BlueAsset[]
+		exchanges: {
+			binance: {
+				lastUpdated: number
+				list: Pair[]
+			}
+			kraken: {
+				lastUpdated: number
+				list: KrakenAssetList['result']
+			}
+		}
+		lastUpdated: number
+		github: {
+			repos: {
+				cached: {
+					[name: string]: GithubProjectResponse[]
+				}
+				tags: {[name: string]: string}
+			}
+			stats: {
+				cached: {[name: string]: GithubActivity}
+				tags: {[name: string]: string}
+			}
+		}
 	}
 }
 

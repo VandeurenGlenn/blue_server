@@ -5,9 +5,9 @@ export const top100 = (): Top100ResponseLoad => {
 }
 
 export const change24h = (): ChangesList[] => {
-	return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change24h}))
+	return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.changes.percent_24h}))
 }
 
 export const change1h = (): ChangesList[] => {
-	return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.change1h}))
+	return cache.bluelist.map<ChangesList>((a) => ({id: a.id, change: a.changes.percent_1h}))
 }
