@@ -58,6 +58,7 @@ mwc-top-app-bar[elevated] {
 md-list {
 	--md-list-container-color: transparent;
 	margin-bottom: 150px;
+	margin: 0 9px;
 }
 
 md-list-item.asset {
