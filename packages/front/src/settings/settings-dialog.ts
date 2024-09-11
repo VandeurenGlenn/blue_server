@@ -30,7 +30,7 @@ class SettingsDialog extends LitElement {
 				</header>
 
 				<form slot="content" method="dialog" id="form">
-					${renderColorModePicker()}
+					${renderThemeElements()}
 				</form>
 
 				<div slot="actions">
