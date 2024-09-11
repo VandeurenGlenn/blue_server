@@ -206,6 +206,8 @@ export class AppShell extends LitElement {
 			(r) => r instanceof Object,
 		) as GithubProjectResponse;
 
+		const repoLink = repo?.url ?? asset.repos[0];
+
 		return html`
 			<md-list-item
 				class="asset"
@@ -243,11 +245,13 @@ export class AppShell extends LitElement {
 
 				<div slot="end" class="flex flex-col items-end">
 					<md-icon-button
-						?disabled=${!repo}
-						href="${repo?.url}"
+						?disabled=${!repoLink}
+						href="${repoLink}"
 						target="_blank"
 					>
-						<md-icon>${SVG_GITHUB}</md-icon>
+						${repo || !repoLink
+							? html` <md-icon>${SVG_GITHUB}</md-icon> `
+							: html` <md-icon>code</md-icon> `}
 					</md-icon-button>
 					${repo
 						? html`<date-element date=${repo.pushed_at}></date-element>`
