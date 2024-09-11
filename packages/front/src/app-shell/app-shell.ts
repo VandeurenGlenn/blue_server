@@ -12,7 +12,7 @@ import {repeat} from 'lit/directives/repeat.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {materialShellLoadingOff} from 'material-shell';
 import {bindInput} from 'relit';
-import {SVG_GITHUB, SVG_LOGO} from '../assets/assets.js';
+import {SVG_BINANCE, SVG_GITHUB, SVG_LOGO} from '../assets/assets.js';
 import '../date/date-element.js';
 import {getSettingsDialog} from '../imports.js';
 import '../price-change.js';
@@ -22,10 +22,10 @@ import {getCMCHref} from '../utils.js';
 import styles from './app-shell.css?inline';
 
 // @ts-ignore
-MdItem.elementStyles.push(css`
-:host([multiline]) .text {
-flex: 1.2;
-`);
+// MdItem.elementStyles.push(css`
+// :host([multiline]) .text {
+// flex: 1.2;
+// `);
 
 declare global {
 	interface Window {
@@ -98,6 +98,7 @@ export class AppShell extends LitElement {
 					id="go-top-fab"
 					size="large"
 					class="fixed bottom-8 right-8 hidden"
+					style="z-index:9"
 					@click=${() => {
 						window.scrollTo({top: 0, behavior: 'smooth'});
 					}}
@@ -211,11 +212,17 @@ export class AppShell extends LitElement {
 				<div slot="overline">#${asset.rank}</div>
 				<div slot="headline" title=${asset.name}>${asset.name}</div>
 				<div slot="supporting-text">$${asset.symbol}</div>
-				<div
-					slot="trailing-supporting-text"
-					class="flex-1 flex items-center justify-between"
-				>
-					<price-change change=${asset.change24h}></price-change>
+				<div slot="trailing-supporting-text" class="flex-1 flex flex-start">
+					<div class="flex flex-col items-center gap-1">
+						<price-change change=${asset.changes.percent_24h}></price-change>
+						${asset.exchanges.includes('binance')
+							? html`
+									<md-filled-tonal-icon-button small>
+										<md-icon>${SVG_BINANCE}</md-icon>
+									</md-filled-tonal-icon-button>
+								`
+							: null}
+					</div>
 				</div>
 
 				<div slot="end" class="flex flex-col items-end">
