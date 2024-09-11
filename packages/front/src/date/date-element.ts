@@ -17,7 +17,8 @@ export class DateElement extends LitElement {
 			${['now', 'sec', 'min', 'ho'].some((m) => _ago.includes(m))
 				? html`<img width="18" src=${GIF_FIRE} />`
 				: /*? html`🔥 `*/
-					null}${_ago}
+					null}
+			${_ago}
 		`;
 	}
 

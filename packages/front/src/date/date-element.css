@@ -1,5 +1,10 @@
 :host {
-	display: flex;
-	align-items: center;
-	gap: 4px;
+	position: relative;
+	text-align: end;
+}
+
+img {
+	position: absolute;
+	left: 41px;
+	top: -25px;
 }

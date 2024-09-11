@@ -10,7 +10,7 @@ export class PriceChange extends LitElement {
 	static styles = css`
 		:host {
 			display: inline-block;
-			transform: scale(0.7);
+			transform: scale(0.8);
 		}
 	`;
 
@@ -21,7 +21,7 @@ export class PriceChange extends LitElement {
 			'--md-sys-color-on-surface': foreground,
 		});
 		return html`
-			<md-assist-chip elevated style=${styles}
+			<md-assist-chip elevated style=${styles} inert
 				>${this.change.toFixed(2)}%</md-assist-chip
 			>
 		`;

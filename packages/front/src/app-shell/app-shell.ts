@@ -17,14 +17,14 @@ import '../date/date-element.js';
 import {getSettingsDialog} from '../imports.js';
 import '../price-change.js';
 import '../select-chip.js';
-import {appstate} from '../state.js';
+import {appstate, SortingMethod} from '../state.js';
 import {getCMCHref} from '../utils.js';
 import styles from './app-shell.css?inline';
 
 // @ts-ignore
 MdItem.elementStyles.push(css`
 :host([multiline]) .text {
-flex: 0.7;
+flex: 1.2;
 `);
 
 declare global {
@@ -144,7 +144,15 @@ export class AppShell extends LitElement {
 			);
 		}
 		switch (appstate.sortingMethod) {
-			case 'pushed at':
+			case SortingMethod.Alphabet:
+				assets = assets.sort((a, b) => a.name.localeCompare(b.name));
+				break;
+			case SortingMethod.Change24h:
+				assets = assets.sort((a, b) => {
+					return b.change24h - a.change24h;
+				});
+				break;
+			case SortingMethod.Github:
 				assets = assets
 					.filter((asset) => asset.github.repos.length)
 					.sort((a, b) => {
@@ -164,14 +172,6 @@ export class AppShell extends LitElement {
 
 						return bDate.getTime() - aDate.getTime();
 					});
-				break;
-			case 'change 24h':
-				assets = assets.sort((a, b) => {
-					return b.change24h - a.change24h;
-				});
-				break;
-			case 'alphabet':
-				assets = assets.sort((a, b) => a.name.localeCompare(b.name));
 				break;
 		}
 
@@ -209,25 +209,27 @@ export class AppShell extends LitElement {
 					<img src=${asset.logo} />
 				</md-icon-button>
 				<div slot="overline">#${asset.rank}</div>
-				<div slot="headline">${asset.name}</div>
+				<div slot="headline" title=${asset.name}>${asset.name}</div>
 				<div slot="supporting-text">$${asset.symbol}</div>
 				<div
 					slot="trailing-supporting-text"
 					class="flex-1 flex items-center justify-between"
 				>
 					<price-change change=${asset.change24h}></price-change>
+				</div>
+
+				<div slot="end" class="flex flex-col items-end">
+					<md-icon-button
+						?disabled=${!repo}
+						href="${repo?.url}"
+						target="_blank"
+					>
+						<md-icon>${SVG_GITHUB}</md-icon>
+					</md-icon-button>
 					${repo
 						? html`<date-element date=${repo.pushed_at}></date-element>`
 						: null}
 				</div>
-				<md-icon-button
-					slot="end"
-					?disabled=${!repo}
-					href="${repo?.url}"
-					target="_blank"
-				>
-					<md-icon>${SVG_GITHUB}</md-icon>
-				</md-icon-button>
 			</md-list-item>
 		`;
 	}
