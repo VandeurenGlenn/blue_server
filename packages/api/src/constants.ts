@@ -10,8 +10,6 @@ export const protocol = 'protocol-blue'
 
 // One directory down because this script operates from 'lib' not the root
 export const CACHE_ROOT_DIRECTORY = join(__dirname, '..', '.cache')
-export const COINBASE_CACHE_FILENAME = 'coinbase-asset-list.json'
-export const KRAKEN_CACHE_FILENAME = 'kraken-asset-list.json'
 
 export const availableRoutes = ['top100', 'change24h'] as const
 

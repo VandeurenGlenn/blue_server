@@ -1,6 +1,8 @@
 import fetch from 'node-fetch'
 import {readCacheFile, writeCacheFile} from '../../cache.js'
-import {KRAKEN_CACHE_FILENAME, TWENTY_FOUR_HOURS} from '../../constants.js'
+import {TWENTY_FOUR_HOURS} from '../../constants.js'
+
+export const KRAKEN_CACHE_FILENAME = 'kraken-asset-list.json'
 
 export type KrakenAssetList = {
 	[key: string]: {

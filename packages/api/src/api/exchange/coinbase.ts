@@ -1,6 +1,8 @@
 import fetch from 'node-fetch'
-import {COINBASE_CACHE_FILENAME, TWENTY_FOUR_HOURS} from '../../constants.js'
+import {TWENTY_FOUR_HOURS} from '../../constants.js'
 import {readCacheFile, writeCacheFile} from '../../cache.js'
+
+export const COINBASE_CACHE_FILENAME = 'coinbase-asset-list.json'
 
 export type CoinBaseAssetList = {
 	id: string
