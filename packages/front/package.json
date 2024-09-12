@@ -47,6 +47,7 @@
 		"dev": {
 			"dependencies": [
 				"../server:serve",
+				"../api:build",
 				"serve",
 				"pwa-assets"
 			]
