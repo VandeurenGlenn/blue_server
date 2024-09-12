@@ -5,6 +5,19 @@ import {dataBuilder} from './DataBuilder.js'
 import {CACHE_ROOT_DIRECTORY, LIST_SIZE, TWENTY_FOUR_HOURS} from './constants.js'
 import {PubSub} from './pubsub.js'
 import {Binance} from './api/Binance.js'
+import type {KrakenAssetList} from './api/exchange/kraken.js'
+import type {CoinBaseAssetList} from './api/exchange/coinbase.js'
+
+export type CacheFileData = {lastUpdated: number; data: any}
+
+export async function readCacheFile(filename: string) {
+	const data = await readFile(join(CACHE_ROOT_DIRECTORY, filename))
+	return JSON.parse(data.toString())
+}
+
+export async function writeCacheFile(filename: string, data: CacheFileData) {
+	return writeFile(join(CACHE_ROOT_DIRECTORY, filename), JSON.stringify(data))
+}
 
 export async function createCacheDirectory() {
 	try {
@@ -17,12 +30,6 @@ export async function createCacheDirectory() {
 
 interface BlueCache {
 	bluelist: BlueAsset[]
-	exchanges: {
-		kraken: {
-			lastUpdated: number
-			list: KrakenAssetList['result']
-		}
-	}
 	lastUpdated: number
 	github: {
 		repos: {
@@ -40,12 +47,6 @@ interface BlueCache {
 
 export const cache: BlueCache = {
 	bluelist: [],
-	exchanges: {
-		kraken: {
-			lastUpdated: 0,
-			list: {}
-		}
-	},
 	lastUpdated: 0,
 	// subscribe: pubsub.subscribe.bind(pubsub),
 	github: {
@@ -73,16 +74,6 @@ export async function init() {
 }
 
 export async function updateCacheWithRemote() {
-	// we only update the cache exchanges cache every 24 hours
-	if (Date.now() - cache.exchanges.kraken.lastUpdated >= TWENTY_FOUR_HOURS) {
-		cache.exchanges.kraken.list = await dataBuilder.createKrakenAssetList()
-		cache.exchanges.kraken.lastUpdated = Date.now()
-	}
-
-	if (Binance.isExchangeInfoObsolete()) {
-		await Binance.fetchExchangeInfo()
-	}
-
 	cache.bluelist = await dataBuilder.createAssetList(LIST_SIZE)
 	PubSub.publishTop100()
 	PubSub.publishChange24h()

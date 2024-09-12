@@ -63,10 +63,12 @@
 		"@blueserver/env": "*",
 		"@koa/cors": "^5.0.0",
 		"@koa/router": "^13.0.0",
+		"chainmap": "^0.0.315",
+		"ethers": "^6.13.2",
 		"koa": "^2.15.3",
 		"node-fetch": "^3.3.2",
 		"socket-request-client": "^2.0.9",
-		"socket-request-server": "^1.6.16"
+		"socket-request-server": "^1.6.17"
 	},
 	"devDependencies": {
 		"@types/koa__cors": "^5.0.0",

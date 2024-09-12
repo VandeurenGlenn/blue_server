@@ -263,19 +263,6 @@ declare global {
 		 */
 		quote: string
 	}
-
-	type KrakenAssetList = {
-		error: string[]
-		result: {
-			[key: string]: {
-				altname: string
-				aclass: string
-				decimals: number
-				display_decimals: number
-				status: string
-			}
-		}
-	}
 }
 
 export {}
