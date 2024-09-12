@@ -1,12 +1,10 @@
 import '@material/mwc-top-app-bar';
-import {live} from 'lit/directives/live.js';
 import type {TopAppBar} from '@material/mwc-top-app-bar';
 import type {MdFab, MdList} from '@material/web/all.js';
 import {MdElevation} from '@material/web/elevation/elevation.js';
-import {MdItem} from '@material/web/labs/item/item.js';
 import {withController} from '@snar/lit';
 import 'inspector-elements';
-import {LitElement, css, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {withStyles} from 'lit-with-styles';
 import {customElement, query, state} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
@@ -15,7 +13,7 @@ import {materialShellLoadingOff} from 'material-shell';
 import {bindInput} from 'relit';
 import {SVG_BINANCE, SVG_GITHUB, SVG_LOGO} from '../assets/assets.js';
 import '../date/date-element.js';
-import {getSettingsDialog} from '../imports.js';
+import {getSettingsDialog, getAssetInfoDialog} from '../imports.js';
 import '../price-change.js';
 import '../select-chip.js';
 import {appstate, SortingMethod} from '../state.js';
@@ -45,7 +43,7 @@ export class AppShell extends LitElement {
 	@query('md-fab#go-top-fab') goTopFab!: MdFab;
 	@query('md-list') list!: MdList;
 
-	@state() listItemsAreButtons = false;
+	@state() listItemsAreButtons = true;
 
 	async firstUpdated() {
 		materialShellLoadingOff.call(this);
@@ -212,8 +210,9 @@ export class AppShell extends LitElement {
 			<md-list-item
 				class="asset"
 				.type=${this.listItemsAreButtons ? 'button' : 'text'}
-				@click=${() => {
-					console.log(asset);
+				@click=${async () => {
+					const dialog = await getAssetInfoDialog(asset);
+					dialog.show(asset);
 				}}
 			>
 				<md-filled-tonal-icon-button
