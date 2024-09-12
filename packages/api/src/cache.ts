@@ -2,13 +2,10 @@ import {readFile, writeFile} from 'fs/promises'
 import {mkdir} from 'node:fs/promises'
 import {join} from 'node:path'
 import {dataBuilder} from './DataBuilder.js'
-import {CACHE_ROOT_DIRECTORY, LIST_SIZE, TWENTY_FOUR_HOURS} from './constants.js'
+import {CACHE_ROOT_DIRECTORY, LIST_SIZE} from './constants.js'
 import {PubSub} from './pubsub.js'
-import {Binance} from './api/Binance.js'
-import type {KrakenAssetList} from './api/exchange/kraken.js'
-import type {CoinBaseAssetList} from './api/exchange/coinbase.js'
 
-export type CacheFileData = {lastUpdated: number; data: any}
+export type CacheFileData<T = any> = {lastUpdated: number; data: T}
 
 export async function readCacheFile(filename: string) {
 	const data = await readFile(join(CACHE_ROOT_DIRECTORY, filename))

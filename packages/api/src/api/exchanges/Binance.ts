@@ -1,21 +1,16 @@
-import {readFile, writeFile} from 'fs/promises'
 import fetch, {type Response} from 'node-fetch'
-import {join} from 'path'
-import {CACHE_ROOT_DIRECTORY, TWENTY_FOUR_HOURS} from '../constants.js'
-import log from '../log.js'
+import {readCacheFile, writeCacheFile, type CacheFileData} from '../../cache.js'
+import {TWENTY_FOUR_HOURS} from '../../constants.js'
+import log from '../../log.js'
 
 interface BinanceExchangeInfoResponse {
 	symbols: [{baseAsset: string; quoteAsset: string}]
-}
-interface BinanceExchangeInfoCache {
-	load: BinanceExchangeInfoResponse
-	lastUpdated: number
 }
 
 const EXCHANGE_INFO_FILENAME = 'binance-exchange-info.json'
 
 class BinanceAPI {
-	#exchangeInfo: BinanceExchangeInfoCache | undefined
+	#exchangeInfo: CacheFileData<BinanceExchangeInfoResponse> | undefined
 	#fetchPromise: Promise<Response> | undefined = undefined
 
 	constructor() {
@@ -27,9 +22,9 @@ class BinanceAPI {
 
 	async #loadExchangeInfo() {
 		try {
-			this.#exchangeInfo = JSON.parse((await readFile(join(CACHE_ROOT_DIRECTORY, EXCHANGE_INFO_FILENAME))).toString())
+			this.#exchangeInfo = await readCacheFile(EXCHANGE_INFO_FILENAME)
 		} catch {
-			log.print("[binance] Couldn't load exchange info. Fetching remote...")
+			log.print("[binance] Couldn't load exchange info.")
 		}
 	}
 
@@ -42,9 +37,11 @@ class BinanceAPI {
 		log.print(`[binance] Fetched in ${(now - past) / 1000}s`)
 		this.#exchangeInfo = {
 			lastUpdated: now,
-			load: (await response.json()) as BinanceExchangeInfoResponse
+			data: (await response.json()) as BinanceExchangeInfoResponse
 		}
-		writeFile(join(CACHE_ROOT_DIRECTORY, EXCHANGE_INFO_FILENAME), JSON.stringify(this.#exchangeInfo))
+		writeCacheFile(EXCHANGE_INFO_FILENAME, this.#exchangeInfo).then(() => {
+			log.print('[binance] Cache file successfully written.')
+		})
 	}
 
 	get fetchComplete() {
@@ -68,7 +65,7 @@ class BinanceAPI {
 		if (this.#exchangeInfo === undefined) {
 			throw new Error('exchange info not available.')
 		}
-		return this.#exchangeInfo.load.symbols.map((s) => ({base: s.baseAsset, quote: s.quoteAsset}))
+		return this.#exchangeInfo.data.symbols.map((s) => ({base: s.baseAsset, quote: s.quoteAsset}))
 	}
 
 	doesPairExist(base: string, quote: string) {
