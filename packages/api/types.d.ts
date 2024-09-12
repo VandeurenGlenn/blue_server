@@ -244,6 +244,7 @@ declare global {
 		rank: number
 		slug: string
 		symbol: string
+		source_code: string[]
 		platform?: CMCPlatform
 		platforms: {
 			contract_address: string

@@ -37,21 +37,13 @@ export class Coinbase {
 	list: CoinBaseAssetList = []
 
 	async fetchList() {
-		if (this.lastUpdated === 0) {
-			try {
-				const {lastUpdated, data} = await readCacheFile(COINBASE_CACHE_FILENAME)
-				this.list = data
-				this.lastUpdated = lastUpdated
-			} catch (error) {}
-		}
-		if (this.needsUpdate()) {
+		if (await this.needsUpdate()) {
 			log.time('[Coinbase] Fetching remote data')
 			const response = await fetch('https://api.exchange.coinbase.com/currencies', {
 				headers: {
 					Accept: 'application/json'
 				}
 			})
-
 			this.list = (await response.json()) as CoinBaseAssetList
 			this.lastUpdated = Date.now()
 			await writeCacheFile(COINBASE_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
@@ -59,7 +51,14 @@ export class Coinbase {
 		}
 	}
 
-	needsUpdate(): boolean {
+	async needsUpdate(): Promise<boolean> {
+		if (this.lastUpdated === 0) {
+			try {
+				const {lastUpdated, data} = await readCacheFile(COINBASE_CACHE_FILENAME)
+				this.list = data
+				this.lastUpdated = lastUpdated
+			} catch (error) {}
+		}
 		return Date.now() - this.lastUpdated >= TWENTY_FOUR_HOURS
 	}
 

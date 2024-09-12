@@ -26,14 +26,7 @@ export class Kraken {
 	list: KrakenAssetList = {}
 
 	async fetchList() {
-		if (this.lastUpdated === 0) {
-			try {
-				const {lastUpdated, data} = await readCacheFile(KRAKEN_CACHE_FILENAME)
-				this.list = data
-				this.lastUpdated = lastUpdated
-			} catch (error) {}
-		}
-		if (this.needsUpdate()) {
+		if (await this.needsUpdate()) {
 			log.time('[Kraken] Fetching remote data')
 			const response = await fetch('https://api.kraken.com/0/public/Assets', {
 				headers: {
@@ -48,7 +41,14 @@ export class Kraken {
 		}
 	}
 
-	needsUpdate(): boolean {
+	async needsUpdate(): Promise<boolean> {
+		if (this.lastUpdated === 0) {
+			try {
+				const {lastUpdated, data} = await readCacheFile(KRAKEN_CACHE_FILENAME)
+				this.list = data
+				this.lastUpdated = lastUpdated
+			} catch (error) {}
+		}
 		return Date.now() - this.lastUpdated >= TWENTY_FOUR_HOURS
 	}
 
