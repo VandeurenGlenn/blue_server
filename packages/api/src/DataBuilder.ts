@@ -1,13 +1,13 @@
 import {env} from '@blueserver/env'
-import {CoinMarketCap} from './api/coinmarketcap.js'
-import {GitHub} from './api/github.js'
-import {CACHE_ROOT_DIRECTORY, SEVEN_DAYS_AGO} from './constants.js'
 import {writeFile} from 'fs/promises'
 import {join} from 'node:path'
-import {cache, createCacheDirectory} from './cache.js'
-import {Binance} from './api/Binance.js'
-import {Kraken} from './api/exchange/kraken.js'
-import {Coinbase} from './api/exchange/coinbase.js'
+import {CoinMarketCap} from './api/coinmarketcap.js'
+import {Binance} from './api/exchanges/Binance.js'
+import {Coinbase} from './api/exchanges/coinbase.js'
+import {Kraken} from './api/exchanges/kraken.js'
+import {GitHub} from './api/github.js'
+import {createCacheDirectory} from './cache.js'
+import {CACHE_ROOT_DIRECTORY, SEVEN_DAYS_AGO} from './constants.js'
 
 export class DataBuilder {
 	coinMarketCap: CoinMarketCap
