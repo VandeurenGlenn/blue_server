@@ -29,10 +29,11 @@ export default {
 export class Logger {
 	constructor(
 		protected name: string,
-		protected color: ChalkInstance
+		protected color: ChalkInstance,
+		protected enabled = true
 	) {}
 
-	log(message: string) {
-		console.log(this.color(`[${this.name}] ${message}`))
+	log(message: any) {
+		console.log(this.color(`[${this.name.toUpperCase()}] ${message}`))
 	}
 }
