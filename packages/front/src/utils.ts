@@ -73,3 +73,11 @@ export async function getElementInTree(
 export function getCMCHref(slug: string) {
 	return `https://coinmarketcap.com/en/currencies/${slug}/`;
 }
+
+export function binanceHref(base: string, quote: string) {
+	return `https://www.binance.com/en/trade/${base}_${quote}`;
+}
+
+// export function openBinance(base: string, quote: string) {
+// 	window.open(binanceHref(base, quote), '_blank');
+// }

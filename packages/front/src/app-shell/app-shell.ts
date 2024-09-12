@@ -2,30 +2,29 @@ import '@material/mwc-top-app-bar';
 import type {TopAppBar} from '@material/mwc-top-app-bar';
 import type {MdFab, MdList} from '@material/web/all.js';
 import {MdElevation} from '@material/web/elevation/elevation.js';
-import {MdItem} from '@material/web/labs/item/item.js';
 import {withController} from '@snar/lit';
 import 'inspector-elements';
-import {LitElement, css, html} from 'lit';
+import {html, LitElement} from 'lit';
 import {withStyles} from 'lit-with-styles';
-import {customElement, query} from 'lit/decorators.js';
+import {customElement, query, state} from 'lit/decorators.js';
 import {repeat} from 'lit/directives/repeat.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {materialShellLoadingOff} from 'material-shell';
 import {bindInput} from 'relit';
-import {SVG_GITHUB, SVG_LOGO} from '../assets/assets.js';
+import {SVG_BINANCE, SVG_GITHUB, SVG_LOGO} from '../assets/assets.js';
 import '../date/date-element.js';
-import {getSettingsDialog} from '../imports.js';
+import {getSettingsDialog, getAssetInfoDialog} from '../imports.js';
 import '../price-change.js';
 import '../select-chip.js';
 import {appstate, SortingMethod} from '../state.js';
-import {getCMCHref} from '../utils.js';
+import {binanceHref, getCMCHref} from '../utils.js';
 import styles from './app-shell.css?inline';
 
 // @ts-ignore
-MdItem.elementStyles.push(css`
-:host([multiline]) .text {
-flex: 1.2;
-`);
+// MdItem.elementStyles.push(css`
+// :host([multiline]) .text {
+// flex: 1.2;
+// `);
 
 declare global {
 	interface Window {
@@ -43,6 +42,8 @@ export class AppShell extends LitElement {
 	@query('mwc-top-app-bar') topAppBar!: TopAppBar;
 	@query('md-fab#go-top-fab') goTopFab!: MdFab;
 	@query('md-list') list!: MdList;
+
+	@state() listItemsAreButtons = true;
 
 	async firstUpdated() {
 		materialShellLoadingOff.call(this);
@@ -98,6 +99,7 @@ export class AppShell extends LitElement {
 					id="go-top-fab"
 					size="large"
 					class="fixed bottom-8 right-8 hidden"
+					style="z-index:9"
 					@click=${() => {
 						window.scrollTo({top: 0, behavior: 'smooth'});
 					}}
@@ -149,7 +151,7 @@ export class AppShell extends LitElement {
 				break;
 			case SortingMethod.Change24h:
 				assets = assets.sort((a, b) => {
-					return b.change24h - a.change24h;
+					return b.changes.percent_24h - a.changes.percent_24h;
 				});
 				break;
 			case SortingMethod.Github:
@@ -188,7 +190,10 @@ export class AppShell extends LitElement {
 				${repeat(
 					assets,
 					(asset) => asset.id,
-					(asset) => this.#renderListItem(asset),
+					(asset) =>
+						html`${this.#renderListItem(
+								asset,
+							)}<!--<md-divider></md-divider>-->`,
 				)}
 			</md-list>
 		`;
@@ -199,38 +204,53 @@ export class AppShell extends LitElement {
 			(r) => r instanceof Object,
 		) as GithubProjectResponse;
 
+		const repoLink = repo?.url ?? asset.repos[0];
+
 		return html`
 			<md-list-item
 				class="asset"
-				type="button"
-				@click=${() => {
-					console.log(asset);
+				.type=${this.listItemsAreButtons ? 'button' : 'text'}
+				@click=${async () => {
+					const dialog = await getAssetInfoDialog(asset);
+					dialog.show(asset);
 				}}
 			>
-				<md-icon-button
+				<md-filled-tonal-icon-button
 					slot="start"
 					href="${getCMCHref(asset.slug)}"
 					target="_blank"
 				>
 					<img src=${asset.logo} />
-				</md-icon-button>
+				</md-filled-tonal-icon-button>
 				<div slot="overline">#${asset.rank}</div>
 				<div slot="headline" title=${asset.name}>${asset.name}</div>
 				<div slot="supporting-text">$${asset.symbol}</div>
-				<div
-					slot="trailing-supporting-text"
-					class="flex-1 flex items-center justify-between"
-				>
-					<price-change change=${asset.change24h}></price-change>
+				<div slot="trailing-supporting-text" class="flex-1 flex flex-start">
+					<div class="flex flex-col items-center gap-1 relative top-1">
+						<price-change change=${asset.changes.percent_24h}></price-change>
+						${asset.exchanges.includes('binance')
+							? html`
+									<md-icon-button
+										small
+										href=${binanceHref(asset.symbol, 'USDT')}
+										target="_blank"
+									>
+										<md-icon>${SVG_BINANCE}</md-icon>
+									</md-icon-button>
+								`
+							: null}
+					</div>
 				</div>
 
 				<div slot="end" class="flex flex-col items-end">
 					<md-icon-button
-						?disabled=${!repo}
-						href="${repo?.url}"
+						?disabled=${!repoLink}
+						href="${repoLink}"
 						target="_blank"
 					>
-						<md-icon>${SVG_GITHUB}</md-icon>
+						${repo || !repoLink
+							? html` <md-icon>${SVG_GITHUB}</md-icon> `
+							: html` <md-icon>code</md-icon> `}
 					</md-icon-button>
 					${repo
 						? html`<date-element date=${repo.pushed_at}></date-element>`

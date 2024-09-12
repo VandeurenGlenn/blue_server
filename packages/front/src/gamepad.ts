@@ -1,7 +1,7 @@
 import gamectrl, {XBoxButton} from 'esm-gamecontroller.js';
 import {app} from './app-shell/app-shell.js';
 
-const REPEATER_TIMEOUT = 60;
+const REPEATER_TIMEOUT = 200;
 const REPEATER_SPEED = 100;
 
 let upKeyRepeaterTimeout: number;
@@ -20,6 +20,9 @@ gamectrl.on('connect', async (gamepad) => {
 	function noTrigger() {
 		return !gamepad.pressed.button6 && !gamepad.pressed.button7;
 	}
+
+	app.listItemsAreButtons = true;
+	await app.updateComplete;
 
 	gamepad.axeThreshold = [0.4];
 
