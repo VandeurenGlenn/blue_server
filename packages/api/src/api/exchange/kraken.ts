@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import {readCacheFile, writeCacheFile} from '../../cache.js'
 import {TWENTY_FOUR_HOURS} from '../../constants.js'
+import log from '../../log.js'
 
 export const KRAKEN_CACHE_FILENAME = 'kraken-asset-list.json'
 
@@ -33,7 +34,7 @@ export class Kraken {
 			} catch (error) {}
 		}
 		if (this.needsUpdate()) {
-			console.time('[Kraken] Fetching remote data')
+			log.time('[Kraken] Fetching remote data')
 			const response = await fetch('https://api.kraken.com/0/public/Assets', {
 				headers: {
 					Accept: 'application/json'
@@ -43,7 +44,7 @@ export class Kraken {
 			this.list = ((await response.json()) as KrakenAssetListResponse).result
 			this.lastUpdated = Date.now()
 			await writeCacheFile(KRAKEN_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
-			console.timeEnd('[Kraken] Fetching remote data')
+			log.timeEnd('[Kraken] Fetching remote data')
 		}
 	}
 

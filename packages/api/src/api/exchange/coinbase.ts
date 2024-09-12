@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import {TWENTY_FOUR_HOURS} from '../../constants.js'
 import {readCacheFile, writeCacheFile} from '../../cache.js'
+import log from '../../log.js'
 
 export const COINBASE_CACHE_FILENAME = 'coinbase-asset-list.json'
 
@@ -44,7 +45,7 @@ export class Coinbase {
 			} catch (error) {}
 		}
 		if (this.needsUpdate()) {
-			console.time('[Coinbase] Fetching remote data')
+			log.time('[Coinbase] Fetching remote data')
 			const response = await fetch('https://api.exchange.coinbase.com/currencies', {
 				headers: {
 					Accept: 'application/json'
@@ -54,7 +55,7 @@ export class Coinbase {
 			this.list = (await response.json()) as CoinBaseAssetList
 			this.lastUpdated = Date.now()
 			await writeCacheFile(COINBASE_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
-			console.timeEnd('[Coinbase] Fetching remote data')
+			log.timeEnd('[Coinbase] Fetching remote data')
 		}
 	}
 

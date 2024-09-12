@@ -9,5 +9,17 @@ export default {
 			return
 		}
 		console.log(input)
+	},
+	time(input: string) {
+		if (silent) {
+			return
+		}
+		console.time(input)
+	},
+	timeEnd(input: string) {
+		if (silent) {
+			return
+		}
+		console.timeEnd(input)
 	}
 }
