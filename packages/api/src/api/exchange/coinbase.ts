@@ -38,8 +38,8 @@ export class Coinbase {
 	async fetchList() {
 		if (this.lastUpdated === 0) {
 			try {
-				const {lastUpdated, list} = await readCacheFile(COINBASE_CACHE_FILENAME)
-				this.list = list
+				const {lastUpdated, data} = await readCacheFile(COINBASE_CACHE_FILENAME)
+				this.list = data
 				this.lastUpdated = lastUpdated
 			} catch (error) {}
 		}
@@ -53,7 +53,7 @@ export class Coinbase {
 
 			this.list = (await response.json()) as CoinBaseAssetList
 			this.lastUpdated = Date.now()
-			await writeCacheFile(COINBASE_CACHE_FILENAME, {lastUpdated: this.lastUpdated, list: this.list})
+			await writeCacheFile(COINBASE_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
 			console.timeEnd('[Coinbase] Fetching remote data')
 		}
 	}

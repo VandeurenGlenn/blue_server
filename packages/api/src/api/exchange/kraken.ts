@@ -27,8 +27,8 @@ export class Kraken {
 	async fetchList() {
 		if (this.lastUpdated === 0) {
 			try {
-				const {lastUpdated, list} = await readCacheFile(KRAKEN_CACHE_FILENAME)
-				this.list = list
+				const {lastUpdated, data} = await readCacheFile(KRAKEN_CACHE_FILENAME)
+				this.list = data
 				this.lastUpdated = lastUpdated
 			} catch (error) {}
 		}
@@ -42,7 +42,7 @@ export class Kraken {
 
 			this.list = ((await response.json()) as KrakenAssetListResponse).result
 			this.lastUpdated = Date.now()
-			await writeCacheFile(KRAKEN_CACHE_FILENAME, {lastUpdated: this.lastUpdated, list: this.list})
+			await writeCacheFile(KRAKEN_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
 			console.timeEnd('[Kraken] Fetching remote data')
 		}
 	}

@@ -8,7 +8,7 @@ import {Binance} from './api/Binance.js'
 import type {KrakenAssetList} from './api/exchange/kraken.js'
 import type {CoinBaseAssetList} from './api/exchange/coinbase.js'
 
-export type CacheFileData = {lastUpdated: number; list: any}
+export type CacheFileData = {lastUpdated: number; data: any}
 
 export async function readCacheFile(filename: string) {
 	const data = await readFile(join(CACHE_ROOT_DIRECTORY, filename))
