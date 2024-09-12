@@ -10,13 +10,18 @@ const job = new CronJob(cronTime, async function () {
 		log.print('Cache is empty, skipping update')
 		return
 	}
-	for (const asset of cache.bluelist) {
+	log.time('Updating GitHub repos')
+	const promises = []
+	const job = async (asset: BlueAsset) => {
 		if (asset.source_code) {
-			log.time(`[Github] Fetching ${asset.name}`)
 			asset.github.repos = await dataBuilder.gitHub.transformRepos(asset.source_code)
-			log.timeEnd(`[Github] Fetching ${asset.name}`)
 			PubSub.publishTop100()
 		}
 	}
+	for (const asset of cache.bluelist) {
+		promises.push(job(asset))
+	}
+	await Promise.all(promises)
+	log.timeEnd('Updating GitHub repos')
 })
 export default job
