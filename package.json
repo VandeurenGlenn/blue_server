@@ -11,6 +11,7 @@
 		"url": "git+https://github.com/VandeurenGlenn/blue_server.git"
 	},
 	"scripts": {
+		"postinstall": "patch-package",
 		"build": "wireit",
 		"front:dev": "wireit",
 		"ncu": "npm run ncu --workspaces --if-present",
@@ -42,9 +43,10 @@
 	},
 	"homepage": "https://github.com/VandeurenGlenn/blue_server#readme",
 	"devDependencies": {
+		"patch-package": "^8.0.0",
 		"prettier": "^3.3.3",
-		"typescript": "^5.5.4",
-		"vite": "^5.4.3",
+		"typescript": "^5.6.2",
+		"vite": "^5.4.4",
 		"wireit": "^0.14.9"
 	}
 }
