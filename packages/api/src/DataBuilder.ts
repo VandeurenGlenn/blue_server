@@ -7,11 +7,13 @@ import {join} from 'node:path'
 import {cache, createCacheDirectory} from './cache.js'
 import {Binance} from './api/Binance.js'
 import {Kraken} from './api/exchange/kraken.js'
+import {Coinbase} from './api/exchange/coinbase.js'
 
 export class DataBuilder {
 	coinMarketCap: CoinMarketCap
 	gitHub: GitHub
 	kraken: Kraken
+	coinbase: Coinbase
 
 	constructor(keys: {coinmarketcap: string; github: string}) {
 		if (!keys) throw new Error('no api keys found (did you setup env?)')
@@ -19,10 +21,7 @@ export class DataBuilder {
 		this.coinMarketCap = new CoinMarketCap(keys.coinmarketcap)
 		this.gitHub = new GitHub(keys.github)
 		this.kraken = new Kraken()
-	}
-
-	async createKrakenAssetList() {
-		return this.kraken.getAssetList()
+		this.coinbase = new Coinbase()
 	}
 
 	/**
@@ -30,6 +29,14 @@ export class DataBuilder {
 	 * @returns {BlueAsset[]} list of blue indicators (for the front end)
 	 */
 	async createAssetList(limit = 100): Promise<BlueAsset[]> {
+		await this.coinbase.fetchList()
+		await this.kraken.fetchList()
+
+		if (Binance.isExchangeInfoObsolete()) {
+			await Binance.fetchExchangeInfo()
+		}
+
+		// console.log(cache.exchanges.coinbase.list['BTC'])
 		const listings: CMCListing[] = await this.coinMarketCap.getLatestListings(limit)
 		await createCacheDirectory()
 		writeFile(join(CACHE_ROOT_DIRECTORY, 'cmclistings.json'), JSON.stringify(listings))
@@ -80,9 +87,12 @@ export class DataBuilder {
 					}
 				}
 
-				const krakenAsset = cache.exchanges.kraken.list[asset.symbol]
-				if (krakenAsset) {
+				if (this.kraken.hasAsset(asset.symbol)) {
 					blueAsset.exchanges.push('kraken')
+				}
+
+				if (this.coinbase.hasAsset(asset.symbol)) {
+					blueAsset.exchanges.push('coinbase')
 				}
 
 				const githubRepos = blueAsset.repos.filter((repo) => repo.includes('github'))
