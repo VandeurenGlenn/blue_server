@@ -1,4 +1,5 @@
-import {readFile, writeFile} from 'fs/promises'
+import {writeFile} from 'fs/promises'
+import {readFileSync} from 'fs'
 import {mkdir} from 'node:fs/promises'
 import {join} from 'node:path'
 import {dataBuilder} from './DataBuilder.js'
@@ -7,8 +8,8 @@ import {PubSub} from './pubsub.js'
 
 export type CacheFileData<T = any> = {lastUpdated: number; data: T}
 
-export async function readCacheFile(filename: string) {
-	const data = await readFile(join(CACHE_ROOT_DIRECTORY, filename))
+export function readCacheFile(filename: string) {
+	const data = readFileSync(join(CACHE_ROOT_DIRECTORY, filename))
 	return JSON.parse(data.toString())
 }
 
