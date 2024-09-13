@@ -34,6 +34,9 @@ export class Logger {
 	) {}
 
 	log(message: any) {
+		if (!this.enabled) {
+			return
+		}
 		console.log(this.color(`[${this.name.toUpperCase()}] ${message}`))
 	}
 }
