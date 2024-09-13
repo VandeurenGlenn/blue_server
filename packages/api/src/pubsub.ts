@@ -14,7 +14,9 @@ export class PubSub {
 		pubsub.subscribe(route, callback)
 	}
 
+	// TODO: more type inconsistencies coming from your lib glenn, fix it >.<
 	static publish<T = any>(event: AvailableRoute, data: T) {
+		// @ts-ignore
 		pubsub.publish(event, data)
 	}
 

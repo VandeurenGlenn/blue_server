@@ -3,6 +3,7 @@ import {Ticker} from './ticker.js'
 import chalk from 'chalk'
 
 class ModelTicker extends Ticker {
+	// runtime data that represents computed data from ticker call
 	@state() data: any | undefined = undefined
 
 	async tickerCall() {

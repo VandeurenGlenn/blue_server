@@ -75,14 +75,14 @@ export class GitHub {
 		this.#fetchReposPromise = new Promise<GithubProject | undefined>(async (resolve) => {
 			let project = this.getProject(cmcAssetId)
 			let type: GitHubRepoType = 'orgs'
-			let response = await this.#fetchRepos(name, type, project?.etag)
+			let response = await this.#fetchRepos(name, type, project?.reposFetchEtag)
 			if (response.status === 304) {
 				// Unchanged we just return cache
 				resolve(project)
 				return
 			}
 			if (response.status === 404) {
-				response = await this.#fetchRepos(name, type, project?.etag)
+				response = await this.#fetchRepos(name, type, project?.reposFetchEtag)
 			}
 			if (response.status === 304) {
 				// Unchanged we just return cache
@@ -102,7 +102,7 @@ export class GitHub {
 				project: {
 					cmc_id: cmcAssetId,
 					type,
-					etag: response.headers.get('ETag')!,
+					reposFetchEtag: response.headers.get('ETag')!,
 					repos: (await response.json()) as GithubRepoResponse[]
 				},
 				force: true // force will force replacing if it already exists

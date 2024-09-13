@@ -11,7 +11,7 @@ declare global {
 	 * Type of objects returned by CMC listings endpoint.
 	 */
 	type CMCListing = {
-		id: string
+		id: number
 		name: string
 		symbol: string
 		slug: string
@@ -219,20 +219,19 @@ declare global {
 		/**
 		 * etag to avoid fetching again if the data has not changed on github
 		 */
-		etag: string
+		reposFetchEtag: string
 		type: GitHubRepoType
 		activity?: GithubActivity
-		repos: Partial<GithubRepoResponse>[]
+		repos: GitHubRepo[]
 		contributers?: string[]
 	}
 
 	type AvailableExchange = 'binance' | 'kraken' | 'coinbase'
 
-	// TODO: glenn do it lol
 	type GithubIndicator = {}
 	type BlueAsset = {
 		id: number
-		// hash: string
+		hash?: string
 		name: string
 		rank: number
 		slug: string
@@ -245,15 +244,11 @@ declare global {
 		exchanges: AvailableExchange[]
 		logo?: string
 		website: string
-		repos: string[]
 		changes: {
 			percent_1h: number
 			percent_24h: number
 		}
-		github: GithubProject
-		indicators: {
-			github: null
-		}
+		source_code: string[]
 	}
 
 	interface ChangesList {

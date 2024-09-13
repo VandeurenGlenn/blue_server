@@ -10,12 +10,12 @@ import {githubTicker} from './github.js'
 import {Ticker} from './ticker.js'
 
 class CoinMarketCapTicker extends Ticker {
-	@state() blueAsset: BlueAsset[] | undefined = undefined
+	@state() blueAssets: BlueAsset[] | undefined = undefined
 
 	updated(changed: PropertyValues<this>) {
-		if (changed.has('blueAsset') && this.blueAsset !== undefined) {
+		if (changed.has('blueAssets') && this.blueAssets !== undefined) {
 			this.logger.log('data available')
-			PubSub.publish('top100', this.blueAsset)
+			PubSub.publish('top100', this.blueAssets)
 		}
 	}
 
@@ -31,8 +31,8 @@ class CoinMarketCapTicker extends Ticker {
 		// TODO: This should be updated to wait if a fetch was
 		// already initiating in another process, to avoid multiple fetches
 		// at the same time.
-		await Coinbase.fetchList()
-		await Kraken.fetchList()
+		// await coinbase.fetchList()
+		// await kraken.fetchList()
 
 		Binance.fetchComplete
 		if (Binance.isExchangeInfoObsolete()) {
@@ -51,7 +51,6 @@ class CoinMarketCapTicker extends Ticker {
 					throw new Error('listing not found from listingInfo object')
 				}
 
-				// @ts-ignore
 				const blueAsset: BlueAsset = {
 					id: asset.id,
 					slug,
@@ -69,19 +68,20 @@ class CoinMarketCapTicker extends Ticker {
 					name: asset.name,
 					logo: asset.logo,
 					website: asset.urls.website[0],
-					repos: asset.urls.source_code,
-					exchanges: [
-						...(Binance.doesPairExist(asset.symbol, 'USDT') ? ['binance' as AvailableExchange] : []),
-						...(Kraken.hasAsset(asset.symbol) ? ['kraken' as AvailableExchange] : []),
-						...(Coinbase.hasAsset(asset.symbol) ? ['coinbase' as AvailableExchange] : [])
-					]
+					source_code: asset.urls.source_code,
+					exchanges: []
 				}
+
+				if (Binance.doesPairExist(asset.symbol, 'USDT')) {
+					blueAsset.exchanges.push('binance')
+				}
+
 				// blueAsset.hash = await hashIt(encode(JSON.stringify(blueAsset)))
 				return blueAsset
 			})
 		)
 
-		this.blueAsset = await assetsPromise
+		this.blueAssets = await assetsPromise
 		await this.updateComplete
 		this.logger.log('ticker run completed')
 

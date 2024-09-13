@@ -5,19 +5,19 @@ import {coinMarketCapTicker} from './coinmarketcap.js'
 import {Ticker} from './ticker.js'
 
 class GithubTicker extends Ticker {
-	@state() data: any = undefined
+	@state() projects: GithubProject[] | undefined = undefined
 
 	updated(changed: PropertyValues<this>) {
-		if (changed.has('data') && this.data !== undefined) {
+		if (changed.has('projects') && this.projects !== undefined) {
 			this.logger.log('data available')
-			PubSub.publish('github', this.data)
+			PubSub.publish('github', this.projects)
 		}
 	}
 
 	async tickerCall(): Promise<void> {
-		this.logger.log('ticker run starting')
+		// Make sure CMC ticker is not running
 		await coinMarketCapTicker.tickerComplete
-		this.data = (this.data ?? 0) + 1
+		this.logger.log('ticker run starting')
 
 		this.logger.log('ticker run completed')
 		await this.updateComplete
