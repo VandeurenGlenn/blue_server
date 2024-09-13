@@ -1,13 +1,16 @@
+import chalk from 'chalk'
 import fetch, {type Response} from 'node-fetch'
 import {readCacheFile, writeCacheFile, type CacheFileData} from '../../cache.js'
 import {TWENTY_FOUR_HOURS} from '../../constants.js'
-import log from '../../log.js'
+import {Logger} from '../../log.js'
 
 interface BinanceExchangeInfoResponse {
 	symbols: [{baseAsset: string; quoteAsset: string}]
 }
 
 const EXCHANGE_INFO_FILENAME = 'binance-exchange-info.json'
+
+const logger = new Logger('Binance API', chalk.blue)
 
 class BinanceAPI {
 	#exchangeInfo: CacheFileData<BinanceExchangeInfoResponse> | undefined
@@ -23,24 +26,25 @@ class BinanceAPI {
 	async #loadExchangeInfo() {
 		try {
 			this.#exchangeInfo = await readCacheFile(EXCHANGE_INFO_FILENAME)
-		} catch {
-			log.print("[binance] Couldn't load exchange info.")
+		} catch (e) {
+			logger.log("Couldn't load exchange info.")
+			throw e
 		}
 	}
 
 	async fetchExchangeInfo() {
-		log.print('[binance] Fetching remote data.')
+		logger.log('Fetching remote data.')
 		const past = Date.now()
 		this.#fetchPromise = fetch(`https://www.binance.com/api/v3/exchangeInfo`)
 		const response = await this.#fetchPromise
 		const now = Date.now()
-		log.print(`[binance] Fetched in ${(now - past) / 1000}s`)
+		logger.log(`Fetched in ${(now - past) / 1000}s`)
 		this.#exchangeInfo = {
 			lastUpdated: now,
 			data: (await response.json()) as BinanceExchangeInfoResponse
 		}
 		writeCacheFile(EXCHANGE_INFO_FILENAME, this.#exchangeInfo).then(() => {
-			log.print('[binance] Cache file successfully written.')
+			logger.log('Cache file successfully written.')
 		})
 	}
 
