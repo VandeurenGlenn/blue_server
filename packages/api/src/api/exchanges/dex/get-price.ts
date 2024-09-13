@@ -14,8 +14,8 @@ export default class getPrice {
 		this.usdtToken = usdtToken
 	}
 	async getWrappedTokenPrice() {
-		const BNBTokenContract = new Contract(this.wrappedToken, ERC20ABI, this.provider)
-		const decimals = await BNBTokenContract.decimals()
+		const wrappedTokenContract = new Contract(this.wrappedToken, ERC20ABI, this.provider)
+		const decimals = await wrappedTokenContract.decimals()
 
 		let amountToSell = parseUnits('1', decimals)
 		let amountOut
@@ -28,11 +28,10 @@ export default class getPrice {
 		return amountOut
 	}
 
-	async getPrice() {
-		const tokenAddress = '0x8FFfED722C699848d0c0dA9ECfEde20e8ACEf7cE'
-		const BNBPrice = await this.getWrappedTokenPrice()
+	async getPrice(tokenAddress: AddressLike) {
+		const wrappedTokenPrice = await this.getWrappedTokenPrice()
 
-		let tokenContract = new Contract(tokenAddress, ERC20ABI, this.provider)
+		let tokenContract = new Contract(tokenAddress as string, ERC20ABI, this.provider)
 		let tokenDecimals = await tokenContract.decimals()
 
 		const tokensToSell = parseUnits('1', tokenDecimals)
@@ -47,6 +46,6 @@ export default class getPrice {
 		}
 
 		if (!amountOut) return 0
-		return amountOut * BNBPrice
+		return amountOut * wrappedTokenPrice
 	}
 }
