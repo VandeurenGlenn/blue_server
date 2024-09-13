@@ -1,6 +1,9 @@
-import chalk, {type ChalkInstance} from 'chalk'
+import {type ChalkInstance} from 'chalk'
 
 let silent = false
+/**
+ * @deprecated
+ */
 export default {
 	silence() {
 		silent = true
@@ -34,7 +37,7 @@ export class Logger {
 	) {}
 
 	log(message: any) {
-		if (!this.enabled) {
+		if (process.env.NODE_ENV === 'production' || !this.enabled) {
 			return
 		}
 		console.log(this.color(`[${this.name.toUpperCase()}] ${message}`))
