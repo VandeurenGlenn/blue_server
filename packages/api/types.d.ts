@@ -85,7 +85,7 @@ declare global {
 		// github: GithubProject;
 	}
 
-	type GithubProjectResponse = {
+	type GithubRepoResponse = {
 		id: number
 		node_id: string
 		name: string
@@ -200,16 +200,30 @@ declare global {
 		}
 	}
 
+	type GitHubRepo = Partial<GithubRepoResponse>
+
 	type GithubActivity = {
 		additions: number
 		deletions: number
 		total: number
 	}
 
+	type GitHubRepoType = 'orgs' | 'Organization' | 'users'
+
 	type GithubProject = {
-		activity: GithubActivity
-		repos: Partial<GithubProjectResponse>[]
-		contributers: string[]
+		/**
+		 * Id of the listing on cmc
+		 * used to connect this resource with cmc asset
+		 */
+		cmc_id: number
+		/**
+		 * etag to avoid fetching again if the data has not changed on github
+		 */
+		etag: string
+		type: GitHubRepoType
+		activity?: GithubActivity
+		repos: Partial<GithubRepoResponse>[]
+		contributers?: string[]
 	}
 
 	type AvailableExchange = 'binance' | 'kraken' | 'coinbase'
