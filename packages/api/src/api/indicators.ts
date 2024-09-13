@@ -1,4 +1,4 @@
-export function buildGithubIndicators(githubProject: GithubProjectResponse) {
+export function buildGithubIndicators(githubProject: GithubRepoResponse) {
 	// TODO
 	// ok :D
 	// good

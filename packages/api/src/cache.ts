@@ -32,7 +32,7 @@ interface BlueCache {
 	github: {
 		repos: {
 			cached: {
-				[name: string]: GithubProjectResponse[]
+				[name: string]: GithubRepoResponse[]
 			}
 			tags: {[name: string]: string}
 		}

@@ -1,7 +1,7 @@
 import {env} from '@blueserver/env'
 import {writeFile} from 'fs/promises'
 import {join} from 'node:path'
-import {CoinMarketCap} from './api/coinmarketcap.js'
+import {CoinMarketCap} from './api/Coinmarketcap.js'
 import {Binance} from './api/exchanges/Binance.js'
 import {Coinbase} from './api/exchanges/coinbase.js'
 import {Kraken} from './api/exchanges/kraken.js'
@@ -101,7 +101,7 @@ export class DataBuilder {
 				if (githubRepos.length > 0) {
 					const urlParts = (githubRepos[0] as string).replace('https://', '').split('/')
 
-					let repos = await this.gitHub.getRepos(urlParts[1])
+					let repos = await this.gitHub.fetchRepos(urlParts[1])
 
 					if (repos.length > 0) {
 						let promises = []
@@ -146,7 +146,7 @@ export class DataBuilder {
 									gravatar: repo.owner.gravatar,
 									type: repo.owner.type
 								}
-							} as Partial<GithubProjectResponse>
+							} as Partial<GithubRepoResponse>
 						})
 
 						blueAsset.github.repos.sort(
