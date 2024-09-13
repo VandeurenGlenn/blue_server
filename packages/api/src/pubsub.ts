@@ -14,6 +14,10 @@ export class PubSub {
 		pubsub.subscribe(route, callback)
 	}
 
+	static publish<T = any>(event: AvailableRoute, data: T) {
+		pubsub.publish(event, data)
+	}
+
 	static publishTop100() {
 		pubsub.publish('top100', cache.bluelist)
 	}
