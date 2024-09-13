@@ -13,7 +13,7 @@ class CoinMarketCapTicker extends Ticker {
 	@state() blueAsset: BlueAsset[] | undefined = undefined
 
 	updated(changed: PropertyValues<this>) {
-		if (changed.has('blueAsset') && this.blueAsset) {
+		if (changed.has('blueAsset') && this.blueAsset !== undefined) {
 			this.logger.log('data available')
 			PubSub.publish('top100', this.blueAsset)
 		}
@@ -86,9 +86,7 @@ class CoinMarketCapTicker extends Ticker {
 		this.logger.log('ticker run completed')
 
 		// Call other tickers if needed
-		if (githubTicker.isRunning()) {
-			githubTicker.goToNextBatch(this)
-		}
+		githubTicker.goToNextBatch(this)
 	}
 }
 
