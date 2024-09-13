@@ -1,4 +1,9 @@
+import {type ChalkInstance} from 'chalk'
+
 let silent = false
+/**
+ * @deprecated
+ */
 export default {
 	silence() {
 		silent = true
@@ -21,5 +26,20 @@ export default {
 			return
 		}
 		console.timeEnd(input)
+	}
+}
+
+export class Logger {
+	constructor(
+		protected name: string,
+		protected color: ChalkInstance,
+		protected enabled = true
+	) {}
+
+	log(message: any) {
+		if (process.env.NODE_ENV === 'production' || !this.enabled) {
+			return
+		}
+		console.log(this.color(`[${this.name.toUpperCase()}] ${message}`))
 	}
 }
