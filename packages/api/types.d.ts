@@ -230,7 +230,7 @@ declare global {
 		reposFetchEtag: string
 		type: GitHubRepoType
 		activity?: GithubActivity
-		repos: GithubRepoResponse[]
+		repos: (GithubRepoResponse | GitHubRepo)[]
 		contributers?: string[]
 	}
 

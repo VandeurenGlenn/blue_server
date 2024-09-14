@@ -3,7 +3,7 @@ import {type PropertyValues, state} from 'snar'
 import {PubSub} from '../pubsub.js'
 import {cmcTicker} from './coinmarketcap.js'
 import {Ticker} from './ticker.js'
-import {availableRepoTypes, GitHub} from '../api/github.js'
+import {availableRepoTypes, GitHub, narrowGithubRepoResponseToGithubRepo} from '../api/github.js'
 
 class GithubTicker extends Ticker {
 	@state() projects: GithubProject[] | undefined = undefined
@@ -33,6 +33,10 @@ class GithubTicker extends Ticker {
 
 				const project = await GitHub.fetchRepos(name, asset.id)
 				if (project) {
+					// Filter the data that only front needs
+					project.repos.forEach((repo, i) => {
+						project.repos[i] = narrowGithubRepoResponseToGithubRepo(repo as GithubRepoResponse)
+					})
 					projects.push(project)
 				}
 			}
