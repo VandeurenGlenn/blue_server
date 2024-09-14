@@ -63,13 +63,13 @@ export abstract class Ticker extends ReactiveObject {
 	}
 
 	/**
-	 * @param needToWait set to false if you want the ticker call to run on start
-	 *                   this value will automatically set to true after first call to wait
-	 *                   between every run.
+	 * @param runOnStart set to true if you want the ticker call to run on start.
+	 *                   All subsequent runs will wait the time provided from `intervalMs`
 	 */
-	async startTicker(intervalMs: number, needToWait = false) {
+	async startTicker(intervalMs: number, runOnStart = false) {
 		this.waitIntervalMs = intervalMs
 		this.#tickering = true
+		let needToWait = !runOnStart
 		while (this.#tickering) {
 			if (needToWait) {
 				this.waitStartedAt = Date.now()
