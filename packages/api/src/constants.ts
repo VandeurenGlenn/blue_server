@@ -11,6 +11,6 @@ export const protocol = 'protocol-blue'
 // One directory down because this script operates from 'lib' not the root
 export const CACHE_ROOT_DIRECTORY = join(__dirname, '..', '.cache')
 
-export const availableRoutes = ['top100', 'change24h'] as const
+export const availableRoutes = ['top100', 'change24h', 'github'] as const
 
 export type AvailableRoute = (typeof availableRoutes)[number]

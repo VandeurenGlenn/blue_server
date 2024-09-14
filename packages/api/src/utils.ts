@@ -24,3 +24,18 @@ export async function hashIt(data: BufferSource) {
 	const hashArray = Array.from(new Uint8Array(hashBuffer))
 	return hashArray.map((byte) => byte.toString(16).padStart(2, '0')).join('')
 }
+
+export function deepClone<T>(object: T | undefined): T | undefined {
+	if (object === undefined) {
+		return undefined
+	}
+	try {
+		return JSON.parse(JSON.stringify(object)) as T
+	} catch (error) {
+		return undefined
+	}
+}
+
+export function filterObject<T extends object, K extends keyof T>(obj: T, keysToKeep: K[]): Pick<T, K> {
+	return Object.fromEntries(keysToKeep.map((key) => [key, obj[key]])) as Pick<T, K>
+}

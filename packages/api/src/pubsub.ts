@@ -1,7 +1,7 @@
 import LittlePubSub from '@vandeurenglenn/little-pubsub'
 import {cache} from './cache.js'
 import {type AvailableRoute} from './constants.js'
-import {change1h, change24h} from './server/shared.js'
+import {API} from './api.js'
 
 declare global {
 	var pubsub: LittlePubSub
@@ -12,6 +12,12 @@ globalThis.pubsub = globalThis.pubsub || new LittlePubSub()
 export class PubSub {
 	static subscribe(route: AvailableRoute, callback: (data: any) => void) {
 		pubsub.subscribe(route, callback)
+	}
+
+	// TODO: more type inconsistencies coming from your lib glenn, fix it >.<
+	static publish<T = any>(event: AvailableRoute, data: T) {
+		// @ts-ignore
+		pubsub.publish(event, data)
 	}
 
 	static publishTop100() {
@@ -30,7 +36,7 @@ export class PubSub {
 	 *
 	 */
 	static publishChange24h() {
-		pubsub.publish('change24h', change24h())
+		pubsub.publish('change24h', API.change24h()!)
 	}
 
 	/**
@@ -46,6 +52,6 @@ export class PubSub {
 	 *
 	 */
 	static publishChange1h() {
-		pubsub.publish('change1h', change1h())
+		pubsub.publish('change1h', API.change1h()!)
 	}
 }

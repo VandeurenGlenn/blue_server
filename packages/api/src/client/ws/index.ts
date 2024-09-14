@@ -1,7 +1,7 @@
 import {SocketRequestClient} from 'socket-request-client'
 import {type AvailableRoute, protocol, WS_PORT} from '../../constants.js'
 import ClientConnection from 'socket-request-client/connection'
-import {resolveLocalIP} from '../../util.js'
+import {resolveLocalIP} from '../../utils.js'
 
 export class WSApiClient {
 	#connectionPromise

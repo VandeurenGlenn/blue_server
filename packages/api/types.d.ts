@@ -11,7 +11,7 @@ declare global {
 	 * Type of objects returned by CMC listings endpoint.
 	 */
 	type CMCListing = {
-		id: string
+		id: number
 		name: string
 		symbol: string
 		slug: string
@@ -85,7 +85,7 @@ declare global {
 		// github: GithubProject;
 	}
 
-	type GithubProjectResponse = {
+	type GithubRepoResponse = {
 		id: number
 		node_id: string
 		name: string
@@ -200,25 +200,46 @@ declare global {
 		}
 	}
 
+	/**
+	 * Filtered interface from GithubRepoResponse
+	 */
+	interface GitHubRepo {
+		name: string
+		url: string
+		description: string
+		pushed_at: string
+	}
+
 	type GithubActivity = {
 		additions: number
 		deletions: number
 		total: number
 	}
 
+	type GitHubRepoType = 'orgs' | 'users'
+
 	type GithubProject = {
-		activity: GithubActivity
-		repos: Partial<GithubProjectResponse>[]
-		contributers: string[]
+		/**
+		 * Id of the listing on cmc
+		 * used to connect this resource with cmc asset
+		 */
+		cmc_id: number
+		/**
+		 * etag to avoid fetching again if the data has not changed on github
+		 */
+		reposFetchEtag: string
+		type: GitHubRepoType
+		activity?: GithubActivity
+		repos: (GithubRepoResponse | GitHubRepo)[]
+		contributers?: string[]
 	}
 
 	type AvailableExchange = 'binance' | 'kraken' | 'coinbase'
 
-	// TODO: glenn do it lol
 	type GithubIndicator = {}
 	type BlueAsset = {
 		id: number
-		// hash: string
+		hash?: string
 		name: string
 		rank: number
 		slug: string
@@ -231,15 +252,11 @@ declare global {
 		exchanges: AvailableExchange[]
 		logo?: string
 		website: string
-		repos: string[]
 		changes: {
 			percent_1h: number
 			percent_24h: number
 		}
-		github: GithubProject
-		indicators: {
-			github: null
-		}
+		source_code: string[]
 	}
 
 	interface ChangesList {

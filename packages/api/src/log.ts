@@ -36,10 +36,10 @@ export class Logger {
 		protected enabled = true
 	) {}
 
-	log(message: any) {
+	log(...messages: any[]) {
 		if (process.env.NODE_ENV === 'production' || !this.enabled) {
 			return
 		}
-		console.log(this.color(`[${this.name.toUpperCase()}] ${message}`))
+		console.log(this.color(`[${this.name.toUpperCase()}] ${messages.join('\t')}`))
 	}
 }

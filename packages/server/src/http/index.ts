@@ -1,7 +1,7 @@
-import Koa from 'koa'
-import cors from '@koa/cors'
-import {routes, allowedMethods} from './routes.js'
 import {availableRoutes} from '@blueserver/api/constants'
+import cors from '@koa/cors'
+import Koa from 'koa'
+import {allowedMethods, routes} from './routes.js'
 
 export class HttpApiServer {
 	server: Koa = new Koa()
@@ -19,4 +19,3 @@ export class HttpApiServer {
 		console.groupEnd()
 	}
 }
-

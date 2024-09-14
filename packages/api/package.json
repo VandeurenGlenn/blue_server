@@ -4,8 +4,8 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"import": "./lib/api/api.js",
-			"types": "./lib/api/api.d.ts"
+			"import": "./lib/api.js",
+			"types": "./lib/api.d.ts"
 		},
 		"./constants": {
 			"types": "./lib/constants.d.ts",
@@ -23,13 +23,13 @@
 			"import": "./lib/client/ws/index.js",
 			"types": "./lib/client/ws/index.d.ts"
 		},
-		"./server/shared": {
-			"import": "./lib/server/shared.js",
-			"types": "./lib/server/shared.d.ts"
-		},
 		"./pubsub": {
 			"import": "./lib/pubsub.js",
 			"types": "./lib/pubsub.d.ts"
+		},
+		"./tickers": {
+			"import": "./lib/tickers/index.js",
+			"types": "./lib/tickers/index.d.ts"
 		},
 		"./types": {
 			"types": "./types.d.ts"
@@ -68,7 +68,8 @@
 		"koa": "^2.15.3",
 		"node-fetch": "^3.3.2",
 		"socket-request-client": "^2.0.9",
-		"socket-request-server": "^1.6.17"
+		"socket-request-server": "^1.6.17",
+		"snar": "^2.2.0"
 	},
 	"devDependencies": {
 		"@types/koa__cors": "^5.0.0",
