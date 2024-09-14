@@ -46,8 +46,6 @@ class GithubTicker extends Ticker {
 		await Promise.all(projectsPromise)
 		this.projects = projects
 		await this.updateComplete
-
-		this.setEnd() // -- real run end
 	}
 
 	updated(changed: PropertyValues<this>) {

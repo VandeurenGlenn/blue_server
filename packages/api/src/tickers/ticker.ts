@@ -20,6 +20,7 @@ export abstract class Ticker extends ReactiveObject {
 	protected waitTimeout: NodeJS.Timeout | undefined = undefined
 	protected logger: Logger
 	#runStartedAt: number | undefined
+	#setEndCalled = false
 
 	constructor(
 		protected name: string,
@@ -49,10 +50,12 @@ export abstract class Ticker extends ReactiveObject {
 		this.logger.log('ticker run starting')
 		this.#runStartedAt = Date.now()
 		this.#running = true
+		this.#setEndCalled = false
 	}
 	setEnd() {
+		this.#setEndCalled = true
 		if (this.#runStartedAt === undefined) {
-			throw new Error("Can't determine the running time because `setStart` hasn't been called prior to this function.")
+			throw new Error("Can't determine the running time because `setStart` hasn't been called in the ticker run.")
 		}
 		const runTime = (Date.now() - this.#runStartedAt) / 1000
 		this.logger.log(`ticker run COMPLETED (${chalk.bold(runTime)}s)`)
@@ -94,6 +97,9 @@ export abstract class Ticker extends ReactiveObject {
 		try {
 			this.logger.log('ticker call starts')
 			await this.tickerCall()
+			if (!this.#setEndCalled) {
+				this.setEnd()
+			}
 			this.logger.log('ticker call ends')
 		} catch {
 		} finally {

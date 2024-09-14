@@ -10,9 +10,9 @@ class ModelTicker extends Ticker {
 		// Wait other tickers to complete here if needed e.g.
 		// await githubTicker.tickerComplete
 
-		this.logger.log('ticker run starting')
-		// Write ticker logic here
-		this.logger.log('ticker run completed')
+		this.setStart() // used to determine ticker's real run, use it after the waits
+
+		// Write ticker logic here, such as building data.
 
 		// This is important to ensure data is available
 		// after this.tickerComplete

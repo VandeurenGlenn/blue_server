@@ -20,8 +20,6 @@ class CoinMarketCapTicker extends Ticker {
 	}
 
 	async tickerCall(): Promise<void> {
-		// await githubTicker.tickerComplete // Making sure github is calm
-
 		this.setStart()
 
 		await CoinMarketCap.fetchComplete
@@ -92,8 +90,6 @@ class CoinMarketCapTicker extends Ticker {
 			await githubTicker.runComplete
 			githubTicker.goToNextRun(this)
 		}
-
-		this.setEnd()
 	}
 }
 
