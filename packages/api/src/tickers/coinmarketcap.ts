@@ -20,8 +20,10 @@ class CoinMarketCapTicker extends Ticker {
 	}
 
 	async tickerCall(): Promise<void> {
-		await githubTicker.tickerComplete // making sure github is calm
-		this.logger.log('ticker run starting')
+		// await githubTicker.tickerComplete // Making sure github is calm
+
+		this.setStart()
+
 		await CoinMarketCap.fetchComplete
 		if (CoinMarketCap.isDataObsolete()) {
 			await CoinMarketCap.fetchListings()
@@ -83,11 +85,16 @@ class CoinMarketCapTicker extends Ticker {
 
 		this.blueAssets = await assetsPromise
 		await this.updateComplete
-		this.logger.log('ticker run completed')
 
-		// Call other tickers if needed
-		githubTicker.goToNextBatch(this)
+		// GitHub ticker needs to run again
+		// if it's running we wait the end
+		if (githubTicker.running) {
+			await githubTicker.runComplete
+			githubTicker.goToNextRun(this)
+		}
+
+		this.setEnd()
 	}
 }
 
-export const coinMarketCapTicker = new CoinMarketCapTicker('cmc ticker', chalk.gray)
+export const cmcTicker = new CoinMarketCapTicker('ticker (cmc)', chalk.gray)

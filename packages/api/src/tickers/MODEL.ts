@@ -14,14 +14,17 @@ class ModelTicker extends Ticker {
 		// Write ticker logic here
 		this.logger.log('ticker run completed')
 
+		// This is important to ensure data is available
+		// after this.tickerComplete
 		await this.updateComplete
+
 		// Force another ticker to run again if needed e.g.
 		// if (githubTicker.isRunning()) {
 		// 	githubTicker.goToNextBatch(this)
 		// }
 	}
 
-	updated(changed: PropertyValues<this>) {
+	updated(changed: PropertyValues) {
 		if (changed.has('data') && this.data !== undefined) {
 			// Do something when the data is available e.g.
 			// PubSub.publish('route', this.data)

@@ -3,36 +3,71 @@ import {Logger} from '../log.js'
 import {type ChalkInstance} from 'chalk'
 
 export abstract class Ticker extends ReactiveObject {
-	protected tickerPromise = Promise.resolve()
-	protected running = false
+	#tickerPromise = Promise.resolve()
+	/**
+	 * flag to determine if the ticker is currently activated or not.
+	 * notice: not to confuse with `running` !
+	 */
+	#tickering = false
+	/**
+	 * flag to determine if the ticker is currently inside a call or not
+	 */
+	#running = false
 	protected waitPromise: Promise<void> | undefined = undefined
 	protected waitPromiseResolve: (() => void) | undefined = undefined
 	protected waitStartedAt: number | undefined = undefined
 	protected waitIntervalMs: number | undefined = undefined
 	protected waitTimeout: NodeJS.Timeout | undefined = undefined
 	protected logger: Logger
+	#runStartedAt: number | undefined
 
 	constructor(
 		protected name: string,
-		protected color: ChalkInstance
+		protected color: ChalkInstance,
+		protected silent = false
 	) {
 		super()
-		this.logger = new Logger(name, color)
+		this.logger = new Logger(name, color, !silent)
 	}
 
-	get tickerComplete() {
-		return this.tickerPromise
+	get runComplete() {
+		return this.#tickerPromise
+	}
+
+	get running() {
+		return this.#tickering && this.#running
+	}
+
+	get paused() {
+		return this.#tickering && !this.running
+	}
+	get stopped() {
+		return !this.#tickering
+	}
+
+	setStart() {
+		this.logger.log('ticker run starting')
+		this.#runStartedAt = Date.now()
+		this.#running = true
+	}
+	setEnd() {
+		if (this.#runStartedAt === undefined) {
+			throw new Error("Can't determine the running time because `setStart` hasn't been called prior to this function.")
+		}
+		const runTime = (Date.now() - this.#runStartedAt) / 1000
+		this.logger.log(`ticker run COMPLETED (${runTime}s)`)
+		this.#running = false
 	}
 
 	/**
 	 * @param needToWait set to false if you want the ticker call to run on start
 	 *                   this value will automatically set to true after first call to wait
-	 *                   between every batch.
+	 *                   between every run.
 	 */
 	async startTicker(intervalMs: number, needToWait = false) {
 		this.waitIntervalMs = intervalMs
-		this.running = true
-		while (this.running) {
+		this.#tickering = true
+		while (this.#tickering) {
 			if (needToWait) {
 				this.waitStartedAt = Date.now()
 				await new Promise<void>((resolve) => {
@@ -44,28 +79,40 @@ export abstract class Ticker extends ReactiveObject {
 			}
 			needToWait = true
 
-			if (this.running) {
-				this.tickerCallWrapper()
+			// RUN!
+			this.#runStartedAt = undefined // Because this is user-defined we make sure it's not defined on a new run
+			this.#running = false // Same for that, we don't assume if it's running until the user explictily call `setStart`
+			if (this.#tickering) {
+				this.#tickerCallWrapper()
 			}
 		}
 	}
 
-	private async tickerCallWrapper() {
+	async #tickerCallWrapper() {
 		let tickerEndResolve!: () => void
-		this.tickerPromise = new Promise((resolve) => (tickerEndResolve = resolve))
-		await this.tickerCall()
-		tickerEndResolve()
+		this.#tickerPromise = new Promise((resolve) => (tickerEndResolve = resolve))
+		try {
+			this.logger.log('ticker call starts')
+			await this.tickerCall()
+			this.logger.log('ticker call ends')
+		} catch {
+		} finally {
+			tickerEndResolve()
+		}
 	}
 
-	goToNextBatch(initiator: Ticker) {
+	goToNextRun(initiator: Ticker) {
+		if (!this.#tickering) {
+			return
+		}
 		const initiatorName = initiator === this ? 'self' : initiator.name
 		this.logger.log(`going to next batch (initiator: ${initiatorName})`)
-		this.waitPromiseResolve?.()
+		this.waitPromiseResolve?.() // This causes the wait to break and run the next call
 	}
 
 	stopTicker() {
-		this.running = false
-		this.goToNextBatch(this) // this will just stop the wait and terminate the ticker.
+		this.#tickering = false
+		this.goToNextRun(this) // this will just stop the wait and terminate the ticker.
 	}
 
 	getTimeLeftRatio() {
@@ -74,11 +121,11 @@ export abstract class Ticker extends ReactiveObject {
 		}
 		const timespent = Date.now() - this.waitStartedAt
 		const ratio = timespent / this.waitIntervalMs
-		return Math.min(ratio, 1)
+		return 1 - Math.min(ratio, 1)
 	}
 
-	isRunning() {
-		return this.running
+	isTickering() {
+		return this.#tickering
 	}
 
 	abstract tickerCall(): Promise<void>
