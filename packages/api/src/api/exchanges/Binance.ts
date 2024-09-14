@@ -10,7 +10,7 @@ interface BinanceExchangeInfoResponse {
 
 const EXCHANGE_INFO_FILENAME = 'binance-exchange-info.json'
 
-const logger = new Logger('Binance API', chalk.blue)
+const logger = new Logger('api (binance)', chalk.blue)
 
 class BinanceAPI {
 	#exchangeInfo: CacheFileData<BinanceExchangeInfoResponse> | undefined

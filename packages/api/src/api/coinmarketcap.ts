@@ -5,7 +5,7 @@ import {readCacheFile, writeCacheFile, type CacheFileData} from '../cache.js'
 import {LIST_SIZE, TWENTY_FOUR_HOURS} from '../constants.js'
 import {Logger} from '../log.js'
 
-const logger = new Logger('cmc api', chalk.magenta)
+const logger = new Logger('api (cmc)', chalk.magenta)
 
 const CMC_LISTINGS_FILENAME = 'cmc-listings.json'
 const CMC_LISTINGS_INFO_FILENAME = 'cmc-listings-info.json'

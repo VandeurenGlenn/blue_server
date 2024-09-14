@@ -1,5 +1,5 @@
 import {PORT} from '../../constants.js'
-import {resolveLocalIP} from '../../util.js'
+import {resolveLocalIP} from '../../utils.js'
 
 export class HttpApiClient {
 	static async #fetch(endpoint: string) {

@@ -200,7 +200,15 @@ declare global {
 		}
 	}
 
-	type GitHubRepo = Partial<GithubRepoResponse>
+	/**
+	 * Filtered interface from GithubRepoResponse
+	 */
+	interface GitHubRepo {
+		name: string
+		url: string
+		description: string
+		pushed_at: string
+	}
 
 	type GithubActivity = {
 		additions: number
@@ -208,7 +216,7 @@ declare global {
 		total: number
 	}
 
-	type GitHubRepoType = 'orgs' | 'Organization' | 'users'
+	type GitHubRepoType = 'orgs' | 'users'
 
 	type GithubProject = {
 		/**
@@ -222,7 +230,7 @@ declare global {
 		reposFetchEtag: string
 		type: GitHubRepoType
 		activity?: GithubActivity
-		repos: GitHubRepo[]
+		repos: GithubRepoResponse[]
 		contributers?: string[]
 	}
 

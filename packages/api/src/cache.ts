@@ -1,8 +1,8 @@
-import {writeFile} from 'fs/promises'
 import {readFileSync} from 'fs'
+import {writeFile} from 'fs/promises'
 import {mkdir} from 'node:fs/promises'
 import {join} from 'node:path'
-import {CACHE_ROOT_DIRECTORY, LIST_SIZE} from './constants.js'
+import {CACHE_ROOT_DIRECTORY} from './constants.js'
 
 export type CacheFileData<T = any> = {lastUpdated: number; data: T}
 
