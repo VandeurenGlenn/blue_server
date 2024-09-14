@@ -31,6 +31,10 @@
 			"import": "./lib/pubsub.js",
 			"types": "./lib/pubsub.d.ts"
 		},
+		"./tickers": {
+			"import": "./lib/tickers/index.js",
+			"types": "./lib/tickers/index.d.ts"
+		},
 		"./types": {
 			"types": "./types.d.ts"
 		}
