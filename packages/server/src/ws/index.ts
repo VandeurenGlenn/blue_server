@@ -1,7 +1,7 @@
+import {API} from '@blueserver/api'
 import {protocol} from '@blueserver/api/constants'
 import socketRequestServer from 'socket-request-server'
 import type {SocketRequestConnection} from 'socket-request-server/connection'
-import {change1h, change24h, top100} from '../../../api/lib/server/api.js'
 
 export type SocketResponse = {
 	send: <T>(data: T, status?: number) => void
@@ -24,8 +24,8 @@ export class WSApiServer {
 	}
 
 	#api: {[name: string]: (response: SocketResponse, params: any) => void} = {
-		top100: (response) => response.send<Top100ResponseLoad>(top100()),
-		change24h: (response) => response.send<ChangesList[]>(change24h()),
-		change1h: (response) => response.send<ChangesList[]>(change1h())
+		top100: (response) => response.send<Top100ResponseLoad>(API.top100()),
+		change24h: (response) => response.send<ChangesList[] | undefined>(API.change24h()),
+		change1h: (response) => response.send<ChangesList[] | undefined>(API.change1h())
 	}
 }
