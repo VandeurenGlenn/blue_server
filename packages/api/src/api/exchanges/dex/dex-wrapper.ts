@@ -3,6 +3,7 @@ import ERC20ABI from './abis/erc20.js'
 import {Contract} from 'ethers'
 import exchangeABI from './abis/exchange.js'
 import DEXPriceError from '../../../errors/dex-price.js'
+import {BigNumber} from '@ethersproject/bignumber'
 
 export default class DexWrapper {
 	provider: any
@@ -36,11 +37,12 @@ export default class DexWrapper {
 		return amountOut
 	}
 
-	async getPrice(tokenAddress: AddressLike) {
+	async getPrice(tokenAddress: AddressLike): Promise<string> {
 		try {
 			const wrappedTokenPrice = await this.getWrappedTokenPrice()
 			const tokenPrice = await this.#getPrice(tokenAddress, this.wrappedToken)
-			return Number(tokenPrice) * Number(wrappedTokenPrice)
+
+			return BigNumber.from(tokenPrice).mul(BigNumber.from(wrappedTokenPrice)).toString()
 		} catch (error) {
 			throw new DEXPriceError((error as Error).message)
 		}

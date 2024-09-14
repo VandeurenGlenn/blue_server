@@ -8,6 +8,7 @@ import {LIST_SIZE} from '../constants.js'
 import {PubSub} from '../pubsub.js'
 import {githubTicker} from './github.js'
 import {Ticker} from './ticker.js'
+import {dexTicker} from './dex.js'
 
 class CoinMarketCapTicker extends Ticker {
 	@state() blueAssets: BlueAsset[] | undefined = undefined
@@ -28,11 +29,12 @@ class CoinMarketCapTicker extends Ticker {
 			await CoinMarketCap.fetchListingsInfo(CoinMarketCap.getListings().map((l) => l.id))
 		}
 
-		// TODO: This should be updated to wait if a fetch was
-		// already initiating in another process, to avoid multiple fetches
-		// at the same time.
-		// await coinbase.fetchList()
-		// await kraken.fetchList()
+		// Fetch all exchange data
+		// This is a good example of how to fetch data from multiple sources
+		// and wait for all of them to complete before continuing
+		// will not refetch if data is not obsolete or start one if it's already fetching
+		await Coinbase.fetchList()
+		await Kraken.fetchList()
 
 		Binance.fetchComplete
 		if (Binance.isExchangeInfoObsolete()) {
@@ -57,7 +59,7 @@ class CoinMarketCapTicker extends Ticker {
 					rank: listing.cmc_rank,
 					platform: listing.platform,
 					platforms: asset.contract_address,
-					// price: listing.quote.USD.price,
+					price: listing.quote.USD.price,
 					// marketCap: listing.quote.USD.market_cap,
 					// circulating_supply: listing.circulating_supply,
 					changes: {
@@ -86,9 +88,16 @@ class CoinMarketCapTicker extends Ticker {
 
 		// GitHub ticker needs to run again
 		// if it's running we wait the end
+		// TODO check lastUpdate to determine if it needs to run again
 		if (githubTicker.running) {
 			await githubTicker.runComplete
 			githubTicker.goToNextRun(this)
+		}
+
+		// TODO check lastUpdate to determine if it needs to run again
+		if (dexTicker.running) {
+			await dexTicker.runComplete
+			dexTicker.goToNextRun(this)
 		}
 	}
 }

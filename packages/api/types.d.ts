@@ -244,11 +244,15 @@ declare global {
 		rank: number
 		slug: string
 		symbol: string
+		price: number
 		source_code: string[]
 		platform?: CMCPlatform
 		platforms: {
 			contract_address: string
 			platform: CMCPlatform
+			// optional price for now, will be added by the ticker
+			// should also get them from the dexticker on cmcticker's initial start?
+			price?: string
 		}[]
 		exchanges: AvailableExchange[]
 		logo?: string
@@ -257,7 +261,6 @@ declare global {
 			percent_1h: number
 			percent_24h: number
 		}
-		source_code: string[]
 	}
 
 	interface ChangesList {

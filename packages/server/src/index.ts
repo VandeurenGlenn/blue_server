@@ -1,6 +1,6 @@
 import {createCacheDirectory} from '@blueserver/api/cache'
 import {PORT, WS_PORT} from '@blueserver/api/constants'
-import {cmcTicker, githubTicker} from '@blueserver/api/tickers'
+import {cmcTicker, githubTicker, dexTicker} from '@blueserver/api/tickers'
 import ms from 'ms'
 import {HttpApiServer} from './http/index.js'
 import {WSApiServer} from './ws/index.js'
@@ -15,6 +15,7 @@ await createCacheDirectory()
  */
 cmcTicker.startTicker(ms('1h'), true)
 githubTicker.startTicker(ms('5m'), true)
+dexTicker.startTicker(ms('1m'), true)
 
 /**
  * Protocols

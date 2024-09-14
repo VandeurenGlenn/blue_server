@@ -21,24 +21,39 @@ export type KrakenAssetListResponse = {
 	result: KrakenAssetList
 }
 
-export class Kraken {
+export class KrakenApi {
 	lastUpdated: number = 0
 	list: KrakenAssetList = {}
+	updating: boolean = false
+	updatePromise: Promise<void> | null = null
 
 	async fetchList() {
-		if (await this.needsUpdate()) {
-			log.time('[Kraken] Fetching remote data')
-			const response = await fetch('https://api.kraken.com/0/public/Assets', {
-				headers: {
-					Accept: 'application/json'
+		if ((await this.needsUpdate()) && !this.updating) {
+			this.updating = true
+			this.updatePromise = new Promise<void>(async (resolve, reject) => {
+				// Store the promise of the ongoing update
+				try {
+					log.time('[Kraken] Fetching remote data')
+					const response = await fetch('https://api.kraken.com/0/public/Assets', {
+						headers: {
+							Accept: 'application/json'
+						}
+					})
+
+					this.list = ((await response.json()) as KrakenAssetListResponse).result
+					this.lastUpdated = Date.now()
+					await writeCacheFile(KRAKEN_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
+					log.timeEnd('[Kraken] Fetching remote data')
+					resolve()
+				} catch (error) {
+					reject(error)
+				} finally {
+					this.updating = false
+					this.updatePromise = null
 				}
 			})
-
-			this.list = ((await response.json()) as KrakenAssetListResponse).result
-			this.lastUpdated = Date.now()
-			await writeCacheFile(KRAKEN_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
-			log.timeEnd('[Kraken] Fetching remote data')
 		}
+		return this.updatePromise
 	}
 
 	async needsUpdate(): Promise<boolean> {
@@ -57,3 +72,5 @@ export class Kraken {
 		return this.list[symbol]?.status === 'enabled'
 	}
 }
+
+export const Kraken = new KrakenApi()
