@@ -4,8 +4,8 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"import": "./lib/api/api.js",
-			"types": "./lib/api/api.d.ts"
+			"import": "./lib/api.js",
+			"types": "./lib/api.d.ts"
 		},
 		"./constants": {
 			"types": "./lib/constants.d.ts",
@@ -22,10 +22,6 @@
 		"./client/ws": {
 			"import": "./lib/client/ws/index.js",
 			"types": "./lib/client/ws/index.d.ts"
-		},
-		"./server/shared": {
-			"import": "./lib/server/shared.js",
-			"types": "./lib/server/shared.d.ts"
 		},
 		"./pubsub": {
 			"import": "./lib/pubsub.js",

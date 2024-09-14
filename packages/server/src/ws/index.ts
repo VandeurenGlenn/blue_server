@@ -1,7 +1,7 @@
 import {protocol} from '@blueserver/api/constants'
 import socketRequestServer from 'socket-request-server'
 import type {SocketRequestConnection} from 'socket-request-server/connection'
-import {change1h, change24h, top100} from '@blueserver/api/server/shared'
+import {change1h, change24h, top100} from '../../../api/lib/server/api.js'
 
 export type SocketResponse = {
 	send: <T>(data: T, status?: number) => void

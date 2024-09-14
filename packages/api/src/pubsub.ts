@@ -1,7 +1,7 @@
 import LittlePubSub from '@vandeurenglenn/little-pubsub'
 import {cache} from './cache.js'
 import {type AvailableRoute} from './constants.js'
-import {change1h, change24h} from './server/shared.js'
+import {API} from './api.js'
 
 declare global {
 	var pubsub: LittlePubSub
@@ -36,7 +36,7 @@ export class PubSub {
 	 *
 	 */
 	static publishChange24h() {
-		pubsub.publish('change24h', change24h())
+		pubsub.publish('change24h', API.change24h()!)
 	}
 
 	/**
@@ -52,6 +52,6 @@ export class PubSub {
 	 *
 	 */
 	static publishChange1h() {
-		pubsub.publish('change1h', change1h())
+		pubsub.publish('change1h', API.change1h()!)
 	}
 }
