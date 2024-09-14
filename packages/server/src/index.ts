@@ -15,7 +15,7 @@ await createCacheDirectory()
  * Tickers
  */
 cmcTicker.startTicker(ms('1h'), true)
-githubTicker.startTicker(ms('5s'), true)
+githubTicker.startTicker(ms('5m'), true)
 
 /**
  * Protocols
