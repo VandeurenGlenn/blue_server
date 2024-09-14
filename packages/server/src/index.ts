@@ -8,7 +8,6 @@ import {WSApiServer} from './ws/index.js'
 /**
  * Some inits
  */
-// TODO: This probably needs a better place
 await createCacheDirectory()
 
 /**
