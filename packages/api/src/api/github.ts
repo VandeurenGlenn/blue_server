@@ -1,11 +1,22 @@
+import {env} from '@blueserver/env'
 import fetch, {type Response} from 'node-fetch'
 import {type CacheFileData, readCacheFile, writeCacheFile} from './../cache.js'
+import {deepClone, filterObject} from '../utils.js'
+import {Logger} from '../log.js'
+import chalk from 'chalk'
 
 const GITHUB_PROJECTS_FILENAME = 'github-projects.json'
 
-export class GitHub {
+export const availableRepoTypes: GitHubRepoType[] = ['orgs', 'users']
+
+export function narrowGithubRepoResponseToGithubRepo(response: GithubRepoResponse): GitHubRepo {
+	return filterObject(response, ['name', 'url', 'description', 'pushed_at'])
+}
+
+export class GitHubAPI {
 	#headers = new Headers()
 	#projects: CacheFileData<GithubProject[]> | undefined = undefined
+	#logger = new Logger('api (github)', chalk.blue, true)
 
 	constructor(key: string, apiVersion = '2022-11-28') {
 		this.#headers.append('Authorization', `Bearer ${key}`)
@@ -15,7 +26,14 @@ export class GitHub {
 	}
 
 	#loadProjects() {
-		this.#projects = readCacheFile(GITHUB_PROJECTS_FILENAME)
+		try {
+			this.#projects = readCacheFile(GITHUB_PROJECTS_FILENAME)
+		} catch {
+			this.#projects = {
+				data: [],
+				lastUpdated: Date.now()
+			}
+		}
 	}
 	#saveProjects() {
 		if (this.#projects === undefined) {
@@ -61,34 +79,53 @@ export class GitHub {
 			headers.set('If-None-Match', etag)
 		}
 
-		if (type === 'Organization') {
-			type = 'orgs'
-		}
-
 		return await fetch(`https://api.github.com/${type}/${name}/repos`, {headers})
 	}
 
-	async fetchRepos(name: string, cmcAssetId: number) {
+	/**
+	 * Fetches repos for the name and returns updated project or undefined
+	 * if fetch failed and no project were found locally.
+	 * The returned project object is deep cloned so external code can manipulate them
+	 * without worrying about altering the cache.
+	 */
+	// TODO: Though GitHub API responds fast we could make this function Promise.all and allow more than one name fetch at once
+	async fetchRepos(
+		name: string,
+		cmcAssetId: number,
+		options: {
+			type?: GitHubRepoType
+		} = {type: 'orgs'}
+	) {
 		if (cmcAssetId === undefined) {
 			throw new Error('Need to provide CMC Id when fetching repos.')
 		}
-		this.#fetchReposPromise = new Promise<GithubProject | undefined>(async (resolve) => {
+		let types: GitHubRepoType[] = ['orgs', 'users']
+		if (options.type === 'users') {
+			types.reverse() // try 'users' first
+		}
+		this.#fetchReposPromise = new Promise<GithubProject | undefined>(async (_resolve) => {
+			function resolve(project: GithubProject | undefined) {
+				_resolve(deepClone(project))
+			}
 			let project = this.getProject(cmcAssetId)
 			let type: GitHubRepoType = 'orgs'
-			let response = await this.#fetchRepos(name, type, project?.reposFetchEtag)
-			if (response.status === 304) {
-				// Unchanged we just return cache
-				resolve(project)
-				return
-			}
-			if (response.status === 404) {
+			let response!: Response
+			for (const type of types) {
+				this.#logger.log(`fetching ${chalk.bold(name)} repos (type: ${type.toUpperCase()})`)
 				response = await this.#fetchRepos(name, type, project?.reposFetchEtag)
+				if (response.status === 200) {
+					break
+				}
+				if (response.status === 304) {
+					resolve(project) // Unchanged we just return cache
+					return
+				}
+				if (response.status === 404) {
+					continue // Not found, trying next type
+				}
 			}
-			if (response.status === 304) {
-				// Unchanged we just return cache
-				resolve(project)
-				return
-			}
+
+			// Ended on a bad note
 			if (response.status === 404) {
 				// Both request returned nothing, we just return project in cache
 				// but it's more likely this will always be undefined;
@@ -135,3 +172,5 @@ export class GitHub {
 	// 	return cache.github.stats.cached[name]
 	// }
 }
+
+export const GitHub = new GitHubAPI(env.github)
