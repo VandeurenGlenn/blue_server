@@ -1,6 +1,6 @@
 import {ReactiveObject} from 'snar'
 import {Logger} from '../log.js'
-import {type ChalkInstance} from 'chalk'
+import chalk, {type ChalkInstance} from 'chalk'
 
 export abstract class Ticker extends ReactiveObject {
 	#tickerPromise = Promise.resolve()
@@ -55,7 +55,7 @@ export abstract class Ticker extends ReactiveObject {
 			throw new Error("Can't determine the running time because `setStart` hasn't been called prior to this function.")
 		}
 		const runTime = (Date.now() - this.#runStartedAt) / 1000
-		this.logger.log(`ticker run COMPLETED (${runTime}s)`)
+		this.logger.log(`ticker run COMPLETED (${chalk.bold(runTime)}s)`)
 		this.#running = false
 	}
 

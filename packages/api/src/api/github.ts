@@ -16,7 +16,7 @@ export function narrowGithubRepoResponseToGithubRepo(response: GithubRepoRespons
 export class GitHubAPI {
 	#headers = new Headers()
 	#projects: CacheFileData<GithubProject[]> | undefined = undefined
-	#logger = new Logger('api (github)', chalk.blue, true)
+	#logger = new Logger('api (github)', chalk.blue, false)
 
 	constructor(key: string, apiVersion = '2022-11-28') {
 		this.#headers.append('Authorization', `Bearer ${key}`)

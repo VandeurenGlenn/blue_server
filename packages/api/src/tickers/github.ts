@@ -25,7 +25,8 @@ class GithubTicker extends Ticker {
 		}
 
 		let projects: GithubProject[] = []
-		cmcTicker.blueAssets.forEach(async (asset, i) => {
+
+		const projectsPromise = cmcTicker.blueAssets.map(async (asset) => {
 			const githubAddresses = asset.source_code.filter((source) => source.includes('github'))
 			if (githubAddresses.length) {
 				const [_domain, nameOrType, nameIfType] = githubAddresses[0].replace('https://', '').split('/')
@@ -42,6 +43,7 @@ class GithubTicker extends Ticker {
 			}
 		})
 
+		await Promise.all(projectsPromise)
 		this.projects = projects
 		await this.updateComplete
 
@@ -50,7 +52,8 @@ class GithubTicker extends Ticker {
 
 	updated(changed: PropertyValues<this>) {
 		if (changed.has('projects') && this.projects !== undefined) {
-			this.logger.log('data available')
+			this.logger.log('pubsubbing data')
+			this.logger.log(`projects available : ${this.projects.length}`)
 			PubSub.publish('github', this.projects)
 		}
 	}
