@@ -37,14 +37,23 @@ export default class DexWrapper {
 		return amountOut
 	}
 
-	async getPrice(tokenAddress: AddressLike): Promise<string> {
+	async getPrice(tokenAddress: AddressLike) {
 		try {
 			const wrappedTokenPrice = await this.getWrappedTokenPrice()
 			const tokenPrice = await this.#getPrice(tokenAddress, this.wrappedToken)
-
-			return BigNumber.from(tokenPrice).mul(BigNumber.from(wrappedTokenPrice)).toString()
+			return String(Number(tokenPrice) * Number(wrappedTokenPrice))
 		} catch (error) {
-			throw new DEXPriceError((error as Error).message)
+			const message = (error as Error).message
+			if (message.includes('insufficient liquidity')) {
+				throw new DEXPriceError('Insufficient liquidity')
+			} else if (message.includes('invalid address')) {
+				throw new DEXPriceError('Invalid address')
+			} else if (message.includes('missing revert data')) {
+				// add to ignorelist
+				// console.log('message', error.message)
+			} else {
+				throw new DEXPriceError(message)
+			}
 		}
 	}
 }
