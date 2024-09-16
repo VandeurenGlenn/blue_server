@@ -236,7 +236,7 @@ declare global {
 
 	type AvailableExchange = 'binance' | 'kraken' | 'coinbase'
 
-	type GithubIndicator = {}
+	// TODO: we'll need to remove this type
 	type BlueAsset = {
 		id: number
 		hash?: string
