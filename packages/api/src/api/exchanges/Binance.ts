@@ -35,7 +35,7 @@ class BinanceAPI {
 	async fetchExchangeInfo() {
 		logger.log('Fetching remote data.')
 		const past = Date.now()
-		this.#fetchPromise = fetch(`https://www.binance.com/api/v3/exchangeInfo`)
+		this.#fetchPromise = fetch(`https://api.binance.com/api/v3/exchangeInfo`)
 		const response = await this.#fetchPromise
 		const now = Date.now()
 		logger.log(`Fetched in ${(now - past) / 1000}s`)
