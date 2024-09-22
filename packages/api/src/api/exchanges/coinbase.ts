@@ -32,11 +32,42 @@ export type CoinBaseAssetList = {
 	display_name: string
 }[]
 
-export class Coinbase {
+class _Coinbase {
 	lastUpdated: number = 0
 	list: CoinBaseAssetList = []
+	updateComplete: {resolve: () => void; reject: (error: Error) => void} = {resolve: () => {}, reject: () => {}}
+	updating: boolean = false
+	updatePromise: Promise<void> | null = null
 
 	async fetchList() {
+		if ((await this.needsUpdate()) && !this.updating) {
+			this.updatePromise = new Promise<void>(async (resolve, reject) => {
+				this.updating = true
+				this.updateComplete = {resolve, reject}
+				try {
+					log.time('[Coinbase] Fetching remote data')
+					const response = await fetch('https://api.exchange.coinbase.com/currencies', {
+						headers: {
+							Accept: 'application/json'
+						}
+					})
+					this.list = (await response.json()) as CoinBaseAssetList
+					this.lastUpdated = Date.now()
+					await writeCacheFile(COINBASE_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
+					log.timeEnd('[Coinbase] Fetching remote data')
+					this.updateComplete.resolve()
+				} catch (error) {
+					this.updateComplete.reject(error as Error)
+				} finally {
+					this.updating = false
+					this.updatePromise = null
+				}
+			})
+		}
+		return this.updatePromise
+	}
+
+	async needsUpdate(): Promise<boolean> {
 		if (this.lastUpdated === 0) {
 			try {
 				const {lastUpdated, data} = await readCacheFile(COINBASE_CACHE_FILENAME)
@@ -44,22 +75,6 @@ export class Coinbase {
 				this.lastUpdated = lastUpdated
 			} catch (error) {}
 		}
-		if (this.needsUpdate()) {
-			log.time('[Coinbase] Fetching remote data')
-			const response = await fetch('https://api.exchange.coinbase.com/currencies', {
-				headers: {
-					Accept: 'application/json'
-				}
-			})
-
-			this.list = (await response.json()) as CoinBaseAssetList
-			this.lastUpdated = Date.now()
-			await writeCacheFile(COINBASE_CACHE_FILENAME, {lastUpdated: this.lastUpdated, data: this.list})
-			log.timeEnd('[Coinbase] Fetching remote data')
-		}
-	}
-
-	needsUpdate(): boolean {
 		return Date.now() - this.lastUpdated >= TWENTY_FOUR_HOURS
 	}
 
@@ -68,3 +83,5 @@ export class Coinbase {
 		return this.list.filter((a) => a.id === asset && a.status === 'online')[0] !== undefined
 	}
 }
+
+export const Coinbase = new _Coinbase()

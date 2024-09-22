@@ -11,10 +11,9 @@
 		"url": "git+https://github.com/VandeurenGlenn/blue_server.git"
 	},
 	"scripts": {
-		"postinstall": "patch-package",
 		"build": "wireit",
 		"front:dev": "wireit",
-		"ncu": "npm run ncu --workspaces --if-present",
+		"ncu": "ncu -u --install always && npm run ncu --workspaces --if-present",
 		"server:serve": "wireit"
 	},
 	"wireit": {

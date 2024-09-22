@@ -1,0 +1,26 @@
+export default [
+	// ABI definition for getAmountsOut function from Uniswap
+	{
+		constant: true,
+		inputs: [
+			{
+				name: 'amountIn',
+				type: 'uint256'
+			},
+			{
+				name: 'path',
+				type: 'address[]'
+			}
+		],
+		name: 'getAmountsOut',
+		outputs: [
+			{
+				name: 'amounts',
+				type: 'uint256[]'
+			}
+		],
+		payable: false,
+		stateMutability: 'view',
+		type: 'function'
+	}
+]
